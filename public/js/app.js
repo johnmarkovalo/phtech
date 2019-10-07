@@ -1995,75 +1995,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -20498,333 +20429,164 @@ var render = function() {
       [
         _c(
           "v-row",
-          {
-            staticClass: "my-5",
-            attrs: { "align-center": "", "justify-center": "" }
-          },
-          [
-            _c("v-col", { staticClass: "my-3", attrs: { cols: "12" } }, [
-              _c("div", { staticClass: "text-center" }, [
-                _c("h2", { staticClass: "display-3 primary--text" }, [
-                  _vm._v("SecureLife International Corporation")
-                ]),
-                _vm._v(" "),
-                _c("span", { staticClass: "title" }, [
-                  _vm._v("We rise by lifting others")
-                ])
-              ])
-            ])
-          ],
-          1
-        )
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "section",
-      [
-        _c(
-          "v-layout",
-          {
-            staticClass: "my-5",
-            attrs: { column: "", wrap: "", "align-center": "" }
-          },
           [
             _c(
-              "v-flex",
-              { staticClass: "my-3", attrs: { xs12: "", sm4: "" } },
-              [
-                _c("div", { staticClass: "text-center" }, [
-                  _c("h2", { staticClass: "display-3 primary--text" }, [
-                    _vm._v("Secure Packages")
-                  ])
-                ])
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "v-container",
-              { attrs: { "grid-list-xl": "" } },
+              "v-col",
+              { attrs: { xs12: "" } },
               [
                 _c(
-                  "v-layout",
-                  { attrs: { row: "", wrap: "", "justify-center": "" } },
+                  "v-container",
+                  { attrs: { "grid-list-xl": "" } },
                   [
                     _c(
-                      "v-flex",
-                      { attrs: { xs12: "", md3: "" } },
+                      "v-row",
+                      { attrs: { "align-start": "" } },
                       [
                         _c(
-                          "v-card",
-                          { staticClass: "elevation-0" },
+                          "v-col",
+                          { attrs: { xs12: "", md4: "" } },
                           [
-                            _c("v-img", {
-                              attrs: {
-                                src:
-                                  "https://res.cloudinary.com/tim0923/image/upload/v1569247464/SecureLife/packages/A.png"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "v-flex",
-                      { attrs: { xs12: "", md3: "" } },
-                      [
-                        _c(
-                          "v-card",
-                          { staticClass: "elevation-0" },
-                          [
-                            _c("v-img", {
-                              attrs: {
-                                src:
-                                  "https://res.cloudinary.com/tim0923/image/upload/v1569247464/SecureLife/packages/A.png"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "v-flex",
-                      { attrs: { xs12: "", md3: "" } },
-                      [
-                        _c(
-                          "v-card",
-                          { staticClass: "elevation-0" },
-                          [
-                            _c("v-img", {
-                              attrs: {
-                                src:
-                                  "https://res.cloudinary.com/tim0923/image/upload/v1569247464/SecureLife/packages/A.png"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "v-flex",
-                      { attrs: { xs12: "", md3: "" } },
-                      [
-                        _c(
-                          "v-card",
-                          { staticClass: "elevation-0" },
-                          [
-                            _c("v-img", {
-                              attrs: {
-                                src:
-                                  "https://res.cloudinary.com/tim0923/image/upload/v1569247464/SecureLife/packages/A.png"
-                              }
-                            })
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                )
-              ],
-              1
-            )
-          ],
-          1
-        )
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "section",
-      [
-        _c(
-          "v-layout",
-          {
-            staticClass: "my-5",
-            attrs: { column: "", wrap: "", "align-center": "" }
-          },
-          [
-            _c(
-              "v-flex",
-              { staticClass: "my-3", attrs: { xs12: "", sm4: "" } },
-              [
-                _c("div", { staticClass: "text-center" }, [
-                  _c("h2", { staticClass: "display-3 primary--text" }, [
-                    _vm._v("Our Products")
-                  ])
-                ])
-              ]
-            ),
-            _vm._v(" "),
-            _c(
-              "v-container",
-              { attrs: { "grid-list-xl": "" } },
-              [
-                _c(
-                  "v-layout",
-                  { attrs: { row: "", wrap: "", "justify-center": "" } },
-                  [
-                    _c(
-                      "v-flex",
-                      { attrs: { xs12: "", md3: "" } },
-                      [
-                        _c(
-                          "v-card",
-                          [
-                            _c("v-img", {
-                              attrs: {
-                                src:
-                                  "https://res.cloudinary.com/tim0923/image/upload/v1569159057/SecureLife/products/Coffee.png"
-                              }
-                            }),
-                            _vm._v(" "),
                             _c(
-                              "v-card-title",
-                              {
-                                staticClass: "layout justify-center",
-                                attrs: { "primary-title": "" }
-                              },
+                              "v-card",
+                              { staticClass: "elevation-0 transparent" },
                               [
                                 _c(
-                                  "p",
-                                  { staticClass: "headline text-center" },
+                                  "v-card-text",
+                                  { staticClass: "text-center" },
                                   [
-                                    _vm._v("SURIMU LUXXE "),
-                                    _c("br"),
-                                    _vm._v(" COFFEE")
+                                    _c(
+                                      "v-icon",
+                                      {
+                                        staticClass:
+                                          "blue--text text--darken-3",
+                                        attrs: { size: "60px" }
+                                      },
+                                      [_vm._v("event_note")]
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-card-title",
+                                  {
+                                    staticClass: "layout justify-center",
+                                    attrs: { "primary-title": "" }
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      { staticClass: "headline text-center" },
+                                      [
+                                        _vm._v(
+                                          "Visit Events page for all the "
+                                        ),
+                                        _c("br"),
+                                        _vm._v(
+                                          "Tech Community activities for the year."
+                                        )
+                                      ]
+                                    )
                                   ]
                                 )
-                              ]
+                              ],
+                              1
                             )
                           ],
                           1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "v-flex",
-                      { attrs: { xs12: "", md3: "" } },
-                      [
+                        ),
+                        _vm._v(" "),
                         _c(
-                          "v-card",
+                          "v-col",
+                          { attrs: { xs12: "", md4: "" } },
                           [
-                            _c("v-img", {
-                              attrs: {
-                                src:
-                                  "https://res.cloudinary.com/tim0923/image/upload/v1569159056/SecureLife/products/Gluta.png"
-                              }
-                            }),
-                            _vm._v(" "),
                             _c(
-                              "v-card-title",
-                              {
-                                staticClass: "layout justify-center",
-                                attrs: { "primary-title": "" }
-                              },
+                              "v-card",
+                              { staticClass: "elevation-0 transparent" },
                               [
                                 _c(
-                                  "p",
-                                  { staticClass: "headline text-center" },
+                                  "v-card-text",
+                                  { staticClass: "text-center" },
                                   [
-                                    _vm._v("SURIMU LUXXE "),
-                                    _c("br"),
-                                    _vm._v(" GLUTATHIONE")
+                                    _c(
+                                      "v-icon",
+                                      {
+                                        staticClass:
+                                          "blue--text text--darken-3",
+                                        attrs: { size: "60px" }
+                                      },
+                                      [_vm._v("group")]
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "v-card-title",
+                                  {
+                                    staticClass: "layout justify-center",
+                                    attrs: { "primary-title": "" }
+                                  },
+                                  [
+                                    _c(
+                                      "div",
+                                      { staticClass: "headline text-center" },
+                                      [
+                                        _vm._v(
+                                          "Meet and Search for Communities"
+                                        )
+                                      ]
+                                    )
                                   ]
                                 )
-                              ]
+                              ],
+                              1
                             )
                           ],
                           1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "v-flex",
-                      { attrs: { xs12: "", md3: "" } },
-                      [
+                        ),
+                        _vm._v(" "),
                         _c(
-                          "v-card",
+                          "v-col",
+                          { attrs: { xs12: "", md4: "" } },
                           [
-                            _c("v-img", {
-                              attrs: {
-                                src:
-                                  "https://res.cloudinary.com/tim0923/image/upload/v1569159055/SecureLife/products/Juice.png"
-                              }
-                            }),
-                            _vm._v(" "),
                             _c(
-                              "v-card-title",
-                              {
-                                staticClass: "layout justify-center",
-                                attrs: { "primary-title": "" }
-                              },
+                              "v-card",
+                              { staticClass: "elevation-0 transparent" },
                               [
                                 _c(
-                                  "p",
-                                  { staticClass: "headline text-center" },
+                                  "v-card-text",
+                                  { staticClass: "text-center" },
                                   [
-                                    _vm._v("SURIMU LUXXE "),
-                                    _c("br"),
-                                    _vm._v(" LEMON JUICE")
-                                  ]
-                                )
-                              ]
-                            )
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "v-flex",
-                      { attrs: { xs12: "", md3: "" } },
-                      [
-                        _c(
-                          "v-card",
-                          [
-                            _c("v-img", {
-                              attrs: {
-                                src:
-                                  "https://res.cloudinary.com/tim0923/image/upload/v1569159054/SecureLife/products/Soap.png"
-                              }
-                            }),
-                            _vm._v(" "),
-                            _c(
-                              "v-card-title",
-                              {
-                                staticClass: "layout justify-center",
-                                attrs: { "primary-title": "" }
-                              },
-                              [
+                                    _c(
+                                      "v-icon",
+                                      {
+                                        staticClass:
+                                          "blue--text text--darken-3",
+                                        attrs: { size: "60px" }
+                                      },
+                                      [_vm._v("accessibility_new")]
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
                                 _c(
-                                  "p",
-                                  { staticClass: "headline text-center" },
+                                  "v-card-title",
+                                  {
+                                    staticClass: "layout justify-center",
+                                    attrs: { "primary-title": "" }
+                                  },
                                   [
-                                    _vm._v("INTENSE WHITE "),
-                                    _c("br"),
-                                    _vm._v(" BEAUTY BAR")
+                                    _c(
+                                      "div",
+                                      { staticClass: "headline text-center" },
+                                      [_vm._v("Accessible for all")]
+                                    )
                                   ]
                                 )
-                              ]
+                              ],
+                              1
                             )
                           ],
                           1
