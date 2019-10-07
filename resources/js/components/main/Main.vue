@@ -8,7 +8,7 @@
                 <v-btn text href="/login"><v-icon color="blue darken-3" left>info</v-icon>ABOUT</v-btn>
                 <v-btn text href="/register"><v-icon color="blue darken-3" left>group</v-icon>COMMMUNITIES</v-btn>
                 <v-btn text href="/register"><v-icon color="blue darken-3" left>fas fa-newspaper</v-icon>NEWS</v-btn>
-                <v-btn text href="/register"><v-icon color="blue darken-3" left>event_note</v-icon>EVENTS</v-btn>
+                <v-btn text href="/event"><v-icon color="blue darken-3" left>event_note</v-icon>EVENTS</v-btn>
                 <!-- <v-btn text href='dashboard' v-show='this.$parent.isLoggedIn'><v-icon color="amber darken-3" left>dashboard</v-icon>MY DASHBOARD</v-btn> -->
                 <!-- <v-btn text @click="logout" v-show='this.$parent.isLoggedIn'><v-icon color="amber darken-3" left>exit_to_app</v-icon>LOGOUT</v-btn> -->
             </v-toolbar-items>
