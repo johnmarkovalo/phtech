@@ -24,7 +24,7 @@ import colors from 'vuetify/es5/util/colors'
 
 const opts = {
   theme: {
-    dark: false,
+    dark: true,
     themes: {
       light: {
         primary: colors.amber.darken3

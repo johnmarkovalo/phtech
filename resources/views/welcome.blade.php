@@ -16,6 +16,10 @@
                 font-family: 'Montserrat', sans-serif;
             }
 
+            a:link{
+              text-decoration: none;
+            }
+
             /* for mobile view in genea ID */
             .phonesize{
               font-size: 7px;

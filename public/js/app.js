@@ -1917,33 +1917,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      today: '2019-01-01',
-      focus: '2019-01-01',
+      modal: false,
+      today: '',
+      focus: '2019-08-01',
       type: 'month',
-      typeToLabel: {
-        month: 'Month',
-        week: 'Week',
-        day: 'Day',
-        '4day': '4 Days'
-      },
       start: null,
       end: null,
       selectedEvent: {},
@@ -2067,21 +2047,12 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       var startMonth = this.monthFormatter(start);
-      var endMonth = this.monthFormatter(end);
-      var suffixMonth = startMonth === endMonth ? '' : endMonth;
       var startYear = start.year;
-      var endYear = end.year;
-      var suffixYear = startYear === endYear ? '' : endYear;
       var startDay = start.day + this.nth(start.day);
-      var endDay = end.day + this.nth(end.day);
 
       switch (this.type) {
         case 'month':
           return "".concat(startMonth, " ").concat(startYear);
-
-        case 'week':
-        case '4day':
-          return "".concat(startMonth, " ").concat(startDay, " ").concat(startYear, " - ").concat(suffixMonth, " ").concat(endDay, " ").concat(suffixYear);
 
         case 'day':
           return "".concat(startMonth, " ").concat(startDay, " ").concat(startYear);
@@ -2100,11 +2071,6 @@ __webpack_require__.r(__webpack_exports__);
     this.$refs.calendar.checkChange();
   },
   methods: {
-    viewDay: function viewDay(_ref) {
-      var date = _ref.date;
-      this.focus = date;
-      this.type = 'day';
-    },
     getEventColor: function getEventColor(event) {
       return event.color;
     },
@@ -2117,11 +2083,11 @@ __webpack_require__.r(__webpack_exports__);
     next: function next() {
       this.$refs.calendar.next();
     },
-    showEvent: function showEvent(_ref2) {
+    showEvent: function showEvent(_ref) {
       var _this = this;
 
-      var nativeEvent = _ref2.nativeEvent,
-          event = _ref2.event;
+      var nativeEvent = _ref.nativeEvent,
+          event = _ref.event;
 
       var open = function open() {
         _this.selectedEvent = event;
@@ -2140,9 +2106,9 @@ __webpack_require__.r(__webpack_exports__);
 
       nativeEvent.stopPropagation();
     },
-    updateRange: function updateRange(_ref3) {
-      var start = _ref3.start,
-          end = _ref3.end;
+    updateRange: function updateRange(_ref2) {
+      var start = _ref2.start,
+          end = _ref2.end;
       // You could load events from an outside source (like database) now that we have the start and end dates on the calendar
       this.start = start;
       this.end = end;
@@ -2150,6 +2116,15 @@ __webpack_require__.r(__webpack_exports__);
     nth: function nth(d) {
       return d > 3 && d < 21 ? 'th' : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'][d % 10];
     }
+  },
+  created: function created() {
+    var _this2 = this;
+
+    setInterval(function () {
+      setInterval(function () {
+        _this2.today = new Date().toLocaleString();
+      }, 1000);
+    }, 1000);
   }
 });
 
@@ -2164,48 +2139,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2344,6 +2277,56 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {// cashier: false,
+      // branch_name: ''
+    };
+  },
+  methods: {// logout(){
+    //     localStorage.clear();
+    //     window.location.replace('/')
+    // },
+    // refresh(){
+    //     setTimeout(function()
+    //     {
+    //         localStorage.clear();
+    //         window.location.replace('/')
+    //     },30000)
+    // }
+  },
+  created: function created() {// axios.post('/api/roles');
+    // if (localStorage.getItem('type') == 'cashier')
+    // {
+    //     this.cashier = true
+    //     this.branch_name = 'cashier/'+localStorage.getItem('branch_name').replace(' ', '_')
+    // }
+    // this.refresh()
+    // document.addEventListener('click', this.refresh)
+    // document.addEventListener('mousemove', this.refresh)
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/main/Signin.vue?vue&type=script&lang=js&":
+/*!**********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/main/Signin.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2375,31 +2358,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
-    return {// cashier: false,
-      // branch_name: ''
+    return {
+      username: "",
+      password: "",
+      show1: false
     };
-  },
-  methods: {// logout(){
-    //     localStorage.clear();
-    //     window.location.replace('/')
-    // },
-    // refresh(){
-    //     setTimeout(function()
-    //     {
-    //         localStorage.clear();
-    //         window.location.replace('/')
-    //     },30000)
-    // }
-  },
-  created: function created() {// axios.post('/api/roles');
-    // if (localStorage.getItem('type') == 'cashier')
-    // {
-    //     this.cashier = true
-    //     this.branch_name = 'cashier/'+localStorage.getItem('branch_name').replace(' ', '_')
-    // }
-    // this.refresh()
-    // document.addEventListener('click', this.refresh)
-    // document.addEventListener('mousemove', this.refresh)
   }
 });
 
@@ -20678,18 +20641,8 @@ var render = function() {
             [
               _c(
                 "v-toolbar",
-                { attrs: { flat: "", color: "white" } },
+                { attrs: { flat: "", color: "blue darken-3" } },
                 [
-                  _c(
-                    "v-btn",
-                    {
-                      staticClass: "mr-4",
-                      attrs: { outlined: "" },
-                      on: { click: _vm.setToday }
-                    },
-                    [_vm._v("\n          Today\n        ")]
-                  ),
-                  _vm._v(" "),
                   _c(
                     "v-btn",
                     {
@@ -20698,7 +20651,7 @@ var render = function() {
                     },
                     [
                       _c("v-icon", { attrs: { small: "" } }, [
-                        _vm._v("mdi-chevron-left")
+                        _vm._v("keyboard_arrow_left")
                       ])
                     ],
                     1
@@ -20712,7 +20665,7 @@ var render = function() {
                     },
                     [
                       _c("v-icon", { attrs: { small: "" } }, [
-                        _vm._v("mdi-chevron-right")
+                        _vm._v("keyboard_arrow_right")
                       ])
                     ],
                     1
@@ -20723,89 +20676,63 @@ var render = function() {
                   _c("div", { staticClass: "flex-grow-1" }),
                   _vm._v(" "),
                   _c(
-                    "v-menu",
+                    "v-btn",
                     {
-                      attrs: { bottom: "", right: "" },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "activator",
-                          fn: function(ref) {
-                            var on = ref.on
-                            return [
-                              _c(
-                                "v-btn",
-                                _vm._g({ attrs: { outlined: "" } }, on),
-                                [
-                                  _c("span", [
-                                    _vm._v(_vm._s(_vm.typeToLabel[_vm.type]))
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("v-icon", { attrs: { right: "" } }, [
-                                    _vm._v("mdi-menu-down")
-                                  ])
-                                ],
-                                1
-                              )
-                            ]
-                          }
+                      attrs: { outlined: "" },
+                      on: {
+                        click: function($event) {
+                          _vm.modal = true
                         }
-                      ])
+                      }
                     },
                     [
+                      _c("span", [_vm._v(_vm._s(_vm.title))]),
                       _vm._v(" "),
+                      _c("v-icon", { attrs: { right: "" } }, [_vm._v("menu")])
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "v-dialog",
+                    {
+                      ref: "dialogfrom",
+                      attrs: { persistent: "", width: "290px" },
+                      model: {
+                        value: _vm.modal,
+                        callback: function($$v) {
+                          _vm.modal = $$v
+                        },
+                        expression: "modal"
+                      }
+                    },
+                    [
                       _c(
-                        "v-list",
+                        "v-date-picker",
+                        {
+                          attrs: { type: "month" },
+                          model: {
+                            value: _vm.focus,
+                            callback: function($$v) {
+                              _vm.focus = $$v
+                            },
+                            expression: "focus"
+                          }
+                        },
                         [
-                          _c(
-                            "v-list-item",
-                            {
-                              on: {
-                                click: function($event) {
-                                  _vm.type = "day"
-                                }
-                              }
-                            },
-                            [_c("v-list-item-title", [_vm._v("Day")])],
-                            1
-                          ),
+                          _c("v-spacer"),
                           _vm._v(" "),
                           _c(
-                            "v-list-item",
+                            "v-btn",
                             {
+                              attrs: { text: "", color: "primary" },
                               on: {
                                 click: function($event) {
-                                  _vm.type = "week"
+                                  _vm.modal = false
                                 }
                               }
                             },
-                            [_c("v-list-item-title", [_vm._v("Week")])],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "v-list-item",
-                            {
-                              on: {
-                                click: function($event) {
-                                  _vm.type = "month"
-                                }
-                              }
-                            },
-                            [_c("v-list-item-title", [_vm._v("Month")])],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "v-list-item",
-                            {
-                              on: {
-                                click: function($event) {
-                                  _vm.type = "4day"
-                                }
-                              }
-                            },
-                            [_c("v-list-item-title", [_vm._v("4 days")])],
-                            1
+                            [_vm._v("OK")]
                           )
                         ],
                         1
@@ -20832,14 +20759,10 @@ var render = function() {
                   "event-color": _vm.getEventColor,
                   "event-margin-bottom": 3,
                   now: _vm.today,
-                  type: _vm.type
+                  type: _vm.type,
+                  dark: ""
                 },
-                on: {
-                  "click:event": _vm.showEvent,
-                  "click:more": _vm.viewDay,
-                  "click:date": _vm.viewDay,
-                  change: _vm.updateRange
-                },
+                on: { "click:event": _vm.showEvent, change: _vm.updateRange },
                 model: {
                   value: _vm.focus,
                   callback: function($$v) {
@@ -20884,7 +20807,7 @@ var render = function() {
                           _c(
                             "v-btn",
                             { attrs: { icon: "" } },
-                            [_c("v-icon", [_vm._v("mdi-pencil")])],
+                            [_c("v-icon", [_vm._v("edit")])],
                             1
                           ),
                           _vm._v(" "),
@@ -20899,14 +20822,14 @@ var render = function() {
                           _c(
                             "v-btn",
                             { attrs: { icon: "" } },
-                            [_c("v-icon", [_vm._v("mdi-heart")])],
+                            [_c("v-icon", [_vm._v("favorite")])],
                             1
                           ),
                           _vm._v(" "),
                           _c(
                             "v-btn",
                             { attrs: { icon: "" } },
-                            [_c("v-icon", [_vm._v("mdi-dots-vertical")])],
+                            [_c("v-icon", [_vm._v("more_vert")])],
                             1
                           )
                         ],
@@ -21011,25 +20934,37 @@ var render = function() {
               [
                 _c("v-carousel-item", [
                   _c("img", {
-                    attrs: { src: "/img/Banner4.5.png", alt: "img" }
+                    attrs: { src: "/img/carousel/1.png", alt: "img" }
                   })
                 ]),
                 _vm._v(" "),
                 _c("v-carousel-item", [
                   _c("img", {
-                    attrs: { src: "/img/Banner4.6.png", alt: "img" }
+                    attrs: { src: "/img/carousel/2.png", alt: "img" }
                   })
                 ]),
                 _vm._v(" "),
                 _c("v-carousel-item", [
                   _c("img", {
-                    attrs: { src: "/img/Banner4.7.png", alt: "img" }
+                    attrs: { src: "/img/carousel/3.png", alt: "img" }
                   })
                 ]),
                 _vm._v(" "),
                 _c("v-carousel-item", [
                   _c("img", {
-                    attrs: { src: "/img/Banner4.8.png", alt: "img" }
+                    attrs: { src: "/img/carousel/4.png", alt: "img" }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("v-carousel-item", [
+                  _c("img", {
+                    attrs: { src: "/img/carousel/5.png", alt: "img" }
+                  })
+                ]),
+                _vm._v(" "),
+                _c("v-carousel-item", [
+                  _c("img", {
+                    attrs: { src: "/img/carousel/6.png", alt: "img" }
                   })
                 ])
               ],
@@ -21228,189 +21163,19 @@ var render = function() {
     _c(
       "div",
       {
-        staticStyle: { backgrounded: "linear-gradient(#FF8F00, #FFC107)" },
-        attrs: { id: "footer", height: "350px", padless: "", absolute: "" }
+        attrs: {
+          id: "footer",
+          height: "350px",
+          padless: "",
+          absolute: "",
+          color: "black"
+        }
       },
       [
         _c(
           "v-col",
           { attrs: { cols: "12" } },
           [
-            _c(
-              "v-container",
-              {
-                staticClass: "hidden-sm-and-down",
-                attrs: { "grid-list-xl": "", fluid: "" }
-              },
-              [
-                _c(
-                  "v-row",
-                  { attrs: { "align-start": "" } },
-                  [
-                    _c(
-                      "v-col",
-                      { attrs: { cols: "12", md: "4" } },
-                      [
-                        _c(
-                          "v-card",
-                          { staticClass: "elevation-0 transparent" },
-                          [
-                            _c("v-card-text", { staticClass: "subtitle-2" }, [
-                              _vm._v(
-                                "\n                            Company Information"
-                              ),
-                              _c("br"),
-                              _vm._v(
-                                "\n                            Tel Nos. :"
-                              ),
-                              _c("br"),
-                              _vm._v(
-                                "\n                            +639 000 0000"
-                              ),
-                              _c("br"),
-                              _vm._v(
-                                "\n                            Email Address :"
-                              ),
-                              _c("br"),
-                              _vm._v(
-                                "\n                            ask@securelifeintlcorp.com"
-                              ),
-                              _c("br"),
-                              _vm._v("\n                            Address :"),
-                              _c("br"),
-                              _vm._v(
-                                "\n                            Nunez Ext, Zamboanga City, Philippines"
-                              ),
-                              _c("br")
-                            ])
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "v-col",
-                      { attrs: { cols: "12", md: "4" } },
-                      [
-                        _c(
-                          "v-card",
-                          { staticClass: "elevation-0 transparent" },
-                          [
-                            _c("v-card-text", { staticClass: "subtitle-2" }, [
-                              _vm._v(
-                                "\n                            Quick Links"
-                              ),
-                              _c("br"),
-                              _vm._v("\n                            Home"),
-                              _c("br"),
-                              _vm._v(
-                                "\n                            Terms & Conditions"
-                              ),
-                              _c("br"),
-                              _vm._v(
-                                "\n                            Privacy Policy"
-                              ),
-                              _c("br"),
-                              _vm._v(
-                                "\n                            Contact Us"
-                              ),
-                              _c("br"),
-                              _vm._v("\n                            About Us"),
-                              _c("br"),
-                              _vm._v(
-                                "\n                            Frequently Asked Questions"
-                              ),
-                              _c("br")
-                            ])
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "v-col",
-                      { attrs: { cols: "12", md: "4" } },
-                      [
-                        _c(
-                          "v-card",
-                          { staticClass: "elevation-0 transparent" },
-                          [
-                            _c(
-                              "v-card-text",
-                              { staticClass: "subtitle-2" },
-                              [
-                                _vm._v(
-                                  "\n                            Send us an email"
-                                ),
-                                _c("br"),
-                                _vm._v(" "),
-                                _c("v-text-field", {
-                                  attrs: {
-                                    small: "",
-                                    outlinedd: "",
-                                    id: "email",
-                                    type: "email",
-                                    label: "Email Address",
-                                    "prepend-inner-icon": "alternate_email"
-                                  },
-                                  model: {
-                                    value: _vm.email,
-                                    callback: function($$v) {
-                                      _vm.email = $$v
-                                    },
-                                    expression: "email"
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c(
-                                  "v-btn",
-                                  {
-                                    attrs: {
-                                      medium: "",
-                                      rounded: "",
-                                      color: "primary",
-                                      outlined: "",
-                                      type: "submit"
-                                    },
-                                    on: { click: _vm.handleSubmit }
-                                  },
-                                  [
-                                    _vm._v(
-                                      "\n                                Send\n                                "
-                                    ),
-                                    _c(
-                                      "v-icon",
-                                      {
-                                        staticClass: "ml-2",
-                                        attrs: { small: "" }
-                                      },
-                                      [_vm._v("send")]
-                                    )
-                                  ],
-                                  1
-                                )
-                              ],
-                              1
-                            )
-                          ],
-                          1
-                        )
-                      ],
-                      1
-                    )
-                  ],
-                  1
-                )
-              ],
-              1
-            ),
-            _vm._v(" "),
-            _c("v-divider"),
-            _vm._v(" "),
             _c(
               "v-row",
               { attrs: { "justify-center": "" } },
@@ -21503,11 +21268,7 @@ var render = function() {
                       { staticClass: "elevation-0 transparent" },
                       [
                         _c("v-card-text", { staticClass: "text-center" }, [
-                          _c("span", [
-                            _vm._v(
-                              "© SecureLife International Corporation 2019"
-                            )
-                          ]),
+                          _c("span", [_vm._v("© phtechpark 2019")]),
                           _c("br"),
                           _vm._v(" "),
                           _c(
@@ -21595,7 +21356,7 @@ var render = function() {
             [
               _c(
                 "v-btn",
-                { attrs: { text: "", href: "/about" } },
+                { attrs: { text: "", href: "/home" } },
                 [
                   _c(
                     "v-icon",
@@ -21609,7 +21370,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "v-btn",
-                { attrs: { text: "", href: "/login" } },
+                { attrs: { text: "", href: "/about" } },
                 [
                   _c(
                     "v-icon",
@@ -21623,7 +21384,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "v-btn",
-                { attrs: { text: "", href: "/register" } },
+                { attrs: { text: "", href: "/communities" } },
                 [
                   _c(
                     "v-icon",
@@ -21637,7 +21398,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "v-btn",
-                { attrs: { text: "", href: "/register" } },
+                { attrs: { text: "", href: "/news" } },
                 [
                   _c(
                     "v-icon",
@@ -21661,6 +21422,20 @@ var render = function() {
                   _vm._v("EVENTS")
                 ],
                 1
+              ),
+              _vm._v(" "),
+              _c(
+                "v-btn",
+                { attrs: { text: "", href: "/signin" } },
+                [
+                  _c(
+                    "v-icon",
+                    { attrs: { color: "blue darken-3", left: "" } },
+                    [_vm._v("person_add")]
+                  ),
+                  _vm._v("SIGN-IN")
+                ],
+                1
               )
             ],
             1
@@ -21673,6 +21448,204 @@ var render = function() {
         "main",
         { staticClass: "pt-5 mt-5 pb-0" },
         [_c("router-view", { staticClass: "mt-5", attrs: { name: "main" } })],
+        1
+      )
+    ],
+    1
+  )
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/main/Signin.vue?vue&type=template&id=8d4fc846&":
+/*!**************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/main/Signin.vue?vue&type=template&id=8d4fc846& ***!
+  \**************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "container fluid" },
+    [
+      _c(
+        "v-layout",
+        { attrs: { row: "" } },
+        [
+          _c(
+            "v-layout",
+            { attrs: { xs12: "", md10: "", lg10: "", "justify-center": "" } },
+            [
+              _c(
+                "v-card",
+                {
+                  class: {
+                    "my-5 elevation-0": _vm.$vuetify.breakpoint.mdAndUp
+                  },
+                  attrs: { width: "600px" }
+                },
+                [
+                  _c(
+                    "v-card-text",
+                    [
+                      _c(
+                        "v-form",
+                        [
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", md12: "" } },
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  outlined: "",
+                                  id: "username",
+                                  type: "text",
+                                  label: "Username",
+                                  required: "",
+                                  "prepend-inner-icon": "account_circle",
+                                  autofocus: ""
+                                },
+                                model: {
+                                  value: _vm.username,
+                                  callback: function($$v) {
+                                    _vm.username = $$v
+                                  },
+                                  expression: "username"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-flex",
+                            { attrs: { xs12: "", md12: "" } },
+                            [
+                              _c("v-text-field", {
+                                attrs: {
+                                  outlined: "",
+                                  id: "password",
+                                  type: _vm.show1 ? "text" : "password",
+                                  "append-icon": _vm.show1
+                                    ? "visibility"
+                                    : "visibility_off",
+                                  label: "Password",
+                                  required: "",
+                                  "prepend-inner-icon": "lock"
+                                },
+                                on: {
+                                  "click:append": function($event) {
+                                    _vm.show1 = !_vm.show1
+                                  }
+                                },
+                                model: {
+                                  value: _vm.password,
+                                  callback: function($$v) {
+                                    _vm.password = $$v
+                                  },
+                                  expression: "password"
+                                }
+                              })
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-row",
+                            { attrs: { justify: "center" } },
+                            [
+                              _c(
+                                "v-col",
+                                {
+                                  attrs: {
+                                    xs: "12",
+                                    md: "12",
+                                    justify: "center"
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: {
+                                        "pa-1": "",
+                                        block: "",
+                                        "x-large": "",
+                                        rounded: "",
+                                        type: "submit",
+                                        color: "amber darken-3"
+                                      },
+                                      on: { click: _vm.handleSubmit }
+                                    },
+                                    [_vm._v("Login")]
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c(
+                            "v-row",
+                            { attrs: { justify: "center" } },
+                            [
+                              _c(
+                                "v-col",
+                                {
+                                  attrs: {
+                                    xs: "12",
+                                    md: "12",
+                                    justify: "center"
+                                  }
+                                },
+                                [
+                                  _c(
+                                    "v-btn",
+                                    {
+                                      attrs: {
+                                        href: "redirect",
+                                        "pa-1": "",
+                                        block: "",
+                                        "x-large": "",
+                                        rounded: "",
+                                        type: "submit",
+                                        color: "amber darken-3"
+                                      }
+                                    },
+                                    [_vm._v("Google Sign-in")]
+                                  )
+                                ],
+                                1
+                              )
+                            ],
+                            1
+                          )
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
+            ],
+            1
+          )
+        ],
         1
       )
     ],
@@ -85637,7 +85610,7 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 
 var opts = {
   theme: {
-    dark: false,
+    dark: true,
     themes: {
       light: {
         primary: vuetify_es5_util_colors__WEBPACK_IMPORTED_MODULE_6___default.a.amber.darken3
@@ -86005,6 +85978,75 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/components/main/Signin.vue":
+/*!*************************************************!*\
+  !*** ./resources/js/components/main/Signin.vue ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Signin_vue_vue_type_template_id_8d4fc846___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Signin.vue?vue&type=template&id=8d4fc846& */ "./resources/js/components/main/Signin.vue?vue&type=template&id=8d4fc846&");
+/* harmony import */ var _Signin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Signin.vue?vue&type=script&lang=js& */ "./resources/js/components/main/Signin.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Signin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Signin_vue_vue_type_template_id_8d4fc846___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Signin_vue_vue_type_template_id_8d4fc846___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/components/main/Signin.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/main/Signin.vue?vue&type=script&lang=js&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/components/main/Signin.vue?vue&type=script&lang=js& ***!
+  \**************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Signin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./Signin.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/main/Signin.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Signin_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/main/Signin.vue?vue&type=template&id=8d4fc846&":
+/*!********************************************************************************!*\
+  !*** ./resources/js/components/main/Signin.vue?vue&type=template&id=8d4fc846& ***!
+  \********************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Signin_vue_vue_type_template_id_8d4fc846___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./Signin.vue?vue&type=template&id=8d4fc846& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/main/Signin.vue?vue&type=template&id=8d4fc846&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Signin_vue_vue_type_template_id_8d4fc846___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Signin_vue_vue_type_template_id_8d4fc846___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
+
+/***/ }),
+
 /***/ "./resources/js/routes.js":
 /*!********************************!*\
   !*** ./resources/js/routes.js ***!
@@ -86018,7 +86060,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_main_Main_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./components/main/Main.vue */ "./resources/js/components/main/Main.vue");
 /* harmony import */ var _components_main_Landing_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/main/Landing.vue */ "./resources/js/components/main/Landing.vue");
 /* harmony import */ var _components_main_Event_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/main/Event.vue */ "./resources/js/components/main/Event.vue");
+/* harmony import */ var _components_main_Signin_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/main/Signin.vue */ "./resources/js/components/main/Signin.vue");
 //Main
+
 
 
 
@@ -86037,6 +86081,12 @@ var routes = [{
     name: 'Event',
     components: {
       main: _components_main_Event_vue__WEBPACK_IMPORTED_MODULE_2__["default"]
+    }
+  }, {
+    path: '/signin',
+    name: 'Signin',
+    components: {
+      main: _components_main_Signin_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
     }
   }]
 }];
