@@ -26,7 +26,7 @@
                             </v-row>
                             <v-row justify="center">
                                 <v-col xs="12" md="12" justify="center">
-                                    <v-btn href="redirect" pa-1 block x-large rounded type="submit" color="amber darken-3">Google Sign-in</v-btn>
+                                    <v-btn href="login/google" pa-1 block x-large rounded color="amber darken-3">Google Sign-in</v-btn>
                                 </v-col>
                             </v-row>
                         </v-form>

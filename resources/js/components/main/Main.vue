@@ -4,7 +4,7 @@
             <v-img src="img/Phtech.png" max-width="200px" alt="avatar"/>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
-                <v-btn text href="/home"><v-icon color="blue darken-3" left>home</v-icon>HOME</v-btn>
+                <v-btn text href="/"><v-icon color="blue darken-3" left>home</v-icon>HOME</v-btn>
                 <v-btn text href="/about"><v-icon color="blue darken-3" left>info</v-icon>ABOUT</v-btn>
                 <v-btn text href="/communities"><v-icon color="blue darken-3" left>group</v-icon>COMMMUNITIES</v-btn>
                 <v-btn text href="/news"><v-icon color="blue darken-3" left>fas fa-newspaper</v-icon>NEWS</v-btn>

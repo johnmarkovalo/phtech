@@ -40,13 +40,13 @@ class LoginController extends Controller
     }
 
     /**
-     * Redirect the user to the provider authentication page.
+     * Redirect the user to the GitHub authentication page.
      *
      * @return \Illuminate\Http\Response
      */
-    public function redirectToProvider($driver)
+    public function redirectToProvider()
     {
-        return Socialite::driver($driver)->redirect();
+        return Socialite::driver('google')->redirect();
     }
 
     /**
@@ -54,12 +54,12 @@ class LoginController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function handleProviderCallback($driver)
+    public function handleProviderCallback()
     {
         try {
-            $user = Socialite::driver($driver)->user();
+            $user = Socialite::driver('google')->user();
         } catch (\Exception $e) {
-            return redirect()->route('login');
+            return redirect()->route('signin');
         }
 
         $existingUser = User::where('email', $user->getEmail())->first();
@@ -68,7 +68,7 @@ class LoginController extends Controller
             auth()->login($existingUser, true);
         } else {
             $newUser                    = new User;
-            $newUser->provider_name     = $driver;
+            $newUser->provider_name     = 'google';
             $newUser->provider_id       = $user->getId();
             $newUser->name              = $user->getName();
             $newUser->email             = $user->getEmail();
@@ -81,4 +81,5 @@ class LoginController extends Controller
 
         return redirect($this->redirectPath());
     }
+
 }

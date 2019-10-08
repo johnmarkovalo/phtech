@@ -31,9 +31,9 @@ return [
     ],
 
     'google' => [
-        'client_id'     => env('261547305621-kt1hsvdt4is044mig2e6chvvd84tifu5.apps.googleusercontent.com'),
-        'client_secret' => env('FXOx0HjcBmWVyrneVCRYWnEw '),
-        'redirect'      => env('http://localhost:8000/google/callback'),
+        'client_id' => '261547305621-heps63mvt90c50icp884lnkkagr9c42b.apps.googleusercontent.com',
+        'client_secret' => 'ZQl8PSjbSoup-PBoLJsDdxfK',
+        'redirect' => 'http://127.0.0.1:8000/login/google/callback',
     ],
 
 ];

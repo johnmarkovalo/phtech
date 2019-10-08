@@ -46,12 +46,7 @@ return [
             'provider' => 'users',
             'hash' => false,
         ],
-    ],
-    
-    'socialite' => [
-        'drivers' => [
-            'google',
-        ],
+        
     ],
 
     /*
@@ -83,6 +78,12 @@ return [
         // ],
     ],
 
+    'socialite' => [
+        'drivers' => [
+            'google',
+        ],
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Resetting Passwords
@@ -105,5 +106,18 @@ return [
             'expire' => 60,
         ],
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Password Confirmation Timeout
+    |--------------------------------------------------------------------------
+    |
+    | Here you may define the amount of seconds before a password confirmation
+    | times out and the user is prompted to re-enter their password via the
+    | confirmation screen. By default, the timeout lasts for three hours.
+    |
+    */
+
+    'password_timeout' => 10800,
 
 ];
