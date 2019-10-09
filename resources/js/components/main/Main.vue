@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid pa-0 pb-2">
-        <v-app-bar  text fixed app color="transparent">
+        <v-app-bar hide-on-scroll app>
             <v-img src="img/Phtech.png" max-width="200px" alt="avatar"/>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
@@ -9,7 +9,8 @@
                 <v-btn text href="/communities"><v-icon color="blue darken-3" left>group</v-icon>COMMMUNITIES</v-btn>
                 <v-btn text href="/news"><v-icon color="blue darken-3" left>fas fa-newspaper</v-icon>NEWS</v-btn>
                 <v-btn text href="/event"><v-icon color="blue darken-3" left>event_note</v-icon>EVENTS</v-btn>
-                <v-btn text href="/signin"><v-icon color="blue darken-3" left>person_add</v-icon>SIGN-IN</v-btn>
+                <v-btn text href="/login/google"><v-icon color="blue darken-3" left>person_add</v-icon>SIGN-IN</v-btn>
+                <v-btn text href="/logout"><v-icon color="blue darken-3" left>exit_to_app</v-icon>LOGOUT</v-btn>
                 <!-- <v-btn text href='dashboard' v-show='this.$parent.isLoggedIn'><v-icon color="amber darken-3" left>dashboard</v-icon>MY DASHBOARD</v-btn> -->
                 <!-- <v-btn text @click="logout" v-show='this.$parent.isLoggedIn'><v-icon color="amber darken-3" left>exit_to_app</v-icon>LOGOUT</v-btn> -->
             </v-toolbar-items>
