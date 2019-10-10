@@ -13,7 +13,12 @@
 
 Route::any('{all}', function () {
     return view('welcome');
-})->where(['all' => '^(?!login).*$']);
+})->where(['all' => '^(?!log).*$']);
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
 
 //Socialite Google Log in
 Route::get('login/google', 'Auth\LoginController@redirectToProvider')
@@ -22,3 +27,4 @@ Route::get('login/google', 'Auth\LoginController@redirectToProvider')
 Route::get('login/google/callback', 'Auth\LoginController@handleProviderCallback')
     ->name('login.callback')
     ->where('driver', implode('|', config('auth.socialite.drivers')));
+

@@ -91,3 +91,13 @@ const app = new Vue({
   }),
 }).$mount('#app');
 
+// Add a request interceptor to axios
+axios.interceptors.request.use(function (config) {
+  let authToken = localStorage.getItem('user-token') || ''
+  if (authToken) {
+      config.headers['Authorization'] = `Bearer ${authToken}`
+  }   
+  return config;
+}, function (error) {
+  return Promise.reject(error);
+});
