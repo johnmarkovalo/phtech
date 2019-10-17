@@ -3,7 +3,7 @@ window.Vue = require('vue');
 
 // import moment from 'moment';
 // import swal from 'sweetalert2'
-// import VueProgressBar from 'vue-progressbar'
+import VueProgressBar from 'vue-progressbar'
 import VueRouter from 'vue-router'
 import {routes} from './routes';
 import Vuetify from 'vuetify'
@@ -24,13 +24,13 @@ import colors from 'vuetify/es5/util/colors'
 
 const opts = {
   theme: {
-    dark: true,
+    dark: false,
     themes: {
       light: {
-        primary: colors.amber.darken3
+        primary: colors.blue.darken3
       },
       dark: {
-        primary: colors.amber.darken3
+        primary: colors.blue.darken3
       }
     }
   },
@@ -42,12 +42,12 @@ const opts = {
 Vue.use(Vuetify)
 Vue.use(VueRouter)
 
-// Vue.use(VueProgressBar, {
-//   color: '#FF8F00',
-//   thickness: '7px',
-//   failedColor: 'red',
-//   height: '3px'
-// })
+Vue.use(VueProgressBar, {
+  color: '#FF8F00',
+  thickness: '7px',
+  failedColor: 'red',
+  height: '3px'
+})
 
 // window.swal = swal;
 // const toast = swal.mixin({
@@ -75,7 +75,9 @@ Vue.use(VueRouter)
 // });
 
 Vue.component('App', require('./components/App.vue').default);
+Vue.component('Event', require('./components/main/EventTemplate.vue').default);
 import App from './components/App.vue'
+import Event from './components/main/EventTemplate.vue'
 // Vue.component('Home', require('./components/main/Home.vue').default);
 // import Home from './components/main/Home.vue'
 
@@ -85,6 +87,7 @@ const app = new Vue({
   router,
   components: {
     'App' : App,
+    'Event' : Event,
   },
   data: () => ({
      

@@ -1,11 +1,11 @@
 <template>
   <v-layout row>
       <v-flex col-12 >
-          <v-card class="elevation-0 transparent">
+          <v-card>
             <!-- Header -->
-              <v-toolbar class="elevation-0 transparent">
-                <v-icon color="primary" x-large>dashboard</v-icon>
-                <v-toolbar-title class="display-2">Dashboard</v-toolbar-title>
+              <v-toolbar color="amber darken-3">
+                <v-icon color="white" medium>dashboard</v-icon>
+                <v-toolbar-title>Dashboard</v-toolbar-title>
                 <v-spacer></v-spacer>
               </v-toolbar>
               <v-card-text>

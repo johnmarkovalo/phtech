@@ -1,19 +1,42 @@
 <template>
     <div class="container-fluid pa-0 pb-2">
         <v-app-bar hide-on-scroll app>
-            <v-img src="img/Phtech.png" max-width="200px" alt="avatar"/>
+            <v-img v-show="!type == 'admin'" src="img/Phtech.png" max-width="200px" alt="avatar"/>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
-                <v-btn text href="/"><v-icon color="blue darken-3" left>home</v-icon>HOME</v-btn>
-                <v-btn text href="/about"><v-icon color="blue darken-3" left>info</v-icon>ABOUT</v-btn>
-                <v-btn text href="/communities"><v-icon color="blue darken-3" left>group</v-icon>COMMMUNITIES</v-btn>
-                <v-btn text href="/news"><v-icon color="blue darken-3" left>fas fa-newspaper</v-icon>NEWS</v-btn>
-                <v-btn text href="/event"><v-icon color="blue darken-3" left>event_note</v-icon>EVENTS</v-btn>
-                <v-btn text href="/signin"><v-icon color="blue darken-3" left>person_add</v-icon>SIGN-IN</v-btn>
-                <v-btn text href="/logout"><v-icon color="blue darken-3" left>exit_to_app</v-icon>LOGOUT</v-btn>
-                <!-- <v-btn text href='dashboard' v-show='this.$parent.isLoggedIn'><v-icon color="amber darken-3" left>dashboard</v-icon>MY DASHBOARD</v-btn> -->
-                <!-- <v-btn text @click="logout" v-show='this.$parent.isLoggedIn'><v-icon color="amber darken-3" left>exit_to_app</v-icon>LOGOUT</v-btn> -->
+                <v-btn text class="font-weight-bold blue--text" href="/">HOME</v-btn>
+                <v-btn text class="font-weight-bold blue--text" href="/about">ABOUT</v-btn>
+                <v-btn text class="font-weight-bold blue--text" href="/dashboard">COMMMUNITIES</v-btn>
+                <v-btn text class="font-weight-bold blue--text" href="/news">NEWS</v-btn>
+                <v-btn text class="font-weight-bold blue--text" href="/event">EVENTS</v-btn>
+                <v-btn text class="font-weight-bold blue--text" v-show='!this.isLoggedIn' href="/signin">SIGN-IN</v-btn>
+                <v-btn text class="font-weight-bold blue--text" v-show='!this.isLoggedIn' href="/signup">SIGN-up</v-btn>
+                <!-- <v-btn text class="font-weight-bold blue--text" v-show='this.isLoggedIn' @click="logout">LOGOUT</v-btn> -->
             </v-toolbar-items>
+            <v-menu transition="slide-x-reverse-transition" offset-y>
+                <template v-slot:activator="{ on }">
+                <v-btn text class="font-weight-bold blue--text" v-on="on">
+                    <v-avatar>
+                        <img src="https://cdn.vuetifyjs.com/images/john.jpg" alt="John">
+                    </v-avatar>
+                    <v-icon>keyboard_arrow_down</v-icon>
+                </v-btn>
+                </template>
+                <v-list>
+                    <v-list-item ripple="ripple" href="/profile">
+                        <v-icon color="primary" right>account_circle</v-icon>
+                        <v-list-item-content>
+                        <v-list-item-title>My Profile</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item ripple="ripple" @click="logout">
+                        <v-icon color="primary" right>exit_to_app</v-icon>
+                        <v-list-item-content>
+                        <v-list-item-title>Logout</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
         </v-app-bar>
         <main class="pt-5 mt-5 pb-0">
            <router-view class="mt-5" name="main"></router-view>
@@ -23,33 +46,32 @@
 <script>
     export default {
         data: () => ({
-            // cashier: false,
-            // branch_name: ''
+            isLoggedIn : null,
+            type: null,
         }),
         methods:{
-            // logout(){
-            //     localStorage.clear();
-            //     window.location.replace('/')
-            // },
-            // refresh(){
-            //     setTimeout(function()
-            //     {
-            //         localStorage.clear();
-            //         window.location.replace('/')
-            //     },30000)
-            // }
+            logout() {
+                this.loading = true
+                axios.post('api/logout')   
+                .then( response => { 
+                    localStorage.clear();
+                    // Redirect user
+                    window.location.reload()
+                })
+                .catch( error => { alert(error)})
+                // .finally( x => { this.$router.push('/') })
+            }
+        },
+        computed: {
+
+        },
+        mounted(){
+            this.isLoggedIn = localStorage.getItem('user-id')
+            this.type = localStorage.getItem('user-type')
+            
         },
         created(){
-            // axios.post('/api/roles');
-            // if (localStorage.getItem('type') == 'cashier')
-            // {
-            //     this.cashier = true
-            //     this.branch_name = 'cashier/'+localStorage.getItem('branch_name').replace(' ', '_')
-            // }
-            
-            // this.refresh()
-            // document.addEventListener('click', this.refresh)
-            // document.addEventListener('mousemove', this.refresh)
+            // console.log(localStorage.getItem('user-id'));
         }
     }
 </script>

@@ -2,8 +2,6 @@
 
 use Illuminate\Http\Request;
 
-Route::group(['middleware' => ['json.response']], function () {
-    // public routes
     Route::post('/login', 'AuthController@login')->name('login.api');
     Route::post('/register', 'AuthController@register')->name('register.api');
 
@@ -14,7 +12,7 @@ Route::group(['middleware' => ['json.response']], function () {
             return $request->user();
         });
         // Logout
-        Route::get('/logout', 'AuthController@logout')->name('logout');
+        Route::post('/logout', 'AuthController@logout')->name('logout');
         
         // Item
         Route::get('/item', 'ItemController@index');
@@ -37,5 +35,4 @@ Route::group(['middleware' => ['json.response']], function () {
         Route::get('/request', 'RequestController@index');
         Route::post('/request', 'RequestController@store');
     });
-});
 

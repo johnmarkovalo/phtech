@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-use Socialite;
-use App\User;
 
 class LoginController extends Controller
 {
@@ -27,7 +25,7 @@ class LoginController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/dashboard';
+    protected $redirectTo = '/home';
 
     /**
      * Create a new controller instance.
@@ -38,49 +36,4 @@ class LoginController extends Controller
     {
         $this->middleware('guest')->except('logout');
     }
-
-    /**
-     * Redirect the user to the GitHub authentication page.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function redirectToProvider()
-    {
-        return Socialite::driver('google')->redirect();
-    }
-
-    /**
-     * Obtain the user information from provider.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function handleProviderCallback()
-    {
-        try {
-            $user = Socialite::driver('google')->stateless()->user();
-        } catch (\Exception $e) {
-            return redirect()->route('signin');
-        }
-
-        $existingUser = User::where('email', $user->getEmail())->first();
-
-        if ($existingUser) {
-            auth()->login($existingUser, true);
-        } else {
-            $newUser                    = new User;
-            $newUser->provider_name     = 'google';
-            $newUser->provider_id       = $user->getId();
-            $newUser->name              = $user->getName();
-            $newUser->email             = $user->getEmail();
-            $newUser->email_verified_at = now();
-            $newUser->avatar            = $user->getAvatar();
-            $newUser->save();
-
-            auth()->login($newUser, true);
-        }
-
-        return redirect($this->redirectPath());
-    }
-
-    
 }

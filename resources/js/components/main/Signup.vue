@@ -1,0 +1,93 @@
+<template>
+    <div class="container fluid">
+        <v-row justify="center" align="center">
+            <v-col xs="12" md="10" lg="10" justify="center" align="center">
+                <v-card width="600px" :class="{'my-5': $vuetify.breakpoint.mdAndUp}">
+                    <v-toolbar color="primary" dark class="text-center">
+                        <v-toolbar-title class="display-1">User Register</v-toolbar-title>
+                        <v-icon x-large>person_add</v-icon>
+                    </v-toolbar>
+                    <v-card-text>
+                            <v-container grid-list-sm bt-0>
+                                <v-layout row wrap>
+                                    <!-- Name -->
+                                    <v-flex xs12 md12>
+                                        <v-text-field :rules="rules" outlined id="lastname" type="text" label="Last Name" v-model="user.lastname" required autofocus prepend-inner-icon="account_circle"/>
+                                    </v-flex>
+                                    <v-flex xs12 md12>
+                                        <v-text-field :rules="rules" outlined id="firstname" type="text" label="First Name" v-model="user.firstname" required prepend-inner-icon="account_circle" />
+                                    </v-flex>
+                                    <!--Email Address -->
+                                    <v-flex xs12 md12>
+                                        <v-text-field outlined id="address" type="text" label="Email" v-model="user.email" required prepend-inner-icon="alternate_email"/>
+                                    </v-flex>
+                                    <!-- Password -->
+                                    <v-flex xs12 md12>
+                                        <v-text-field :rules="rules" outlined id="password" :type="show1 ? 'text' : 'password'" @click:append="show1 = !show1" :append-icon="show1 ? 'visibility' : 'visibility_off'" label="Password" v-model="user.password" required prepend-inner-icon="lock"/>
+                                    </v-flex>
+                                </v-layout>
+                            </v-container>
+                            <v-row justify="center">
+                                <v-col xs="12" md="12" justify="center">
+                                    <v-btn pa-1 class="white--text" :loading="loading" block x-large rounded color="green" @click="register">Register</v-btn>
+                                </v-col>
+                            </v-row>
+                    </v-card-text>
+                </v-card>
+            </v-col>
+        </v-row>
+    </div>
+</template>
+<script>
+export default {
+    data() {
+        return {
+            loading: false,
+            show1: false,
+            user: { password: null, lastname: null, firstname: null, email: null,},
+            rules: [v => !!v || "The input is required"],
+        }
+    },
+    methods: {
+        register() {
+            this.loading = true
+            axios.post('api/register', { 
+                password: this.user.password, 
+                name: this.user.firstname + " " + this.user.lastname, 
+                email: this.user.email, 
+                user_type: "user"
+            })   
+            .then( response => { 
+                axios.post('api/login', { 
+                    email: this.user.email, password: this.user.password
+                })
+                .then( response => {
+                    var token = response.data.token
+                    var id = response.data.user
+                    var type = response.data.type
+                    // Create a local storage item
+                    localStorage.setItem('user-token', token)
+                    localStorage.setItem('user-id', id)
+                    localStorage.setItem('user-type', type)
+                    // Redirect user
+                    this.$router.push('info')
+                })
+                .catch( error => { alert(error.errors)})
+                .finally( x => {})
+            })
+            .catch( error => { alert(error)})
+            .finally( x => { this.loading = false})
+        }
+    },
+    created(){
+        
+    },
+    beforeRouteEnter (to, from, next) { 
+        if (localStorage.getItem('user-id')) {
+            return next('dashboard');
+        }
+
+        next();
+    }
+}
+</script>

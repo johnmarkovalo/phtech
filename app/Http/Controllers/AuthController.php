@@ -6,21 +6,18 @@ use Illuminate\Http\Request;
 
 use Hash;
 use App\User;
-use App\UserType;
-use App\UserInformation;
+use App\Information;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
     public function register (Request $request) {
         $validator = Validator::make($request->all(), [ 
-            'username' => 'required|string|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
-            'user_type' => 'required|string',
-            'firstname' => 'required|string|max:255',
-            'lastname' => 'required|string|max:255',
-            'address' => 'required|string|max:255',
-            'phone_number' => 'required|string|max:10',
+            'password' => 'required|string|min:6',
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|max:255',
+            'user_type' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()){
@@ -28,20 +25,19 @@ class AuthController extends Controller
         }
 
         $request['password'] = Hash::make($request['password']);
-        $user_type_id = UserType::where('name', $request['user_type'])->first()->id;
-        $user = User::create(array_merge($request->toArray(), ['user_type_id' => $user_type_id]));
-        $user_information = UserInformation::create(array_merge($request->toArray(), ['user_id' => $user->id]));
-
+        $user = User::create($request->all());
+        $information = Information::create(array_merge($request->toArray(),["user_id"=>$user->id]));
         $token = $user->createToken('Laravel Password Grant Client')->accessToken;
         return response(['token' => $token], 200);
+
     }
 
     public function login (Request $request) {
-        $user = User::where('username', $request->username)->first();
+        $user = User::where('email', $request->email)->first();
         if ($user) {
             if (Hash::check($request->password, $user->password)) {
                 $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                return response(['token' => $token], 200);
+                return response(['token' => $token, 'user' => $user->id, 'type' => $user->user_type], 200);
             } else {
                 return response("Password missmatch", 422);
             }
