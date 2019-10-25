@@ -73,14 +73,31 @@ export default {
                     sessionStorage.setItem('user-id', id)
                     sessionStorage.setItem('user-type', type)
                     sessionStorage.setItem('user-avatar', avatar)
+
+                    swal.fire({
+                        position: 'top-end',
+                        toast: true,
+                        type: 'success',
+                        title: 'Successfully Logined',
+                        showConfirmButton: false,
+                        timer: 1500
+                        // onClose: () => {
+                        //     window.location.reload()
+                        // }
+
+                    })
                     // Redirect user
-                    this.$router.push('info')
+                    window.location.reload()
+                    
                 })
                 .catch( error => { alert(error.errors)})
                 .finally( x => {})
             })
             .catch( error => { alert(error)})
-            .finally( x => { this.loading = false})
+            .finally( x => { 
+                this.loading = false
+                this.$router.push('info')
+            })
         }
     },
     created(){

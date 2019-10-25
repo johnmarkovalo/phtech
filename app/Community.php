@@ -10,6 +10,10 @@ class Community extends Model
     public $primaryKey = 'id';
     public $timestamps = true;
 
+    protected $casts = [
+        'location' => 'array'
+    ];
+
     protected $fillable = [
         'organizer_id',
         'name',

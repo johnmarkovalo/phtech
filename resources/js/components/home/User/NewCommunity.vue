@@ -41,29 +41,25 @@
                                         <!-- <v-text-field outlined type="text" label="Company" v-model="address" required autofocus prepend-inner-icon="location_on">
                                         </v-text-field> -->
                                         <h2>Search and add a pin</h2>
-                                        <h2 class="teal--text text--lighten-2">
-                                            <gmap-autocomplete
-                                            @place_changed="setPlace">
-                                            </gmap-autocomplete>
-                                        </h2>
+                                        <v-layout row justify-center align-center>
+                                            <v-icon medium color="primary">location_on</v-icon>
+                                            <h2 class="teal--text text--lighten-2">
+                                                <gmap-autocomplete
+                                                @place_changed="setPlace">
+                                                </gmap-autocomplete>
+                                            </h2>
+                                        </v-layout>
                                         <v-layout>
-                                            <GmapMap style="width: 100%; height: 500px;" :zoom="14" :center="center">
+                                            <GmapMap style="width: 100%; height: 500px;" :zoom="25" :center="center" 
+                                                     map-type-id="terrain">
                                             <GmapMarker
                                                 v-if="this.address"
                                                 label="★"
-                                                :position="{
-                                                lat: this.address.geometry.location.lat(),
-                                                lng: this.address.geometry.location.lng(),
-                                                }"
+                                                :draggable="true"
+                                                :position="center"
                                                 />
                                             </GmapMap>
                                         </v-layout>
-                                        <!-- <vuetify-google-autocomplete
-                                            ref="address" id="map" prepend-icon="location_on"
-                                            classname="form-control" placeholder="Please type the address"
-                                            v-on:placechanged="getAddressData" country="ph"
-                                        >
-                                        </vuetify-google-autocomplete> -->
                                     </v-flex>
                                 </v-layout>
                             </v-container>
@@ -190,7 +186,7 @@ export default {
             address: null,
             currentPlace: null,
             description: '',
-            center: { lat: 6.8999964 , lng: 122.0666664 },
+            center: { lat: 6.903975099999999 , lng: 122.07619890000001 },
             tags: [],
             rules: [v => !!v || "The input is required"],
             autoUpdate: true,
@@ -216,7 +212,17 @@ export default {
         },
         setPlace(place) {
             this.address = place;
-            console.log(this.address);
+            this.center = {
+                lat: this.address.geometry.location.lat(),
+                lng: this.address.geometry.location.lng()
+            };
+            this.address = {
+                lat: this.address.geometry.location.lat(),
+                lng: this.address.geometry.location.lng(),
+                name: this.address.name,
+                formatted_address: this.address.formatted_address,
+            }
+            // console.log(this.address);
         },
         retrieveTags() {
             this.loading = true
