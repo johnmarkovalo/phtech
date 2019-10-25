@@ -16,6 +16,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [ 
             'password' => 'required|string|min:6',
             'name' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'firstname' => 'required|string|max:255',
             'email' => 'required|string|max:255',
             'user_type' => 'required|string|max:255',
         ]);
@@ -26,7 +28,7 @@ class AuthController extends Controller
 
         $request['password'] = Hash::make($request['password']);
         $user = User::create($request->all());
-        $information = Information::create(array_merge($request->toArray(),["user_id"=>$user->id]));
+        $information = Information::create(array_merge($request->toArray(),["user_id"=>$user->id, "firstname"=>$request->firstname, "lastname"=>$request->lastname]));
         $token = $user->createToken('Laravel Password Grant Client')->accessToken;
         return response(['token' => $token], 200);
 
@@ -37,7 +39,7 @@ class AuthController extends Controller
         if ($user) {
             if (Hash::check($request->password, $user->password)) {
                 $token = $user->createToken('Laravel Password Grant Client')->accessToken;
-                return response(['token' => $token, 'user' => $user->id, 'type' => $user->user_type], 200);
+                return response(['token' => $token, 'user' => $user->id, 'type' => $user->user_type, 'avatar' => $user->information->avatar], 200);
             } else {
                 return response("Password missmatch", 422);
             }

@@ -22,7 +22,7 @@
                             <v-col xs12 md4>
                             <v-card class="elevation-0 transparent">
                                 <v-card-text class="text-center">
-                                <v-icon size="60px" class="blue--text text--darken-3">event_note</v-icon>
+                                <v-icon size="60px" class="teal--text text--darken-3">event_note</v-icon>
                                 </v-card-text>
                                 <v-card-title primary-title class="layout justify-center">
                                 <div class="headline text-center">Visit Events page for all the <br>Tech Community activities for the year.</div>
@@ -32,7 +32,7 @@
                             <v-col xs12 md4>
                             <v-card class="elevation-0 transparent">
                                 <v-card-text class="text-center">
-                                <v-icon size="60px" class="blue--text text--darken-3">group</v-icon>
+                                <v-icon size="60px" class="teal--text text--darken-3">group</v-icon>
                                 </v-card-text>
                                 <v-card-title primary-title class="layout justify-center">
                                 <div class="headline text-center">Meet and Search for Communities</div>
@@ -42,7 +42,7 @@
                             <v-col xs12 md4>
                             <v-card class="elevation-0 transparent">
                                 <v-card-text class="text-center">
-                                <v-icon size="60px" class="blue--text text--darken-3">accessibility_new</v-icon>
+                                <v-icon size="60px" class="teal--text text--darken-3">accessibility_new</v-icon>
                                 </v-card-text>
                                 <v-card-title primary-title class="layout justify-center">
                                 <div class="headline text-center">Accessible for all</div>

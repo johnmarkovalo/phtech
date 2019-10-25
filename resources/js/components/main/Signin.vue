@@ -1,7 +1,7 @@
 <template>
     <div class="container fluid">
-        <v-layout row>
-            <v-layout xs12 md10 lg10 justify-center>
+        <v-row justify="center" align="center">
+            <v-col xs="12" md="10" lg="10" justify="center" align="center">
                 <v-card width="600px" :class="{'my-5 elevation-3': $vuetify.breakpoint.mdAndUp}">
                     <v-toolbar dark color="primary" class="text-center">
                             <v-toolbar-title class="display-1">User Login</v-toolbar-title>
@@ -23,7 +23,7 @@
 
                                     <v-row justify="center">
                                         <v-col xs="12" md="12" justify="center">
-                                            <v-btn color="green" class="white--text" pa-1 block x-large rounded :loading="loading" @click="login">Login</v-btn>
+                                            <v-btn color="primary" pa-1 block x-large rounded :loading="loading" @click="login">Login</v-btn>
                                         </v-col>
                                     </v-row>
                                 </v-form>
@@ -42,8 +42,8 @@
                         </v-row>
                     </v-card-text>
                 </v-card>
-            </v-layout>
-        </v-layout>
+            </v-col>
+        </v-row>
     </div>
 </template>
 <script>
@@ -66,15 +66,33 @@
                     var token = response.data.token
                     var id = response.data.user
                     var type = response.data.type
+                    var avatar = response.data.avatar
                     // Create a local storage item
-                    localStorage.setItem('user-token', token)
-                    localStorage.setItem('user-id', id)
-                    localStorage.setItem('user-type', type)
+                    sessionStorage.setItem('user-token', token)
+                    sessionStorage.setItem('user-id', id)
+                    sessionStorage.setItem('user-type', type)
+                    sessionStorage.setItem('user-avatar', avatar)
                     // Redirect user
-                    window.location.reload()
-                    
+                    swal.fire({
+                        position: 'top-end',
+                        toast: true,
+                        type: 'success',
+                        title: 'Successfully Logined',
+                        showConfirmButton: false,
+                        timer: 1500
+                        // onClose: () => {
+                        //     window.location.reload()
+                        // }
+
+                    })
+                        window.location.reload()
                 })
-                .catch( error => { alert(error)})
+                .catch( error => { 
+                    // this.$Progress.fail();
+                    swal.fire("Failed!",
+                    "Incorrect Username/Password",
+                    "error")
+                })
                 .finally( x => {
                     this.loading = false
                     if (type == 'admin'){
@@ -87,8 +105,8 @@
             }
         },
         beforeRouteEnter (to, from, next) { 
-            if (localStorage.getItem('user-id')) {
-                if (localStorage.getItem('user-type') == 'admin'){
+            if (sessionStorage.getItem('user-id')) {
+                if (sessionStorage.getItem('user-type') == 'admin'){
                     return next('dashboard');
                 }
                 else{

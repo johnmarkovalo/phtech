@@ -2,35 +2,36 @@ require('./bootstrap');
 window.Vue = require('vue');
 
 // import moment from 'moment';
-// import swal from 'sweetalert2'
+import swal from 'sweetalert2'
 import VueProgressBar from 'vue-progressbar'
 import VueRouter from 'vue-router'
 import {routes} from './routes';
 import Vuetify from 'vuetify'
 import Vue from 'vue'
+import '@mdi/font/css/materialdesignicons.css'
 import 'vuetify/dist/vuetify.min.css'
 import 'vue/dist/vue.js'
 import colors from 'vuetify/es5/util/colors'
 // import VueMaterial from 'vue-material'
 // import '../stylus/main.styl'
 // import 'vue-material/dist/vue-material.min.css'
-// import {CldContext, CldImage, CldVideo, CldTransformation} from 'cloudinary-vue'
-// import Cloudinary from 'cloudinary-vue';
-// Vue.use(Cloudinary, {
-//   configuration: {
-//     cloudName: "tim0923"
-//   }
-// });
+import {CldContext, CldImage, CldVideo, CldTransformation} from 'cloudinary-vue'
+import Cloudinary from 'cloudinary-vue';
+Vue.use(Cloudinary, {
+  configuration: {
+    cloudName: "mactimestwo"
+  }
+});
 
 const opts = {
   theme: {
-    dark: false,
+    dark: true,
     themes: {
       light: {
-        primary: colors.blue.darken3
+        primary: colors.teal.lighten2
       },
       dark: {
-        primary: colors.blue.darken3
+        primary: colors.teal.lighten2
       }
     }
   },
@@ -49,15 +50,16 @@ Vue.use(VueProgressBar, {
   height: '3px'
 })
 
-// window.swal = swal;
-// const toast = swal.mixin({
-//     toast: true,
-//     position: 'top-end',
-//     showConfirmButton: false,
-//     timer: 3000  
-// });
+window.toast = toast;
 
-// window.toast = toast;
+window.swal = swal;
+const toast = swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000  
+});
+
 
 // window.custEvent = new Vue();
 
@@ -75,9 +77,8 @@ Vue.use(VueProgressBar, {
 // });
 
 Vue.component('App', require('./components/App.vue').default);
-Vue.component('Event', require('./components/main/EventTemplate.vue').default);
 import App from './components/App.vue'
-import Event from './components/main/EventTemplate.vue'
+// import Event from './components/main/EventTemplate.vue'
 // Vue.component('Home', require('./components/main/Home.vue').default);
 // import Home from './components/main/Home.vue'
 
@@ -87,20 +88,8 @@ const app = new Vue({
   router,
   components: {
     'App' : App,
-    'Event' : Event,
   },
   data: () => ({
      
   }),
 }).$mount('#app');
-
-// Add a request interceptor to axios
-axios.interceptors.request.use(function (config) {
-  let authToken = localStorage.getItem('user-token') || ''
-  if (authToken) {
-      config.headers['Authorization'] = `Bearer ${authToken}`
-  }   
-  return config;
-}, function (error) {
-  return Promise.reject(error);
-});

@@ -13,7 +13,7 @@
             }
         },
         mounted(){
-            // this.isLoggedIn = localStorage.getItem('user-id')
+            // this.isLoggedIn = sessionStorage.getItem('user-id')
             
         }
     }

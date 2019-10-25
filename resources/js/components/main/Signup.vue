@@ -29,7 +29,7 @@
                             </v-container>
                             <v-row justify="center">
                                 <v-col xs="12" md="12" justify="center">
-                                    <v-btn pa-1 class="white--text" :loading="loading" block x-large rounded color="green" @click="register">Register</v-btn>
+                                    <v-btn pa-1 :loading="loading" block x-large rounded color="primary" @click="register">Register</v-btn>
                                 </v-col>
                             </v-row>
                     </v-card-text>
@@ -53,7 +53,9 @@ export default {
             this.loading = true
             axios.post('api/register', { 
                 password: this.user.password, 
-                name: this.user.firstname + " " + this.user.lastname, 
+                name: this.user.firstname + " " + this.user.lastname,
+                lastname: this.user.lastname,
+                firstname: this.user.firstname,
                 email: this.user.email, 
                 user_type: "user"
             })   
@@ -65,10 +67,12 @@ export default {
                     var token = response.data.token
                     var id = response.data.user
                     var type = response.data.type
+                    var avatar = response.data.avatar
                     // Create a local storage item
-                    localStorage.setItem('user-token', token)
-                    localStorage.setItem('user-id', id)
-                    localStorage.setItem('user-type', type)
+                    sessionStorage.setItem('user-token', token)
+                    sessionStorage.setItem('user-id', id)
+                    sessionStorage.setItem('user-type', type)
+                    sessionStorage.setItem('user-avatar', avatar)
                     // Redirect user
                     this.$router.push('info')
                 })
@@ -83,7 +87,7 @@ export default {
         
     },
     beforeRouteEnter (to, from, next) { 
-        if (localStorage.getItem('user-id')) {
+        if (sessionStorage.getItem('user-id')) {
             return next('dashboard');
         }
 

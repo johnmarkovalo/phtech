@@ -8,13 +8,15 @@ import Event from './components/main/Event.vue'
 import Signin from './components/main/Signin.vue'
 import Signup from './components/main/Signup.vue'
 import Home from './components/main/Home.vue'
-import Admin from './components/main/Admin.vue'
 //User
-import Dashboard from './components/home/Dashboard.vue'
-import Information from './components/home/Information.vue'
-import Events from './components/home/Event.vue'
+import Information from './components/home/User/Information.vue'
+import Profile from './components/home/User/Profile.vue'
 //Admin
-import AdminDashboard from './components/admin/AdminDashboard.vue'
+import Dashboard from './components/home/Admin/Dashboard.vue'
+import UserList from './components/home/Admin/Users.vue'
+import Events from './components/home/Admin/EventList.vue'
+import Community from './components/home/Admin/CommunityList.vue'
+import Tech from './components/home/Admin/Technology.vue'
 
 export const routes = [
     { path: '/', name: 'main', component: Main, 
@@ -28,14 +30,15 @@ export const routes = [
             { path: '/signup', name: 'Signup', components: {main: Signup}},
             { path: '/home', name: 'home', components: {main: Home},
                 children: [
+                    //Admin
                     { path: '/dashboard', name: 'dashboard', components: {home: Dashboard}},
+                    { path: '/technology', name: 'technology', components: {home: Tech}},
+                    { path: '/community', name: 'community', components: {home: Community}},
+                    { path: '/users', name: 'users', components: {home: UserList}},
+                    { path: '/events', name: 'events', components: {home: Events}},
+                    //User
+                    { path: '/profile', name: 'profile', components: {home: Profile}},
                     { path: '/info', name: 'information', components: {home: Information}},
-                    { path: '/events', name: 'event', components: {home: Events}},
-                ]
-            },
-            { path: '/admin', name: 'admin', components: {main: Admin},
-                children: [
-                    { path: '/admin/dashboard', name: 'admindashboard', components: {admin: AdminDashboard}},
                 ]
             },
         ]

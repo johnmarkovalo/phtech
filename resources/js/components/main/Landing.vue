@@ -1,96 +1,25 @@
 <template>
-    <div>
-        <!-- Banner -->
+    <div class="mt-n1">
         <section>
-            <v-container fluid cols="12" md="12" lg="12" ma-0 pa-0>
-                <v-carousel height="100%" width="100%" cycle interval="3500" :show-arrows="false" hide-delimiters  reverse-transition="fade" transition="fade">
-                    <v-carousel-item><img src="/img/carousel/1.png" alt="img"></v-carousel-item>
-                    <v-carousel-item><img src="/img/carousel/2.png" alt="img"></v-carousel-item>
-                    <v-carousel-item><img src="/img/carousel/3.png" alt="img"></v-carousel-item>
-                    <v-carousel-item><img src="/img/carousel/4.png" alt="img"></v-carousel-item>
-                    <v-carousel-item><img src="/img/carousel/5.png" alt="img"></v-carousel-item>
-                    <v-carousel-item><img src="/img/carousel/6.png" alt="img"></v-carousel-item>
-                </v-carousel>
+            <v-container fluid pa-0 fill-heigh>
+                <v-img src="img/carousel/1.png" max-height="100vw" max-width="100%" gradient="to top right, rgba(23,22,22,.4), rgba(23,22,22,.4)">
+                    <v-layout align-start column fill-height justify-center :class="{'ml-3 pl-3': $vuetify.breakpoint.smAndDown, 'ml-12 pl-12': $vuetify.breakpoint.mdAndUp}" >
+                    <h1 :class="{'teal--text text--lighten-2 title font-weight-thin mb-3': $vuetify.breakpoint.smAndDown, 
+                                 'teal--text text--lighten-2 display-3 font-weight-thin mb-3': $vuetify.breakpoint.mdAndUp}">
+                                EXPERIENCE THE BEST <br>
+                                EVENTS AND MEET <br>
+                                WITH AWESOME PEOPLE <br>
+                                IN YOUR COMMUNITY <br>
+                    </h1>
+                    <v-btn rounded :class="{'mb-2 black--text ml-3 pl-3': $vuetify.breakpoint.smAndDown, 'mb-4 black--text': $vuetify.breakpoint.mdAndUp}" 
+                        color="primary" bottom center dark round :x-large="$vuetify.breakpoint.mdAndUp" 
+                        :small="$vuetify.breakpoint.smAndDown">
+                        SIGN-UP
+                    </v-btn>
+                    </v-layout>
+                </v-img>
             </v-container>
         </section>
-         <!-- Sayings With Icon -->
-        <section>
-            <v-row>
-                <v-col xs12>
-                    <v-container grid-list-xl>
-                        <v-row align-start>
-                            <v-col xs12 md4>
-                            <v-card class="elevation-0 transparent">
-                                <v-card-text class="text-center">
-                                <v-icon size="60px" class="blue--text text--darken-3">event_note</v-icon>
-                                </v-card-text>
-                                <v-card-title primary-title class="layout justify-center">
-                                <div class="headline text-center">Visit Events page for all the <br>Tech Community activities for the year.</div>
-                                </v-card-title>
-                            </v-card>
-                            </v-col>
-                            <v-col xs12 md4>
-                            <v-card class="elevation-0 transparent">
-                                <v-card-text class="text-center">
-                                <v-icon size="60px" class="blue--text text--darken-3">group</v-icon>
-                                </v-card-text>
-                                <v-card-title primary-title class="layout justify-center">
-                                <div class="headline text-center">Meet and Search for Communities</div>
-                                </v-card-title>
-                            </v-card>
-                            </v-col>
-                            <v-col xs12 md4>
-                            <v-card class="elevation-0 transparent">
-                                <v-card-text class="text-center">
-                                <v-icon size="60px" class="blue--text text--darken-3">accessibility_new</v-icon>
-                                </v-card-text>
-                                <v-card-title primary-title class="layout justify-center">
-                                <div class="headline text-center">Accessible for all</div>
-                                </v-card-title>
-                            </v-card>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                </v-col>
-            </v-row>
-        </section>
-
-
-        <!-- Footer -->
-        <div id="footer" height="350px" padless absolute color="black">
-            <v-col cols="12">
-                <v-row  justify-center>
-                    <v-col cols="12" md="12">
-                        <v-card class="elevation-0 transparent">
-                            <v-card-text class="text-center">
-                                <v-btn class="mx-2" href="https://www.facebook.com/securelifeintlcorp" icon>
-                                    <v-icon size="22px">fab fa-facebook</v-icon>
-                                </v-btn>
-                                <v-btn class="mx-2" icon>
-                                    <v-icon size="22px">fab fa-twitter</v-icon>
-                                </v-btn>
-                                <v-btn class="mx-2" icon>
-                                    <v-icon size="22px">fab fa-instagram</v-icon>
-                                </v-btn>
-                                <v-btn class="mx-2" icon>
-                                    <v-icon size="22px">fab fa-youtube</v-icon>
-                                </v-btn>
-                            </v-card-text>
-                        </v-card>
-                    </v-col>
-                </v-row>
-                <v-row justify-center>
-                        <v-col cols="12" md="12">
-                            <v-card class="elevation-0 transparent">
-                            <v-card-text class="text-center">
-                                <span>&copy; phtechpark 2019</span><br>
-                                <p>Made With <v-icon class="red--text">favorite</v-icon> by <a href="https://www.dreamersinfo.com" target="_blank">Dreame.rs</a></p>
-                            </v-card-text>
-                        </v-card>
-                        </v-col>
-                </v-row>
-            </v-col>
-        </div>
     </div>
 </template>
 <script>

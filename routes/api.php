@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 
     Route::post('/login', 'AuthController@login')->name('login.api');
     Route::post('/register', 'AuthController@register')->name('register.api');
+    Route::get('/technology', 'TechnologyController@index');
 
     // private routes
     Route::middleware('auth:api')->group(function () {
@@ -14,18 +15,20 @@ use Illuminate\Http\Request;
         // Logout
         Route::post('/logout', 'AuthController@logout')->name('logout');
         
-        // Item
-        Route::get('/item', 'ItemController@index');
-        Route::get('/item/{item}', 'ItemController@show');
-        Route::post('/item', 'ItemController@store');
-        Route::put('/item/{item}', 'ItemController@update');
-        Route::delete('/item/{item}', 'ItemController@destroy');
+        // Technology
+       
+        Route::post('/technology', 'TechnologyController@store');
+        Route::put('/technology/{technology}', 'TechnologyController@update');
+        Route::delete('/technology/{technology}', 'TechnologyController@destroy');
+        
+        // Information
+        Route::get('/information', 'InformationController@index');
+        // Route::get('/information/{information}', 'InformationController@show');
+        Route::put('/information/{information}', 'InformationController@update');
+        Route::delete('/information/{information}', 'InformationController@destroy');
 
-        // Customer
-        Route::get('/customer', 'CustomerController@index');
-        Route::post('/customer', 'CustomerController@store');
-        Route::put('/customer/{customer}', 'CustomerController@update');
-        Route::delete('/customer/{customer}', 'CustomerController@destroy');
+        //Information Technology
+        Route::put('/infotech/{information}', 'InformationController@infotech');
 
         // Request
         Route::get('/request/customer-usernames', 'RequestController@usernames');

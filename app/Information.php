@@ -12,9 +12,16 @@ class Information extends Model
 
     protected $fillable = [
         'user_id',
+        'lastname',
+        'firstname',
         'affiliation',
-        'position'
+        'position',
+        'avatar'
     ];
+
+    public function user() {
+        return $this->belongsTo('App\User');
+    }
 
     public function info_tech() {
         return $this->hasMany('App\info_tech', 'info_id', 'id');

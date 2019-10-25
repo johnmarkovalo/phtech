@@ -13,7 +13,7 @@
                 </v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item ripple="ripple" exact to="technologies">
+            <v-list-item ripple="ripple" exact to="technology">
               <v-list-item-action>
                 <v-icon>fas fa-tags</v-icon>
               </v-list-item-action>
@@ -30,7 +30,7 @@
                 <v-list-item-title class="subheading font-weight-regular">Events</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item ripple="ripple" exact to="">
+            <v-list-item ripple="ripple" exact to="users">
               <v-list-item-action>
                 <v-icon>account_circle</v-icon>
               </v-list-item-action>
@@ -38,7 +38,7 @@
                 <v-list-item-title class="subheading font-weight-regular">Users</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item ripple="ripple" exact to="">
+            <v-list-item ripple="ripple" exact to="community">
               <v-list-item-action>
                 <v-icon>group</v-icon>
               </v-list-item-action>
@@ -83,10 +83,13 @@
     methods:{
     },
     created() {
-      this.type = (localStorage.getItem('user-type'));
+      this.type = (sessionStorage.getItem('user-type'));
+      console.log(sessionStorage.getItem('user-type'));
+      console.log(sessionStorage.getItem('user-token'));
+      
     },
     beforeRouteEnter (to, from, next) { 
-        if (!localStorage.getItem('user-id')) {
+        if (!sessionStorage.getItem('user-id')) {
             return next('signin');
         }
 

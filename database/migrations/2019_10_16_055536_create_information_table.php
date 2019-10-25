@@ -16,8 +16,11 @@ class CreateInformationTable extends Migration
         Schema::create('information', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->unsigned();
+            $table->string('lastname')->nullable();
+            $table->string('firstname')->nullable();
             $table->string('affiliation')->nullable();
             $table->string('position')->nullable();
+            $table->string('avatar')->default('phtechpark/profiles/default');
             $table->timestamps();
 
             $table->foreign('user_id')
