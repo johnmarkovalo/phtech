@@ -103,7 +103,7 @@
                           <v-stepper-content step="3">
                               <p class="display-1">Congratulations! Please Save The information</p>
 
-                              <v-btn x-large rounded color="success" @click="SaveInfoAndTech()">
+                              <v-btn x-large rounded color="success" :loading="loading" @click="SaveInfoAndTech()">
                                 Save Information
                               </v-btn>
 

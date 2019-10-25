@@ -39,6 +39,7 @@ class TechnologyController extends Controller
     public function index (Request $request) {
         $technology = Technology::all();
         return response(['tags' => $technology], 200);
+        // return 'fuck';
     }
 
 }

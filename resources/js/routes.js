@@ -10,6 +10,7 @@ import Signup from './components/main/Signup.vue'
 import Home from './components/main/Home.vue'
 //User
 import Information from './components/home/User/Information.vue'
+import NewComm from './components/home/User/NewCommunity.vue'
 import Profile from './components/home/User/Profile.vue'
 //Admin
 import Dashboard from './components/home/Admin/Dashboard.vue'
@@ -39,6 +40,7 @@ export const routes = [
                     //User
                     { path: '/profile', name: 'profile', components: {home: Profile}},
                     { path: '/info', name: 'information', components: {home: Information}},
+                    { path: '/newcommunity', name: 'newcommunity', components: {home: NewComm}},
                 ]
             },
         ]

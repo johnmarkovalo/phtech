@@ -57,7 +57,7 @@
               font-size: 7px;
             }
               /* For V-Cloak */
-            [v-cloak] > * { display: none; }
+            /* [v-cloak] > * { display: none; }
             [v-cloak]::before {
               content: '';
               position: absolute;
@@ -84,7 +84,7 @@
             @keyframes spin {
               0% { transform: rotate(0deg); }
               100% { transform: rotate(360deg); }
-            }
+            } */
         </style>
         <title>Philippine Tech Community</title>
     </head>

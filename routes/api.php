@@ -16,7 +16,6 @@ use Illuminate\Http\Request;
         Route::post('/logout', 'AuthController@logout')->name('logout');
         
         // Technology
-       
         Route::post('/technology', 'TechnologyController@store');
         Route::put('/technology/{technology}', 'TechnologyController@update');
         Route::delete('/technology/{technology}', 'TechnologyController@destroy');
@@ -30,12 +29,13 @@ use Illuminate\Http\Request;
         //Information Technology
         Route::put('/infotech/{information}', 'InformationController@infotech');
 
-        // Request
-        Route::get('/request/customer-usernames', 'RequestController@usernames');
-        Route::get('/request/item-codes', 'RequestController@item_codes');
-        Route::get('/request/{request_obj}/details', 'RequestController@details');
-        Route::put('/request/{request_obj}/status', 'RequestController@request_status');
-        Route::get('/request', 'RequestController@index');
-        Route::post('/request', 'RequestController@store');
+        // Community
+        Route::get('/community', 'CommunityController@index');
+        Route::post('/community', 'CommunityController@store');
+        Route::put('/community/{community}', 'CommunityController@update');
+        Route::delete('/community/{community}', 'RequestController@destroy');
+
+        //Information Technology
+        Route::put('/infotech/{information}', 'InformationController@infotech');
     });
 

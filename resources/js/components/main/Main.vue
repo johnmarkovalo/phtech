@@ -11,8 +11,8 @@
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/event">EVENTS</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/signin">SIGN-IN</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/signup">SIGN-up</v-btn>
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/dashboard"><v-icon left dark>mdi-plus</v-icon> COMMMUNITIES</v-btn>
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/event"><v-icon left dark>mdi-plus</v-icon> EVENTS</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/newcommunity"><v-icon left dark>mdi-plus</v-icon> COMMMUNITIES</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/newevent"><v-icon left dark>mdi-plus</v-icon> EVENTS</v-btn>
                 <!-- <v-btn text class="font-weight-bold teal--text" v-show='isLoggedIn' @click="logout">LOGOUT</v-btn> -->
             </v-toolbar-items>
             <v-menu transition="slide-x-reverse-transition" offset-y :nudge-width="200">

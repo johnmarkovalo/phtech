@@ -63,7 +63,7 @@
                         <v-col
                           v-for="card in cards"
                           :key="card.title"
-                          :cols="card.flex"
+                          cols="12" lg="3" xl="3" md="3"
                         >
                           <v-card>
                             <v-img
@@ -72,8 +72,12 @@
                               gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
                               height="200px"
                             >
-                              <v-card-title v-text="card.title"></v-card-title>
                             </v-img>
+                            <v-card-text> 
+                              <p class="title teal--text text--lighten-2">Monday Tuesday</p>
+                              <p class="headline white--text">Top western road trips</p>
+                              <p class="subtitle-1">Don Alfaro St, Tetuan Zamboanga City</p>
+                            </v-card-text>
 
                             <v-card-actions>
                               <v-spacer></v-spacer>
@@ -166,10 +170,10 @@
   export default {
     data: () => ({
       cards: [
-        { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 3 },
-        { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 3 },
-        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 3 },
-        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 3 },
+        { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg'},
+        { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg'},
+        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg'},
+        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg'},
       ],
       tags: [],
       selected: [],
@@ -377,12 +381,12 @@
           ? 'th'
           : ['th', 'st', 'nd', 'rd', 'th', 'th', 'th', 'th', 'th', 'th'][d % 10]
       },
-       retrieveTags() {
-          axios.get('api/technology')
-          .then( response => {
-              this.tags = response.data.tags
-          })
-          .catch( error => { alert(error)})
+      retrieveTags() {
+        axios.get('api/technology')
+        .then( response => {
+            this.tags = response.data.tags
+        })
+        .catch( error => { alert(error)})
       },
       remove (item) {
           const index = this.selected.indexOf(item.name)
@@ -390,6 +394,7 @@
       },
     },
     created() {
+      this.retrieveTags();
       this.focus = new Date().toLocaleString();
     },
   }
