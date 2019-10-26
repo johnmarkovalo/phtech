@@ -235,6 +235,7 @@ export default {
         },
         SaveCommunity(){
             this.loading = true
+            var name = null;
             // Create Community
             axios.post('api/community' , { 
                 name: this.name, 
@@ -244,7 +245,8 @@ export default {
             })
             .then( response => { 
                 var id = response.data.community.id
-                axios.put('api/communitytech/' + id, { 
+                name = response.data.community.name
+                axios.put('api/communitytech' + id, { 
                     id: id,
                     tags: this.selected
                 })
@@ -263,7 +265,7 @@ export default {
             .catch( error => { alert(error)})
             .finally( x => { 
                 this.loading = false
-                this.$router.push('community/'+response.data.community.name)
+                this.$router.push('community/'+name.split(' ').join('_'))
             })
         },
         viewaddress(){

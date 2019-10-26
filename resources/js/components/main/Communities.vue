@@ -1,109 +1,109 @@
 <template>
-    <div>
-        <!-- Banner -->
-        <section>
-            <v-container fluid cols="12" md="12" lg="12" ma-0 pa-0>
-                <v-carousel height="100%" width="100%" cycle interval="3500" :show-arrows="false" hide-delimiters  reverse-transition="fade" transition="fade">
-                    <v-carousel-item><img src="/img/carousel/1.png" alt="img"></v-carousel-item>
-                    <v-carousel-item><img src="/img/carousel/2.png" alt="img"></v-carousel-item>
-                    <v-carousel-item><img src="/img/carousel/3.png" alt="img"></v-carousel-item>
-                    <v-carousel-item><img src="/img/carousel/4.png" alt="img"></v-carousel-item>
-                    <v-carousel-item><img src="/img/carousel/5.png" alt="img"></v-carousel-item>
-                    <v-carousel-item><img src="/img/carousel/6.png" alt="img"></v-carousel-item>
-                </v-carousel>
-            </v-container>
-        </section>
-         <!-- Sayings With Icon -->
-        <section>
-            <v-row>
-                <v-col xs12>
-                    <v-container grid-list-xl>
-                        <v-row align-start>
-                            <v-col xs12 md4>
-                            <v-card class="elevation-0 transparent">
-                                <v-card-text class="text-center">
-                                <v-icon size="60px" class="teal--text text--darken-3">event_note</v-icon>
-                                </v-card-text>
-                                <v-card-title primary-title class="layout justify-center">
-                                <div class="headline text-center">Visit Events page for all the <br>Tech Community activities for the year.</div>
-                                </v-card-title>
-                            </v-card>
-                            </v-col>
-                            <v-col xs12 md4>
-                            <v-card class="elevation-0 transparent">
-                                <v-card-text class="text-center">
-                                <v-icon size="60px" class="teal--text text--darken-3">group</v-icon>
-                                </v-card-text>
-                                <v-card-title primary-title class="layout justify-center">
-                                <div class="headline text-center">Meet and Search for Communities</div>
-                                </v-card-title>
-                            </v-card>
-                            </v-col>
-                            <v-col xs12 md4>
-                            <v-card class="elevation-0 transparent">
-                                <v-card-text class="text-center">
-                                <v-icon size="60px" class="teal--text text--darken-3">accessibility_new</v-icon>
-                                </v-card-text>
-                                <v-card-title primary-title class="layout justify-center">
-                                <div class="headline text-center">Accessible for all</div>
-                                </v-card-title>
-                            </v-card>
-                            </v-col>
-                        </v-row>
-                    </v-container>
-                </v-col>
-            </v-row>
-        </section>
+  <v-layout row>
+      <v-flex col-12 >
+        <v-card class="mt-5">
+            <v-toolbar flat align="center">
+            <v-icon medium color="primary">fas fa-search</v-icon>
+            <v-toolbar-title class="hidden-sm-and-down display-1">Search Using Tags:</v-toolbar-title>
+            <v-flex xs="12" md="5">
+                <v-autocomplete dense v-model="selected" :disabled="isUpdating" :items="tags"
+                    filled chips color="primary" class="transparent"
+                    item-text="name" item-value="name" multiple rounded>
+                    <template v-slot:selection="data">
+                        <v-chip
+                        v-bind="data.attrs"
+                        :input-value="data.selected"
+                        close
+                        @click="data.select"
+                        @click:close="remove(data.item)"
+                        >
+                        <!-- <v-avatar left>
+                            <v-img :src="data.item.avatar"></v-img>
+                        </v-avatar> -->
+                        {{ data.item.name }}
+                        </v-chip>
+                    </template>
+                    <template v-slot:item="data">
+                        
+                        <template v-if="typeof data.item !== 'object'">
+                        <v-list-item-content v-text="data.item"></v-list-item-content>
+                        </template>
+                        <template v-else>
+                        <!-- <v-list-item-avatar>
+                            <img :src="data.item.avatar">
+                        </v-list-item-avatar> -->
+                        <v-list-item-content>
+                            <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                            <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                        </v-list-item-content>
+                        </template>
+                    </template>
+                </v-autocomplete>
+            </v-flex>
+            </v-toolbar>
+            <v-card-text>
+            <v-container fluid>
+                <v-row dense>
+                    <v-col
+                    v-for="card in cards"
+                    :key="card.title"
+                    cols="12" lg="3" xl="3" md="3"
+                    >
+                    <v-card>
+                        <v-img
+                        :src="card.src"
+                        class="white--text align-end"
+                        gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
+                        height="200px"
+                        >
+                        </v-img>
+                        <v-card-text> 
+                        <p class="title teal--text text--lighten-2">Monday Tuesday</p>
+                        <p class="headline white--text">Top western road trips</p>
+                        <p class="subtitle-1">Don Alfaro St, Tetuan Zamboanga City</p>
+                        </v-card-text>
 
+                        <v-card-actions>
+                        <v-spacer></v-spacer>
 
-        <!-- Footer -->
-        <div id="footer" height="350px" padless absolute color="black">
-            <v-col cols="12">
-                <v-row  justify-center>
-                    <v-col cols="12" md="12">
-                        <v-card class="elevation-0 transparent">
-                            <v-card-text class="text-center">
-                                <v-btn class="mx-2" href="https://www.facebook.com/securelifeintlcorp" icon>
-                                    <v-icon size="22px">fab fa-facebook</v-icon>
-                                </v-btn>
-                                <v-btn class="mx-2" icon>
-                                    <v-icon size="22px">fab fa-twitter</v-icon>
-                                </v-btn>
-                                <v-btn class="mx-2" icon>
-                                    <v-icon size="22px">fab fa-instagram</v-icon>
-                                </v-btn>
-                                <v-btn class="mx-2" icon>
-                                    <v-icon size="22px">fab fa-youtube</v-icon>
-                                </v-btn>
-                            </v-card-text>
-                        </v-card>
+                        <v-btn icon>
+                            <v-icon>mdi-heart</v-icon>
+                        </v-btn>
+
+                        <v-btn icon>
+                            <v-icon>mdi-bookmark</v-icon>
+                        </v-btn>
+
+                        <v-btn icon>
+                            <v-icon>mdi-share-variant</v-icon>
+                        </v-btn>
+                        </v-card-actions>
+                    </v-card>
                     </v-col>
                 </v-row>
-                <v-row justify-center>
-                        <v-col cols="12" md="12">
-                            <v-card class="elevation-0 transparent">
-                            <v-card-text class="text-center">
-                                <span>&copy; phtechpark 2019</span><br>
-                                <p>Made With <v-icon class="red--text">favorite</v-icon> by <a href="https://www.dreamersinfo.com" target="_blank">Dreame.rs</a></p>
-                            </v-card-text>
-                        </v-card>
-                        </v-col>
-                </v-row>
-            </v-col>
-        </div>
-    </div>
+                </v-container>
+            </v-card-text>
+        </v-card>
+      </v-flex>
+  </v-layout>
 </template>
 <script>
-    export default {
-        data(){
-            return {
-                email : "",
-            }
-        },
-        methods : {
-            handleSubmit(){
-                
-            }
-        }
-    }
+  export default {
+    data: () => ({
+      cards: [
+        { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg'},
+        { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg'},
+        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg'},
+        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg'},
+      ],
+    }),
+    computed: {
+    },
+    mounted () {
+    },
+    methods: {
+    },
+    created() {
+    },
+  }
 </script>

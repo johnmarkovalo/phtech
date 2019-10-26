@@ -7,7 +7,7 @@
             <v-toolbar-items class="hidden-sm-and-down">
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/">HOME</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/about">ABOUT</v-btn>
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/dashboard">COMMMUNITIES</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/communities">COMMMUNITIES</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/event">EVENTS</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/signin">SIGN-IN</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/signup">SIGN-up</v-btn>

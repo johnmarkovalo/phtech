@@ -11,6 +11,7 @@ import Home from './components/main/Home.vue'
 //User
 import Information from './components/home/User/Information.vue'
 import NewComm from './components/home/User/NewCommunity.vue'
+import CommunityDetails from './components/home/User/CommunityDetails.vue'
 import Profile from './components/home/User/Profile.vue'
 //Admin
 import Dashboard from './components/home/Admin/Dashboard.vue'
@@ -41,6 +42,7 @@ export const routes = [
                     { path: '/profile', name: 'profile', components: {home: Profile}},
                     { path: '/info', name: 'information', components: {home: Information}},
                     { path: '/newcommunity', name: 'newcommunity', components: {home: NewComm}},
+                    { path: '/community/:community_name', name: 'communitydetails', components: {home: CommunityDetails}},
                 ]
             },
         ]

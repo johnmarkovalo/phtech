@@ -36,6 +36,6 @@ use Illuminate\Http\Request;
         Route::delete('/community/{community}', 'RequestController@destroy');
 
         //Information Technology
-        Route::put('/infotech/{information}', 'InformationController@infotech');
+        Route::put('/communitytech/{community}', 'CommunityController@communitytech');
     });
 

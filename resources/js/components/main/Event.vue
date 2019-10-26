@@ -2,6 +2,11 @@
   <v-layout row>
       <v-flex col-12 >
         <v-card>
+          <v-toolbar color="primary">
+              <v-spacer></v-spacer>
+              <v-toolbar-title class="display-1">Find events that you're looking for</v-toolbar-title>
+              <!-- <v-icon x-large>information</v-icon> -->
+          </v-toolbar>
           <v-tabs color="primary" icons-and-text grow>
             <!-- Tab for List -->
             <v-tab href="#tab-1">
