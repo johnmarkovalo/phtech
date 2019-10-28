@@ -11,23 +11,23 @@
                     <v-card-text>
                       <v-stepper v-model="e1" class="transparent elevation-0">
                         <v-stepper-header class="elevation-0">
-                          <v-stepper-step complete-icon="check" :complete="e1 > 1" step="1">Community Location</v-stepper-step>
+                          <v-stepper-step :complete="e1 > 1" step="1">Community Location</v-stepper-step>
 
                           <v-divider></v-divider>
 
-                          <v-stepper-step complete-icon="check" :complete="e1 > 2" step="2">Technology Tags</v-stepper-step>
+                          <v-stepper-step :complete="e1 > 2" step="2">Technology Tags</v-stepper-step>
 
                           <v-divider></v-divider>
 
-                          <v-stepper-step complete-icon="check" :complete="e1 > 3" step="3">Community Name</v-stepper-step>
+                          <v-stepper-step :complete="e1 > 3" step="3">Community Name</v-stepper-step>
 
                           <v-divider></v-divider>
 
-                          <v-stepper-step complete-icon="check" :complete="e1 > 4" step="4">Community Description</v-stepper-step>
+                          <v-stepper-step :complete="e1 > 4" step="4">Community Description</v-stepper-step>
 
                           <v-divider></v-divider>
 
-                          <v-stepper-step complete-icon="check" step="5">Community Guidlines</v-stepper-step>
+                          <v-stepper-step step="5">Community Guidlines</v-stepper-step>
                         </v-stepper-header>
 
                         <v-stepper-items>
@@ -42,7 +42,7 @@
                                         </v-text-field> -->
                                         <h2>Search and add a pin</h2>
                                         <v-layout row justify-center align-center>
-                                            <v-icon medium color="primary">location_on</v-icon>
+                                            <v-icon medium color="primary">mdi-map-marker</v-icon>
                                             <h2 class="teal--text text--lighten-2">
                                                 <gmap-autocomplete
                                                 @place_changed="setPlace">

@@ -24,31 +24,31 @@
                             <cld-transformation width="200" crop="scale" />
                         </cld-image>
                     </v-avatar>
-                    <v-icon>keyboard_arrow_down</v-icon>
+                    <v-icon>mdi-chevron-down</v-icon>
                 </v-btn>
                 </template>
                 <v-list two-line>
                     <v-list-item ripple="ripple" to="/profile">
                         <v-list-item-avatar>
                             <v-icon class="teal lighten-2 white--text"
-                            >account_circle</v-icon>
+                            >mdi-account-circle</v-icon>
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>My Profile</v-list-item-title>
                             <v-list-item-subtitle>Edit Profile</v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item ripple="ripple" >
+                    <v-list-item ripple="ripple" to="/event">
                         <v-list-item-avatar>
                             <v-icon class="teal lighten-2 white--text"
-                            >event</v-icon>
+                            >mdi-calendar</v-icon>
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>Event</v-list-item-title>
                             <v-list-item-subtitle>View Events</v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item ripple="ripple" >
+                    <v-list-item ripple="ripple" to="/communities">
                         <v-list-item-avatar>
                             <v-icon class="teal lighten-2 white--text"
                             >fas fa-users</v-icon>
@@ -61,7 +61,7 @@
                     <v-list-item ripple="ripple" @click="logout">
                         <v-list-item-avatar>
                             <v-icon class="teal lighten-2 white--text"
-                            >exit_to_app</v-icon>
+                            >mdi-logout-variant</v-icon>
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>Logout</v-list-item-title>

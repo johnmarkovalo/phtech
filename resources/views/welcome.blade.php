@@ -5,7 +5,6 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta http-equiv="x-ua-compatible" content="ie=edge">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <link href='https://fonts.googleapis.com/css?family=Montserrat+Sans:300,400,600,700|Material+Icons' rel="stylesheet">
         <link href="{{ asset('css/app.css') }}" rel="stylesheet">
 
         <script>
@@ -45,7 +44,7 @@
         <!-- Styles -->
         <style>
             html, body, section {
-                font-family: 'Montserrat', sans-serif !important;
+                font-family: 'Montserrat', sans-serif;
             }
 
             a:link{

@@ -5,25 +5,25 @@
                 <v-card width="600px" :class="{'my-5': $vuetify.breakpoint.mdAndUp}">
                     <v-toolbar color="primary" dark class="text-center">
                         <v-toolbar-title class="display-1">User Register</v-toolbar-title>
-                        <v-icon x-large>person_add</v-icon>
+                        <v-icon x-large>mdi-account-plus</v-icon>
                     </v-toolbar>
                     <v-card-text>
                             <v-container grid-list-sm bt-0>
                                 <v-layout row wrap>
                                     <!-- Name -->
                                     <v-flex xs12 md12>
-                                        <v-text-field :rules="rules" outlined id="lastname" type="text" label="Last Name" v-model="user.lastname" required autofocus prepend-inner-icon="account_circle"/>
+                                        <v-text-field :rules="rules" outlined id="lastname" type="text" label="Last Name" v-model="user.lastname" required autofocus prepend-inner-icon="mdi-account-circle"/>
                                     </v-flex>
                                     <v-flex xs12 md12>
-                                        <v-text-field :rules="rules" outlined id="firstname" type="text" label="First Name" v-model="user.firstname" required prepend-inner-icon="account_circle" />
+                                        <v-text-field :rules="rules" outlined id="firstname" type="text" label="First Name" v-model="user.firstname" required prepend-inner-icon="mdi-account-circle" />
                                     </v-flex>
                                     <!--Email Address -->
                                     <v-flex xs12 md12>
-                                        <v-text-field outlined id="address" type="text" label="Email" v-model="user.email" required prepend-inner-icon="alternate_email"/>
+                                        <v-text-field outlined id="address" type="text" label="Email" v-model="user.email" required prepend-inner-icon="mdi-at"/>
                                     </v-flex>
                                     <!-- Password -->
                                     <v-flex xs12 md12>
-                                        <v-text-field :rules="rules" outlined id="password" :type="show1 ? 'text' : 'password'" @click:append="show1 = !show1" :append-icon="show1 ? 'visibility' : 'visibility_off'" label="Password" v-model="user.password" required prepend-inner-icon="lock"/>
+                                        <v-text-field :rules="rules" outlined id="password" :type="show1 ? 'text' : 'password'" @click:append="show1 = !show1" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" label="Password" v-model="user.password" required prepend-inner-icon="mdi-lock"/>
                                     </v-flex>
                                 </v-layout>
                             </v-container>
@@ -87,6 +87,7 @@ export default {
 
                     })
                     // Redirect user
+                    this.$router.push('info')
                     window.location.reload()
                     
                 })
@@ -96,7 +97,6 @@ export default {
             .catch( error => { alert(error)})
             .finally( x => { 
                 this.loading = false
-                this.$router.push('info')
             })
         }
     },

@@ -8,7 +8,7 @@
               <v-flex xs12 md12 lg12 >
                   <v-layout row wrap>
                     <v-flex xs12 md6>
-                        <v-text-field class="purple-input" id="lname" type="text" label="Last Name" v-model="lastname" required autofocus prepend-inner-icon="account_circle"/>
+                        <v-text-field class="purple-input" id="lname" type="text" label="Last Name" v-model="lastname" required autofocus prepend-inner-icon="mdi-account-circle"/>
                     </v-flex>
                     <v-flex xs12 md6>
                         <v-text-field class="purple-input" id="fname" type="text" label="First Name" v-model="firstname" required />
@@ -16,7 +16,7 @@
                   </v-layout>
               </v-flex>
               <v-flex xs12 md12>
-                <v-text-field label="Email Address" class="purple-input" v-model="email" prepend-inner-icon="alternate_email"/>
+                <v-text-field label="Email Address" class="purple-input" v-model="email" prepend-inner-icon="mdi-at"/>
               </v-flex>
             </v-layout>
           </v-container>
@@ -26,7 +26,7 @@
               <v-flex xs12 md12 lg12 >
                   <v-layout row wrap>
                     <v-flex xs12 md6>
-                        <v-text-field class="purple-input" type="text" label="Affiliate" v-model="affiliate" required prepend-inner-icon="account_circle"/>
+                        <v-text-field class="purple-input" type="text" label="Affiliate" v-model="affiliate" required prepend-inner-icon="mdi-account-circle"/>
                     </v-flex>
                     <v-flex xs12 md6>
                         <v-text-field class="purple-input" type="text" label="Position" v-model="position" required />
@@ -34,7 +34,7 @@
                   </v-layout>
               </v-flex>
               <v-flex xs12 md12>
-                <v-text-field v-model="password" :append-icon="show1 ? 'visibility' : 'visibility_off'" :rules="[rules.min]" :type="show1 ? 'text' : 'password'" label="Password" hint="At least 8 characters" counter @click:append="show1 = !show1" @keydown.space.prevent prepend-inner-icon="lock"></v-text-field>
+                <v-text-field v-model="password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.min]" :type="show1 ? 'text' : 'password'" label="Password" hint="At least 8 characters" counter @click:append="show1 = !show1" @keydown.space.prevent prepend-inner-icon="mdi-lock"></v-text-field>
               </v-flex>
               <v-flex xs12 text-xs-right >
                 <v-btn class="mx-0 font-weight-light" rounded large color="success" @click="updateUser()">
@@ -61,7 +61,7 @@
                   </div>
                 </v-expand-transition>
                 <cld-image :publicId="photo" v-if="photo == avatar">
-                  <cld-transformation width="1000" height="1000" border="5px_solid_rgb:ff8f00" gravity="face" radius="max" crop="fill"/> 
+                  <cld-transformation width="1000" height="1000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="fill"/> 
                   <cld-transformation width="200" crop="scale" />
                 </cld-image>
                 <img :src="photo" alt="Profile" v-if="photo != avatar">

@@ -5,7 +5,7 @@
                 <v-card width="600px" :class="{'my-5 elevation-3': $vuetify.breakpoint.mdAndUp}">
                     <v-toolbar dark color="primary" class="text-center">
                             <v-toolbar-title class="display-1">User Login</v-toolbar-title>
-                            <v-icon x-large>assignment_ind</v-icon>
+                            <v-icon x-large>mdi-clipboard-account</v-icon>
                     </v-toolbar>
                     <v-card-text>
                         <v-row cols="12">
@@ -14,11 +14,11 @@
                                 <v-form>
                                     <!-- Email -->
                                     <v-flex xs12 md12>
-                                        <v-text-field   outlined id="email" type="text" label="Email" v-model="email" required prepend-inner-icon="alternate_email" autofocus/>
+                                        <v-text-field   outlined id="email" type="text" label="Email" v-model="email" required prepend-inner-icon="mdi-at" autofocus/>
                                     </v-flex>
                                     <!-- Password -->
                                     <v-flex xs12 md12>
-                                        <v-text-field   outlined id="password" :type="show1 ? 'text' : 'password'" @click:append="show1 = !show1" :append-icon="show1 ? 'visibility' : 'visibility_off'" label="Password" v-model="password"  required prepend-inner-icon="lock"/>
+                                        <v-text-field   outlined id="password" :type="show1 ? 'text' : 'password'" @click:append="show1 = !show1" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" label="Password" v-model="password"  required prepend-inner-icon="mdi-lock"/>
                                     </v-flex>
 
                                     <v-row justify="center">

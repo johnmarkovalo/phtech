@@ -6,7 +6,7 @@
           <v-list-item-group color="primary" class="mt-12 pt-12">
              <v-list-item ripple="ripple" exact to="dashboard">
               <v-list-item-action>
-                <v-icon>dashboard</v-icon>
+                <v-icon>mdi-view-dashboard</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title class="subheading font-weight-regular">Dashboard
@@ -24,7 +24,7 @@
             </v-list-item>
             <v-list-item ripple="ripple" exact to="events">
               <v-list-item-action>
-                <v-icon>event</v-icon>
+                <v-icon>mdi-calendar</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title class="subheading font-weight-regular">Events</v-list-item-title>
@@ -32,7 +32,7 @@
             </v-list-item>
             <v-list-item ripple="ripple" exact to="users">
               <v-list-item-action>
-                <v-icon>account_circle</v-icon>
+                <v-icon>mdi-account-circle</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title class="subheading font-weight-regular">Users</v-list-item-title>
@@ -40,7 +40,7 @@
             </v-list-item>
             <v-list-item ripple="ripple" exact to="community">
               <v-list-item-action>
-                <v-icon>group</v-icon>
+                <v-icon>fas fa-users</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title class="subheading font-weight-regular">Communities</v-list-item-title>

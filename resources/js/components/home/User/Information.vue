@@ -11,15 +11,15 @@
                     <v-card-text>
                       <v-stepper v-model="e1" class="transparent elevation-0">
                         <v-stepper-header class="elevation-0">
-                          <v-stepper-step complete-icon="check" :complete="e1 > 1" step="1">Affiliation</v-stepper-step>
+                          <v-stepper-step :complete="e1 > 1" step="1">Affiliation</v-stepper-step>
 
                           <v-divider></v-divider>
 
-                          <v-stepper-step complete-icon="check" :complete="e1 > 2" step="2">Specialty</v-stepper-step>
+                          <v-stepper-step :complete="e1 > 2" step="2">Specialty</v-stepper-step>
 
                           <v-divider></v-divider>
 
-                          <v-stepper-step complete-icon="check" step="3">Verification</v-stepper-step>
+                          <v-stepper-step step="3">Verification</v-stepper-step>
                         </v-stepper-header>
 
                         <v-stepper-items>
@@ -28,19 +28,19 @@
                                       <v-layout row wrap>
                                           <!-- Company -->
                                           <v-flex xs12 md12 v-if="!student">
-                                              <v-text-field :rules="rules" outlined type="text" label="Company" v-model="affiliation" required autofocus prepend-inner-icon="account_circle"/>
+                                              <v-text-field :rules="rules" outlined type="text" label="Company" v-model="affiliation" required autofocus prepend-inner-icon="mdi-account-circle"/>
                                           </v-flex>
                                           <!-- Job -->
                                           <v-flex xs12 md12 v-if="!student">
-                                              <v-text-field :rules="rules" outlined type="text" label="Job Title" v-model="position" required prepend-inner-icon="account_circle" />
+                                              <v-text-field :rules="rules" outlined type="text" label="Job Title" v-model="position" required prepend-inner-icon="mdi-account-circle" />
                                           </v-flex>
                                          <!-- Company -->
                                           <v-flex xs12 md12 v-if="student">
-                                              <v-text-field :rules="rules" outlined type="text" label="School" v-model="affiliation" required autofocus prepend-inner-icon="account_circle"/>
+                                              <v-text-field :rules="rules" outlined type="text" label="School" v-model="affiliation" required autofocus prepend-inner-icon="mdi-account-circle"/>
                                           </v-flex>
                                           <!-- Job -->
                                           <v-flex xs12 md12 v-if="student">
-                                              <v-text-field :rules="rules" outlined type="text" label="Degree" v-model="position" required prepend-inner-icon="account_circle" />
+                                              <v-text-field :rules="rules" outlined type="text" label="Degree" v-model="position" required prepend-inner-icon="mdi-account-circle" />
                                           </v-flex>
                                       </v-layout>
                                   </v-container>

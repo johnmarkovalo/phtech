@@ -1,34 +1,33 @@
 <template>
   <v-layout row>
       <v-flex col-12 >
-        <v-card>
+        <v-card class="mt-1 elevation-0">
           <v-toolbar color="primary">
-              <v-spacer></v-spacer>
-              <v-toolbar-title class="display-1">Find events that you're looking for</v-toolbar-title>
-              <!-- <v-icon x-large>information</v-icon> -->
+            <v-toolbar-title class="display-1">Find events you're interested with</v-toolbar-title>
+            <!-- <v-icon x-large>information</v-icon> -->
           </v-toolbar>
           <v-tabs color="primary" icons-and-text grow>
             <!-- Tab for List -->
             <v-tab href="#tab-1">
                 List
-                <v-icon>menu</v-icon>
+                <v-icon>mdi-menu</v-icon>
             </v-tab>
             
             <!-- Tab for Calendar -->
             <v-tab href="#tab-2">
                 Calendar
-                <v-icon>event</v-icon>
+                <v-icon>mdi-calendar</v-icon>
             </v-tab>
             
             <!-- Tab Value for List -->
             <v-tab-item :value="'tab-' + 1">
-              <v-card class="mt-5">
+              <v-card class="mt-5 elevation-0">
                 <v-toolbar flat align="center">
                   <v-icon medium color="primary">fas fa-search</v-icon>
                   <v-toolbar-title class="hidden-sm-and-down display-1">Search Using Tags:</v-toolbar-title>
                   <v-flex xs="12" md="5">
                       <v-autocomplete dense v-model="selected" :disabled="isUpdating" :items="tags"
-                        filled chips color="primary" class="transparent"
+                        filled chips color="primary" class="transparent mt-6"
                         item-text="name" item-value="name" multiple rounded>
                         <template v-slot:selection="data">
                             <v-chip

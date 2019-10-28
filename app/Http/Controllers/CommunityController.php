@@ -17,7 +17,7 @@ class CommunityController extends Controller
         $validator = Validator::make($request->all(), [ 
             'name' => 'required|string|max:255',
             'organizer_id' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
+            'description' => 'required|string',
             'location' => 'required',
         ]);
 
@@ -61,13 +61,21 @@ class CommunityController extends Controller
     }
 
     public function index (Request $request) {
-        $community = Community::all();
-
-        // $tags = info_tech::select('technology.name')
-        //                    ->join('technology', 'info_tech.tech_id', 'technology.id')
-        //                    ->where('info_id', $request->user()->information->id)->get();
-                           
-        return response(['community' => $community], 200);
+        $community_tmp = Community::all();
+        $communitylist = [];
+        foreach($community_tmp as $community){
+            $communitylist[] = [
+                'id' => $community->id,
+                'name' => $community->name,
+                'description' => $community->description,
+                'photo' => $community->photo,
+                'location' => $community->location,
+                'tags' => community_tech::select('technology.name')
+                        ->join('technology', 'community_tech.tech_id', 'technology.id')
+                        ->where('community_id', $community->id)->get(),
+            ];
+        }
+        return response(['community' => $communitylist], 200);
     }
 
     public function uploadprofile(request $request){

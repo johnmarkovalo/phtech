@@ -17,9 +17,9 @@ class CreateCommunityTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('organizer_id')->unsigned();
             $table->string('name')->nullable();
-            $table->string('description')->nullable();
+            $table->longText('description')->nullable();
             $table->json('location')->nullable();
-            $table->string('photo')->default('phtechpark/profiles/default');
+            $table->string('photo')->default('https://res.cloudinary.com/mactimestwo/image/upload/v1572071482/phtechpark/community/default.jpg');
             $table->timestamps();
 
             $table->foreign('organizer_id')
