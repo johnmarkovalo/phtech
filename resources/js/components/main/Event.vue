@@ -81,6 +81,12 @@
                               <p class="title teal--text text--lighten-2">Monday Tuesday</p>
                               <p class="headline white--text">Top western road trips</p>
                               <p class="subtitle-1">Don Alfaro St, Tetuan Zamboanga City</p>
+                               <v-chip color="primary" outlined @click="">
+                                  <v-icon left>
+                                    fas fa-users
+                                  </v-icon>
+                                  Dreame.rs IT-Solution
+                                </v-chip>
                             </v-card-text>
 
                             <v-card-actions>
