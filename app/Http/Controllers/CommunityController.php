@@ -8,6 +8,7 @@ use Hash;
 use App\Technology;
 use App\Community;
 use App\community_tech;
+use App\user_community;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -26,6 +27,7 @@ class CommunityController extends Controller
         }
 
         $community = Community::create($request->all());
+        user_community::create(['user_id' => $request->organizer_id, 'community_id' => $community->id, 'position' => 'organizer']);
         return response(['community' => $community], 200);
 
     }
@@ -76,6 +78,29 @@ class CommunityController extends Controller
             ];
         }
         return response(['community' => $communitylist], 200);
+    }
+
+    public function communitydetails(Request $request) {
+        $community = Community::where('name', $request->name)->first();
+        $communitydetails = [
+            'id' => $community->id,
+            'name' => $community->name,
+            'location' => $community->location,
+            'photo' => $community->photo,
+        ];
+
+        $members_tmp = user_community::where('community_id', $community->id)->first();
+        // $members = $members_tmp->user->information;
+        $members = [];
+        foreach($members_tmp as $member){
+            $members[] = [
+                'id' => $member->user->id,
+                'name' => $member->user->name,
+                'avatar' => $member->user->information->avatar,
+            ];
+        }
+        // return response(['community' => $members_tmp], 200)
+        return response(['community' => $communitydetails,'members' => $members], 200);
     }
 
     public function uploadprofile(request $request){

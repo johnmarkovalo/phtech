@@ -13,13 +13,14 @@ class user_community extends Model
     protected $fillable = [
         'user_id',
         'community_id',
+        'position',
     ];
 
     public function user() {
-        return $this->belongsTo('App\User', 'id', 'user_id');
+        return $this->belongsTo('App\User', 'user_id', 'id');
     }
 
     public function community() {
-        return $this->belongsTo('App\Community', 'id', 'community_id');
+        return $this->belongsTo('App\Community', 'community_id', 'id');
     }
 }

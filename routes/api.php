@@ -33,9 +33,12 @@ use Illuminate\Http\Request;
         // Community
         Route::post('/community', 'CommunityController@store');
         Route::put('/community/{community}', 'CommunityController@update');
-        Route::delete('/community/{community}', 'RequestController@destroy');
+        Route::delete('/community/{community}', 'CommunityController@destroy');
+        Route::get('/community/{community}', 'CommunityController@communitydetails');
+        // Route::get('/community/members', 'CommunityController@getmembers');
 
-        //Information Technology
+
+        //Community Technology
         Route::put('/communitytech/{community}', 'CommunityController@communitytech');
     });
 

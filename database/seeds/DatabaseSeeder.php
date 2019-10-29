@@ -14,6 +14,10 @@ class DatabaseSeeder extends Seeder
         $this->call(TechnologyTableSeeder::class);
         $this->call(UsersTableSeeder::class);
         $this->call(InformationTableSeeder::class);
+        $this->call(PointsTableSeeder::class);
         $this->call(info_techTableSeeder::class);
+        $this->call(CommunityTableSeeder::class);
+        $this->call(community_techTableSeeder::class);
+        $this->call(user_communityTableSeeder::class);
     }
 }

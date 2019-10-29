@@ -75,7 +75,7 @@
                             <v-card-actions>
                             <v-spacer></v-spacer>
 
-                            <v-btn outlined rounded color="primary">
+                            <v-btn outlined rounded color="primary" @click="visit_community(card.name)">
                                 <v-icon small>mdi-card-bulleted-settings</v-icon>
                                 View
                             </v-btn>
@@ -83,7 +83,6 @@
                             <v-btn outlined rounded color="primary">
                                 <v-icon small>mdi-login</v-icon>
                                 Join
-                            </v-btn>
                             </v-btn>
                             </v-card-actions>
                         </v-card>
@@ -132,6 +131,10 @@
                 this.tags = response.data.tags
             })
             .catch( error => { alert(error)})
+        },
+        visit_community(community_name)
+        {
+            this.$router.push('/community/'+community_name.split(' ').join('_'))
         },
     },
     created() {

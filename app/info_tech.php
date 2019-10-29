@@ -16,10 +16,10 @@ class info_tech extends Model
     ];
 
     public function information() {
-        return $this->belongsTo('App\Information', 'id', 'info_id');
+        return $this->belongsTo('App\Information', 'info_id', 'id');
     }
 
     public function technology() {
-        return $this->belongsTo('App\Technology', 'id', 'tech_id');
+        return $this->belongsTo('App\Technology', 'tech_id', 'id');
     }
 }

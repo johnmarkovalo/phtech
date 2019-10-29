@@ -26,4 +26,12 @@ class User extends Authenticatable
     public function information() {
         return $this->hasOne('App\Information');
     }
+
+    public function point() {
+        return $this->hasOne('App\Point');
+    }
+
+    public function user_community() {
+        return $this->hasMany('App\user_community');
+    }
 }

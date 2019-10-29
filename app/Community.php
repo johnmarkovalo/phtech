@@ -23,7 +23,7 @@ class Community extends Model
     ];
 
     public function organizer() {
-        return $this->belongsTo('App\User','id', 'organizer_id');
+        return $this->belongsTo('App\User','organizer_id', 'id');
     }
 
     public function user_community() {

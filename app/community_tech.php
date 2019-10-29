@@ -16,10 +16,10 @@ class community_tech extends Model
     ];
 
     public function community() {
-        return $this->belongsTo('App\Community', 'id', 'community_id');
+        return $this->belongsTo('App\Community', 'community_id', 'id');
     }
 
     public function technology() {
-        return $this->belongsTo('App\Technology', 'id', 'tech_id');
+        return $this->belongsTo('App\Technology', 'tech_id', 'id');
     }
 }
