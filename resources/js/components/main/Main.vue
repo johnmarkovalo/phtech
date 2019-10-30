@@ -17,15 +17,15 @@
             </v-toolbar-items>
             <v-menu transition="slide-x-reverse-transition" offset-y :nudge-width="200">
                 <template v-slot:activator="{ on }">
-                <v-btn text class="font-weight-bold teal--text" v-on="on"  v-if='isnakalogin()'>
-                    <v-avatar>
-                        <cld-image :publicId="photo" >
-                            <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
-                            <cld-transformation width="200" crop="scale" />
-                        </cld-image>
-                    </v-avatar>
-                    <v-icon>mdi-chevron-down</v-icon>
-                </v-btn>
+                    <v-btn text class="font-weight-bold teal--text" v-on="on"  v-if='isnakalogin()'>
+                        <v-avatar>
+                            <cld-image :publicId="photo" >
+                                <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
+                                <cld-transformation width="200" crop="scale" />
+                            </cld-image>
+                        </v-avatar>
+                        <v-icon>mdi-chevron-down</v-icon>
+                    </v-btn>
                 </template>
                 <v-list two-line>
                     <v-list-item ripple="ripple" to="/profile">
@@ -58,6 +58,7 @@
                             <v-list-item-subtitle>View your Communities</v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
+                  
                     <v-list-item ripple="ripple" @click="logout">
                         <v-list-item-avatar>
                             <v-icon class="teal lighten-2 white--text"
@@ -82,6 +83,10 @@
             isLoggedIn : null,
             type: null,
             photo: sessionStorage.getItem('user-avatar'),
+            admins: [
+                ['Management', 'fas fa-users'],
+                ['Settings', 'mdi-settings'],
+            ],
         }),
         methods:{
             logout() {

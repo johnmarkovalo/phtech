@@ -263,7 +263,7 @@ export default {
             .catch( error => { alert(error)})
             .finally( x => { 
                 this.loading = false
-                this.$router.push('community/'+response.data.community.name)
+                this.$router.push('community/'+response.data.community.name.split(' ').join('_'))
             })
         },
         viewaddress(){

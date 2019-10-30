@@ -87,15 +87,16 @@ class CommunityController extends Controller
             'name' => $community->name,
             'location' => $community->location,
             'photo' => $community->photo,
+            'organizer' => $community->organizer->name,
         ];
 
-        $members_tmp = user_community::where('community_id', $community->id)->first();
-        // $members = $members_tmp->user->information;
+        $members_tmp = user_community::where('community_id', $community->id)->get();
         $members = [];
         foreach($members_tmp as $member){
             $members[] = [
                 'id' => $member->user->id,
                 'name' => $member->user->name,
+                'position' => $member->position,
                 'avatar' => $member->user->information->avatar,
             ];
         }

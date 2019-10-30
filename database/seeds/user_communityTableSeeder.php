@@ -12,7 +12,7 @@ class user_communityTableSeeder extends Seeder
     public function run()
     {
         DB::table('user_community')->insert([
-            ['user_id' => '2', 'community_id' => '1'],
+            ['user_id' => '2', 'community_id' => '1', 'position' => 'organizer'],
         ]);
     }
 }
