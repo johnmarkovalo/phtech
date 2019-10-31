@@ -9,227 +9,516 @@
                         <!-- <v-icon x-large>information</v-icon> -->
                     </v-toolbar>
                     <v-card-text>
-                      <v-stepper v-model="e1" class="transparent elevation-0">
-                        <v-stepper-header class="elevation-0">
-                          <v-stepper-step :complete="e1 > 1" step="1">Event Title</v-stepper-step>
+                        <v-stepper v-model="e1" class="transparent elevation-0" v-if="false">
+                            <v-stepper-header class="elevation-0">
+                                <v-stepper-step :complete="e1 > 1" step="1">Event Title</v-stepper-step>
 
-                          <v-divider></v-divider>
+                                <v-divider></v-divider>
 
-                          <v-stepper-step :complete="e1 > 2" step="2">Event Location</v-stepper-step>
+                                <v-stepper-step :complete="e1 > 2" step="2">Event Location</v-stepper-step>
 
-                          <v-divider></v-divider>
+                                <v-divider></v-divider>
 
-                          <v-stepper-step :complete="e1 > 3" step="3">Event Date and Time</v-stepper-step>
+                                <v-stepper-step :complete="e1 > 3" step="3">Event Date and Time</v-stepper-step>
 
-                          <v-divider></v-divider>
+                                <v-divider></v-divider>
 
-                          <v-stepper-step :complete="e1 > 4" step="4">Event Description</v-stepper-step>
+                                <v-stepper-step :complete="e1 > 4" step="4">Event Description</v-stepper-step>
 
-                          <v-divider></v-divider>
+                                <v-divider></v-divider>
 
-                          <v-stepper-step :complete="e1 > 5" step="5">Technology Tags</v-stepper-step>
+                                <v-stepper-step :complete="e1 > 5" step="5">Technology Tags</v-stepper-step>
 
-                          <v-divider></v-divider>
+                                <v-divider></v-divider>
 
-                          <v-stepper-step step="6">Event Guidlines</v-stepper-step>
-                        </v-stepper-header>
+                                <v-stepper-step step="6">Event Guidlines</v-stepper-step>
+                            </v-stepper-header>
 
-                        <v-stepper-items>
-                            
-                            <v-stepper-content step="1">
-                                <v-container>
-                                    <p class="display-2 teal--text text--lighten-2">What is the title of your Event?</p>
-                                    <v-layout row wrap>
-                                        <!-- Company -->
-                                        <v-flex xs12 md12>
-                                            <v-text-field outlined type="text" label="Event Title" v-model="title" required autofocus prepend-inner-icon="mdi-calendar"/>
-                                        </v-flex>
-                                    </v-layout>
-                                </v-container>
+                            <v-stepper-items>
+                                
+                                <v-stepper-content step="1">
+                                    <v-container>
+                                        <p class="display-2 teal--text text--lighten-2">What is the title of your Event?</p>
+                                        <v-layout row wrap>
+                                            <!-- Company -->
+                                            <v-flex xs12 md12>
+                                                <v-text-field outlined type="text" label="Event Title" v-model="title" required autofocus prepend-inner-icon="mdi-calendar"/>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-container>
 
-                                <v-btn text>Cancel</v-btn>
-                                <v-btn x-large rounded color="primary" @click="e1 = 2">
-                                    Continue
-                                </v-btn>
-                            </v-stepper-content>
+                                    <v-btn text>Cancel</v-btn>
+                                    <v-btn x-large rounded color="primary" @click="e1 = 2">
+                                        Continue
+                                    </v-btn>
+                                </v-stepper-content>
 
-                            <v-stepper-content step="2">
-                                <v-container>
-                                    <p class="display-2 teal--text text--lighten-2">Set your event location</p>
-                                    <v-layout row wrap>
-                                        <!-- Company -->
-                                        <v-flex xs12 md12>
-                                            <h2>Search and add a pin</h2>
-                                            <v-layout row justify-center align-center>
-                                                <v-icon medium color="primary">mdi-map-marker</v-icon>
-                                                <h2 class="teal--text text--lighten-2">
-                                                    <gmap-autocomplete
-                                                    @place_changed="setPlace">
-                                                    </gmap-autocomplete>
-                                                </h2>
-                                            </v-layout>
-                                            <v-layout>
-                                                <GmapMap style="width: 100%; height: 500px;" :zoom="25" :center="center" 
-                                                            map-type-id="terrain">
-                                                <GmapMarker
-                                                    v-if="this.address"
-                                                    label="★"
-                                                    :draggable="true"
-                                                    :position="center"
-                                                    />
-                                                </GmapMap>
-                                            </v-layout>
-                                        </v-flex>
-                                    </v-layout>
-                                </v-container>
-                                <v-btn text @click="e1 = 1">Cancel</v-btn>
-                                <v-btn x-large rounded color="primary" @click="e1 = 3">
-                                    Continue
-                                </v-btn>
-                            </v-stepper-content>
+                                <v-stepper-content step="2">
+                                    <v-container>
+                                        <p class="display-2 teal--text text--lighten-2">Set your event location</p>
+                                        <v-layout row wrap>
+                                            <!-- Company -->
+                                            <v-flex xs12 md12>
+                                                <h2>Search and add a pin</h2>
+                                                <v-layout row justify-center align-center>
+                                                    <v-icon medium color="primary">mdi-map-marker</v-icon>
+                                                    <h2 class="teal--text text--lighten-2">
+                                                        <gmap-autocomplete
+                                                        @place_changed="setPlace">
+                                                        </gmap-autocomplete>
+                                                    </h2>
+                                                </v-layout>
+                                                <v-layout>
+                                                    <GmapMap style="width: 100%; height: 500px;" :zoom="25" :center="center" 
+                                                                map-type-id="terrain">
+                                                    <GmapMarker
+                                                        v-if="this.address"
+                                                        label="★"
+                                                        :draggable="true"
+                                                        :position="center"
+                                                        />
+                                                    </GmapMap>
+                                                </v-layout>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-container>
+                                    <v-btn text @click="e1 = 1">Cancel</v-btn>
+                                    <v-btn x-large rounded color="primary" @click="e1 = 3">
+                                        Continue
+                                    </v-btn>
+                                </v-stepper-content>
 
-                            <v-stepper-content step="3">
-                                <v-container>
-                                    <p class="display-2 teal--text text--lighten-2">Set your event date and time</p>
-                                    <v-layout row wrap>
-                                        <!-- Company -->
-                                        <v-flex xs12 md6>
-                                            <v-dialog
-                                                ref="dialog"
-                                                v-model="modal"
-                                                :return-value.sync="date"
-                                                persistent
-                                                width="290px"
-                                            >
-                                                <template v-slot:activator="{ on }">
-                                                <v-text-field outlined
-                                                    v-model="date"
-                                                    label="Event Date"
-                                                    prepend-inner-icon="mdi-calendar"
-                                                    readonly
-                                                    v-on="on"
-                                                ></v-text-field>
-                                                </template>
-                                                <v-date-picker v-model="date" color="primary" scrollable>
-                                                <v-spacer></v-spacer>
-                                                <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
-                                                <v-btn text color="primary" @click="$refs.dialog.save(date)">OK</v-btn>
-                                                </v-date-picker>
-                                            </v-dialog>
-                                        </v-flex>
-                                        <v-flex xs12 md6>
-                                            <v-dialog
-                                                ref="dialog2"
-                                                v-model="modal2"
-                                                :return-value.sync="time"
-                                                persistent
-                                                width="290px"
-                                            >
-                                                <template v-slot:activator="{ on }">
-                                                <v-text-field outlined
-                                                    v-model="time"
-                                                    label="Event Time"
-                                                    prepend-inner-icon="mdi-alarm"
-                                                    readonly
-                                                    v-on="on"
-                                                ></v-text-field>
-                                                </template>
-                                                <v-time-picker color="primary"
-                                                v-if="modal2"
-                                                v-model="time"
-                                                full-width
+                                <v-stepper-content step="3">
+                                    <v-container grid-list-xl>
+                                        <p class="display-2 teal--text text--lighten-2">Set your event date and time</p>
+                                        <p class="title teal--text text--lighten-2">Start</p>
+                                        <v-layout row wrap>
+                                            <!-- Company -->
+                                            <v-flex xs12 md6>
+                                                <v-dialog
+                                                    ref="dialog"
+                                                    v-model="modal"
+                                                    :return-value.sync="start.date"
+                                                    persistent
+                                                    width="290px"
                                                 >
-                                                <v-spacer></v-spacer>
-                                                <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
-                                                <v-btn text color="primary" @click="$refs.dialog2.save(time)">OK</v-btn>
-                                                </v-time-picker>
-                                            </v-dialog>
-                                        </v-flex>
-                                    </v-layout>
-                                </v-container>
-                                <v-btn text @click="e1 = 2">Cancel</v-btn>
-                                <v-btn x-large rounded color="primary" @click="e1 = 4">
-                                    Continue
-                                </v-btn>
-                            </v-stepper-content>
-
-                            <v-stepper-content step="4">
-                                <v-container>
-                                    <p class="display-2 teal--text text--lighten-2">Event Description?</p>
-                                    <v-layout row wrap>
-                                        <!-- Company -->
-                                        <v-flex xs12 md12>
-                                            <v-textarea outlined label="Event Description" v-model="description" required autofocus/>
-                                        </v-flex>
-                                    </v-layout>
-                                </v-container>
-                                <v-btn text @click="e1 = 3">Cancel</v-btn>
-
-                                <v-btn x-large rounded color="primary" @click="e1 = 5">
-                                    Continue
-                                </v-btn>
-
-                            </v-stepper-content>
-                            
-                            <v-stepper-content step="5">
-                                <v-container>
-                                    <p class="display-2 teal--text text--lighten-2">Choose a few technology tags that describe your community's interests</p>
-                                    <p class="title">Be specific! This will help us promote your community to the right people.</p>
-                                    <v-layout row wrap>
-                                        <v-autocomplete v-model="selected" :disabled="isUpdating" :items="tags"
-                                            filled chips color="primary" label="Select Technology tags"
-                                            item-text="name" item-value="name" multiple outlined>
-                                            <template v-slot:selection="data">
-                                                <v-chip
-                                                v-bind="data.attrs"
-                                                :input-value="data.selected"
-                                                close
-                                                @click="data.select"
-                                                @click:close="remove(data.item)"
+                                                    <template v-slot:activator="{ on }">
+                                                    <v-text-field outlined
+                                                        v-model="start.date"
+                                                        label="Event Date"
+                                                        prepend-inner-icon="mdi-calendar"
+                                                        readonly
+                                                        v-on="on"
+                                                    ></v-text-field>
+                                                    </template>
+                                                    <v-date-picker v-model="start.date" color="primary" scrollable>
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
+                                                    <v-btn text color="primary" @click="$refs.dialog.save(start.date)">OK</v-btn>
+                                                    </v-date-picker>
+                                                </v-dialog>
+                                            </v-flex>
+                                            <v-flex xs12 md6>
+                                                <v-dialog
+                                                    ref="dialog2"
+                                                    v-model="modal2"
+                                                    :return-value.sync="start.time"
+                                                    persistent
+                                                    width="290px"
                                                 >
-                                                <!-- <v-avatar left>
-                                                    <v-img :src="data.item.avatar"></v-img>
-                                                </v-avatar> -->
-                                                {{ data.item.name }}
-                                                </v-chip>
-                                            </template>
-                                            <template v-slot:item="data">
-                                                
-                                                <template v-if="typeof data.item !== 'object'">
-                                                <v-list-item-content v-text="data.item"></v-list-item-content>
-                                                </template>
-                                                <template v-else>
-                                                <!-- <v-list-item-avatar>
-                                                    <img :src="data.item.avatar">
-                                                </v-list-item-avatar> -->
-                                                <v-list-item-content>
-                                                    <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                                    <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
-                                                </v-list-item-content>
-                                                </template>
-                                            </template>
-                                        </v-autocomplete>
-                                    </v-layout>
-                                </v-container>
-                                <v-btn text @click="e1 = 3">Cancel</v-btn>
-                                <v-btn x-large rounded color="primary" @click="e1 = 5">
-                                    Continue
-                                </v-btn>
-                            </v-stepper-content>
+                                                    <template v-slot:activator="{ on }">
+                                                    <v-text-field outlined
+                                                        v-model="start.time"
+                                                        label="Event Time"
+                                                        prepend-inner-icon="mdi-alarm"
+                                                        readonly
+                                                        v-on="on"
+                                                    ></v-text-field>
+                                                    </template>
+                                                    <v-time-picker color="primary"
+                                                    v-if="modal2"
+                                                    v-model="start.time"
+                                                    full-width
+                                                    >
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
+                                                    <v-btn text color="primary" @click="$refs.dialog2.save(start.time)">OK</v-btn>
+                                                    </v-time-picker>
+                                                </v-dialog>
+                                            </v-flex>
+                                        </v-layout>
+                                        <p class="title teal--text text--lighten-2">End</p>
+                                        <v-layout row wrap>
+                                            <!-- Company -->
+                                            <v-flex xs12 md6>
+                                                <v-dialog
+                                                    ref="dialog3"
+                                                    v-model="modal3"
+                                                    :return-value.sync="end.date"
+                                                    persistent
+                                                    width="290px"
+                                                >
+                                                    <template v-slot:activator="{ on }">
+                                                    <v-text-field outlined
+                                                        v-model="end.date"
+                                                        label="Event Date"
+                                                        prepend-inner-icon="mdi-calendar"
+                                                        readonly
+                                                        v-on="on"
+                                                    ></v-text-field>
+                                                    </template>
+                                                    <v-date-picker v-model="end.date" color="primary" scrollable>
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn text color="primary" @click="modal3 = false">Cancel</v-btn>
+                                                    <v-btn text color="primary" @click="$refs.dialog3.save(end.date)">OK</v-btn>
+                                                    </v-date-picker>
+                                                </v-dialog>
+                                            </v-flex>
+                                            <v-flex xs12 md6>
+                                                <v-dialog
+                                                    ref="dialog4"
+                                                    v-model="modal4"
+                                                    :return-value.sync="end.time"
+                                                    persistent
+                                                    width="290px"
+                                                >
+                                                    <template v-slot:activator="{ on }">
+                                                    <v-text-field outlined
+                                                        v-model="end.time"
+                                                        label="Event Time"
+                                                        prepend-inner-icon="mdi-alarm"
+                                                        readonly
+                                                        v-on="on"
+                                                    ></v-text-field>
+                                                    </template>
+                                                    <v-time-picker color="primary"
+                                                    v-if="modal4"
+                                                    v-model="end.time"
+                                                    full-width
+                                                    >
+                                                    <v-spacer></v-spacer>
+                                                    <v-btn text color="primary" @click="modal4 = false">Cancel</v-btn>
+                                                    <v-btn text color="primary" @click="$refs.dialog4.save(end.time)">OK</v-btn>
+                                                    </v-time-picker>
+                                                </v-dialog>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-container>
+                                    <v-btn text @click="e1 = 2">Cancel</v-btn>
+                                    <v-btn x-large rounded color="primary" @click="e1 = 4">
+                                        Continue
+                                    </v-btn>
+                                </v-stepper-content>
 
-                            <v-stepper-content step="6">
-                                <v-container>
-                                    <p class="display-2 teal--text text--lighten-2">Please Read the Community Guidlines</p>
-                                    <a class="subtitile-2 teal--text text--lighten-2">Guidlines</a>
-                                </v-container>
+                                <v-stepper-content step="4">
+                                    <v-container>
+                                        <p class="display-2 teal--text text--lighten-2">Event Description?</p>
+                                        <v-layout row wrap>
+                                            <!-- Company -->
+                                            <v-flex xs12 md12>
+                                                <v-textarea outlined label="Event Description" v-model="description" required autofocus/>
+                                            </v-flex>
+                                        </v-layout>
+                                    </v-container>
+                                    <v-btn text @click="e1 = 3">Cancel</v-btn>
 
-                                <v-btn text>Cancel</v-btn>
-                                <v-btn x-large rounded :loading="loading" color="primary" @click="SaveCommunity()">
-                                    Save Community
-                                </v-btn>
-                            </v-stepper-content>
-                        </v-stepper-items>
-                      </v-stepper>  
+                                    <v-btn x-large rounded color="primary" @click="e1 = 5">
+                                        Continue
+                                    </v-btn>
+
+                                </v-stepper-content>
+                                
+                                <v-stepper-content step="5">
+                                    <v-container>
+                                        <p class="display-2 teal--text text--lighten-2">Choose a few technology tags that describe your community's interests</p>
+                                        <p class="title">Be specific! This will help us promote your community end the right people.</p>
+                                        <v-layout row wrap>
+                                            <v-autocomplete v-model="selected" :disabled="isUpdating" :items="tags"
+                                                filled chips color="primary" label="Select Technology tags"
+                                                item-text="name" item-value="name" multiple outlined>
+                                                <template v-slot:selection="data">
+                                                    <v-chip
+                                                    v-bind="data.attrs"
+                                                    :input-value="data.selected"
+                                                    close
+                                                    @click="data.select"
+                                                    @click:close="remove(data.item)"
+                                                    >
+                                                    <!-- <v-avatar left>
+                                                        <v-img :src="data.item.avatar"></v-img>
+                                                    </v-avatar> -->
+                                                    {{ data.item.name }}
+                                                    </v-chip>
+                                                </template>
+                                                <template v-slot:item="data">
+                                                    
+                                                    <template v-if="typeof data.item !== 'object'">
+                                                    <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                    </template>
+                                                    <template v-else>
+                                                    <!-- <v-list-item-avatar>
+                                                        <img :src="data.item.avatar">
+                                                    </v-list-item-avatar> -->
+                                                    <v-list-item-content>
+                                                        <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                        <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                                    </v-list-item-content>
+                                                    </template>
+                                                </template>
+                                            </v-autocomplete>
+                                        </v-layout>
+                                    </v-container>
+                                    <v-btn text @click="e1 = 3">Cancel</v-btn>
+                                    <v-btn x-large rounded color="primary" @click="e1 = 5">
+                                        Continue
+                                    </v-btn>
+                                </v-stepper-content>
+
+                                <v-stepper-content step="6">
+                                    <v-container>
+                                        <p class="display-2 teal--text text--lighten-2">Please Read the Community Guidlines</p>
+                                        <a class="subtitile-2 teal--text text--lighten-2">Guidlines</a>
+                                    </v-container>
+
+                                    <v-btn text>Cancel</v-btn>
+                                    <v-btn x-large rounded :loading="loading" color="primary" @click="SaveCommunity()">
+                                        Save Community
+                                    </v-btn>
+                                </v-stepper-content>
+                            </v-stepper-items>
+                        </v-stepper>
+                        <v-container grid-list-xl v-if="true">
+                            <p class="display-2 teal--text text--lighten-2">Event Title</p>                            
+                            <v-row>
+                                <v-col cols=12 md=12 lg=12 xl=12>
+                                    <v-text-field outlined type="text" label="Event Title" v-model="title" required autofocus prepend-inner-icon="mdi-calendar"/>
+                                </v-col>
+                                <!-- <v-col cols=12 md=12 lg=6 xl=6>
+                                    <v-text-field outlined name="name" label="label"/>
+                                </v-col> -->
+                            </v-row>
+                            <p class="display-2 teal--text text--lighten-2">Event Start</p>
+                            <v-row>
+                                <v-col cols=12 md=12 lg=6 xl=6>
+                                    <v-dialog
+                                        ref="dialog"
+                                        v-model="modal"
+                                        :return-value.sync="start.date"
+                                        persistent
+                                        width="290px"
+                                    >
+                                        <template v-slot:activator="{ on }">
+                                        <v-text-field outlined
+                                            v-model="start.date"
+                                            label="Event Date"
+                                            prepend-inner-icon="mdi-calendar"
+                                            readonly
+                                            v-on="on"
+                                        ></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="start.date" color="primary" scrollable>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
+                                        <v-btn text color="primary" @click="$refs.dialog.save(start.date)">OK</v-btn>
+                                        </v-date-picker>
+                                    </v-dialog>
+                                </v-col>
+                                <v-col cols=12 md=12 lg=6 xl=6>
+                                    <v-dialog
+                                        ref="dialog2"
+                                        v-model="modal2"
+                                        :return-value.sync="start.time"
+                                        persistent
+                                        width="290px"
+                                    >
+                                        <template v-slot:activator="{ on }">
+                                        <v-text-field outlined
+                                            v-model="start.time"
+                                            label="Event Time"
+                                            prepend-inner-icon="mdi-alarm"
+                                            readonly
+                                            v-on="on"
+                                        ></v-text-field>
+                                        </template>
+                                        <v-time-picker color="primary"
+                                        v-if="modal2"
+                                        v-model="start.time"
+                                        full-width
+                                        >
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
+                                        <v-btn text color="primary" @click="$refs.dialog2.save(start.time)">OK</v-btn>
+                                        </v-time-picker>
+                                    </v-dialog>
+                                </v-col>
+                            </v-row>
+                            <p class="display-2 teal--text text--lighten-2">Event End</p>
+                            <v-row>
+                                <v-col cols=12 md=12 lg=6 xl=6>
+                                    <v-dialog
+                                        ref="dialog3"
+                                        v-model="modal3"
+                                        :return-value.sync="end.date"
+                                        persistent
+                                        width="290px"
+                                    >
+                                        <template v-slot:activator="{ on }">
+                                        <v-text-field outlined
+                                            v-model="end.date"
+                                            label="Event Date"
+                                            prepend-inner-icon="mdi-calendar"
+                                            readonly
+                                            v-on="on"
+                                        ></v-text-field>
+                                        </template>
+                                        <v-date-picker v-model="end.date" color="primary" scrollable>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="modal3 = false">Cancel</v-btn>
+                                        <v-btn text color="primary" @click="$refs.dialog3.save(end.date)">OK</v-btn>
+                                        </v-date-picker>
+                                    </v-dialog>
+                                </v-col>
+                                <v-col cols=12 md=12 lg=6 xl=6>
+                                    <v-dialog
+                                        ref="dialog4"
+                                        v-model="modal4"
+                                        :return-value.sync="end.time"
+                                        persistent
+                                        width="290px"
+                                    >
+                                        <template v-slot:activator="{ on }">
+                                        <v-text-field outlined
+                                            v-model="end.time"
+                                            label="Event Time"
+                                            prepend-inner-icon="mdi-alarm"
+                                            readonly
+                                            v-on="on"
+                                        ></v-text-field>
+                                        </template>
+                                        <v-time-picker color="primary"
+                                        v-if="modal4"
+                                        v-model="end.time"
+                                        full-width
+                                        >
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="modal4 = false">Cancel</v-btn>
+                                        <v-btn text color="primary" @click="$refs.dialog4.save(end.time)">OK</v-btn>
+                                        </v-time-picker>
+                                    </v-dialog>
+                                </v-col>
+                            </v-row>
+                            <p class="display-2 teal--text text--lighten-2">Event Description</p>                            
+                            <v-row>
+                                <v-col cols=12 md=12 lg=12 xl=12>
+                                    <v-text-field outlined type="text" label="Event Description" v-model="description" required autofocus prepend-inner-icon="mdi-calendar"/>
+                                </v-col>
+                                <!-- <v-col cols=12 md=12 lg=6 xl=6>
+                                    <v-text-field outlined name="name" label="label"/>
+                                </v-col> -->
+                            </v-row>                          
+                            <p class="display-2 teal--text text--lighten-2">Event Location</p>
+                            <v-row>
+                                <v-col cols=12 md=12 lg=12 xl=12>
+                                    <v-row>
+                                        <v-icon medium color="primary">mdi-map-marker</v-icon>
+                                        <h2 class="teal--text text--lighten-2">
+                                            <gmap-autocomplete
+                                            @place_changed="setPlace">
+                                            </gmap-autocomplete>
+                                        </h2>
+                                    </v-row>
+                                    <GmapMap style="width: 100%; height: 400px;" :zoom="25" :center="center" 
+                                                map-type-id="terrain">
+                                    <GmapMarker
+                                        v-if="this.address"
+                                        label="★"
+                                        :draggable="true"
+                                        :position="center"
+                                        />
+                                    </GmapMap>
+                                </v-col>
+                            </v-row>
+                            <p class="display-2 teal--text text--lighten-2">Event Speaker</p>
+                            <v-row>
+                                <v-col cols=12 md=12 lg=12 xl=12>
+                                    <v-autocomplete v-model="selected" :disabled="isUpdating" :items="tags"
+                                        filled chips color="primary" label="Select Technology tags"
+                                        item-text="name" item-value="name" multiple outlined>
+                                        <template v-slot:selection="data">
+                                            <v-chip
+                                            v-bind="data.attrs"
+                                            :input-value="data.selected"
+                                            close
+                                            @click="data.select"
+                                            @click:close="remove(data.item)"
+                                            >
+                                            <!-- <v-avatar left>
+                                                <v-img :src="data.item.avatar"></v-img>
+                                            </v-avatar> -->
+                                            {{ data.item.name }}
+                                            </v-chip>
+                                        </template>
+                                        <template v-slot:item="data">
+                                            
+                                            <template v-if="typeof data.item !== 'object'">
+                                            <v-list-item-content v-text="data.item"></v-list-item-content>
+                                            </template>
+                                            <template v-else>
+                                            <!-- <v-list-item-avatar>
+                                                <img :src="data.item.avatar">
+                                            </v-list-item-avatar> -->
+                                            <v-list-item-content>
+                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                            </v-list-item-content>
+                                            </template>
+                                        </template>
+                                    </v-autocomplete>
+                                </v-col>
+                            </v-row>
+                            <p class="display-2 teal--text text--lighten-2">Event Topic</p>
+                            <v-row>
+                                <v-col cols=12 md=12 lg=12 xl=12>
+                                    <v-autocomplete v-model="selected" :disabled="isUpdating" :items="tags"
+                                        filled chips color="primary" label="Select Technology tags"
+                                        item-text="name" item-value="name" multiple outlined>
+                                        <template v-slot:selection="data">
+                                            <v-chip
+                                            v-bind="data.attrs"
+                                            :input-value="data.selected"
+                                            close
+                                            @click="data.select"
+                                            @click:close="remove(data.item)"
+                                            >
+                                            <!-- <v-avatar left>
+                                                <v-img :src="data.item.avatar"></v-img>
+                                            </v-avatar> -->
+                                            {{ data.item.name }}
+                                            </v-chip>
+                                        </template>
+                                        <template v-slot:item="data">
+                                            
+                                            <template v-if="typeof data.item !== 'object'">
+                                            <v-list-item-content v-text="data.item"></v-list-item-content>
+                                            </template>
+                                            <template v-else>
+                                            <!-- <v-list-item-avatar>
+                                                <img :src="data.item.avatar">
+                                            </v-list-item-avatar> -->
+                                            <v-list-item-content>
+                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                            </v-list-item-content>
+                                            </template>
+                                        </template>
+                                    </v-autocomplete>
+                                </v-col>
+                            </v-row>
+                            <p class="display-2 teal--text text--lighten-2">Optional Settings</p>
+                            <v-row>
+                                
+                            </v-row>
+                        </v-container>
                     </v-card-text>
                 </v-card>
             </v-col>
@@ -240,10 +529,16 @@
 export default {
     data() {
         return {
-            date: new Date().toISOString().substr(0, 10),
-            time: null,
+            start:{
+                date: new Date().toISOString().substr(0, 10), time: null
+            },
+            end:{
+                date: new Date().toISOString().substr(0, 10), time: null
+            },
             modal: false,
             modal2: false,
+            modal3: false,
+            modal4: false,
             e1: 0,
             loading: false,
             title: '',

@@ -34,4 +34,8 @@ class User extends Authenticatable
     public function user_community() {
         return $this->hasMany('App\user_community');
     }
+
+    public function user_event() {
+        return $this->hasMany('App\user_event');
+    }
 }

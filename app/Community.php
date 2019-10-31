@@ -29,8 +29,13 @@ class Community extends Model
     public function user_community() {
         return $this->hasMany('App\user_community', 'community_id', 'id');
     }
-
+    
+    public function event_community() {
+        return $this->hasMany('App\event_community', 'community_id', 'id');
+    }
+    
     public function community_tech() {
         return $this->hasMany('App\info_tech', 'info_id', 'id');
     }
+
 }
