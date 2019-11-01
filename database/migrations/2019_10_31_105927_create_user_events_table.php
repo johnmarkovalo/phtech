@@ -17,6 +17,7 @@ class CreateUserEventsTable extends Migration
             $table->bigIncrements('id');
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('event_id')->unsigned();
+            $table->string('position')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')

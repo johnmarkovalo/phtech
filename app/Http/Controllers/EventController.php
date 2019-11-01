@@ -32,7 +32,6 @@ class EventController extends Controller
 
         $event = Event::create($request->all());
         user_event::create(['user_id' => $request->organizer_id, 'event_id' => $event->id, 'position' => 'organizer']); 
-
         return response(['event' => $event], 200);
 
     }
@@ -67,15 +66,14 @@ class EventController extends Controller
         event_community::where('event_id', $request->id)->delete();
         //for organizer
         $community = Community::where('name', $request->community)->first()->id;
-        event_community::create(['event_id' => $request->id, 'community_id' => $community, 'position' => 'organizer']);
+        event_community::create(['event_id' => $request->id, 'community_id' => $community, 'position' => 'organizer']); 
         //for partner
-        // $partners_tmp = $request->partners;
-        // foreach($partners_tmp as $partner)
-        // {
-        //     $community_id = Community::where('name', $partner)->first()->id;
-        //     event_community::create(['event_id' => $request->id, 'community_id' => $community_id, 'position' => 'partner']);
-        // }
-        // return 'fck';
+        $partners_tmp = $request->partners;
+        foreach($partners_tmp as $partner)
+        {
+            $community_id = Community::where('name', $partner)->first()->id;
+            event_community::create(['event_id' => $request->id, 'community_id' => $community_id, 'position' => 'partner']);
+        }
     }
 
     public function destroy (Event $event) {

@@ -372,7 +372,7 @@ export default {
                     tags: this.selectedTags
                 })
                 .then( response => {
-                    axios.put('api/event/community', { 
+                    axios.put('api/event/' + id, { 
                         id: id,
                         community: this.community,
                         partners: this.selectedPartners

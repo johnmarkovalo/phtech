@@ -13,6 +13,7 @@ class user_event extends Model
     protected $fillable = [
         'user_id',
         'event_id',
+        'position',
     ];
 
     public function user() {

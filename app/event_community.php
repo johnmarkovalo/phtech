@@ -13,6 +13,7 @@ class event_community extends Model
     protected $fillable = [
         'event_id',
         'community_id',
+        'position',
     ];
 
     public function community() {

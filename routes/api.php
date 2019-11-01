@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
     Route::post('/register', 'AuthController@register')->name('register.api');
     Route::get('/technology', 'TechnologyController@index');
     Route::get('/community', 'CommunityController@index');
-    Route::put('/event/community', 'EventController@eventcommunity');
+    Route::put('/event/{community}', 'EventController@eventcommunity');
 
     // private routes
     Route::middleware('auth:api')->group(function () {
