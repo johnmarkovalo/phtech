@@ -58,7 +58,7 @@ class CommunityController extends Controller
         }
     }
 
-    public function destroy (Technology $community) {
+    public function destroy (Community $community) {
         $community->delete();
     }
 
@@ -102,6 +102,16 @@ class CommunityController extends Controller
         }
         // return response(['community' => $members_tmp], 200)
         return response(['community' => $communitydetails,'members' => $members], 200);
+    }
+
+    public function communityunder(Request $request) {
+        $community_tmp = user_community::where('user_id', $request->user()->id)->get();
+        $communities = [];
+        foreach($community_tmp as $community_id){
+            $communities[] = $community_id->community->name;
+        }
+
+        return response(['community' => $communities], 200);
     }
 
     public function uploadprofile(request $request){

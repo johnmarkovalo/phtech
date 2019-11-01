@@ -11,6 +11,7 @@ use App\Event;
 use App\event_community;
 use App\event_tech;
 use App\user_community;
+use App\user_event;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -29,9 +30,10 @@ class EventController extends Controller
             return response(['errors'=>$validator->errors()->all()], 422);
         }
 
-        $community = Community::create($request->all());
-        user_community::create(['user_id' => $request->organizer_id, 'community_id' => $community->id, 'position' => 'organizer']);
-        return response(['community' => $community], 200);
+        $event = Event::create($request->all());
+        user_event::create(['user_id' => $request->organizer_id, 'event_id' => $event->id, 'position' => 'organizer']); 
+
+        return response(['event' => $event], 200);
 
     }
     
@@ -51,18 +53,33 @@ class EventController extends Controller
         return response(['community' => $community], 200);
     }
 
-    public function communitytech (Request $request) {
-        community_tech::where('community_id', $request->id)->delete();
+    public function eventtech (Request $request) {
+        event_tech::where('event_id', $request->id)->delete();
         $tags_tmp = $request->tags;
         foreach($tags_tmp as $tag)
         {
             $tech_id = Technology::where('name', $tag)->first()->id;
-            community_tech::create(['community_id' => $request->id, 'tech_id' => $tech_id]);
+            event_tech::create(['event_id' => $request->id, 'tech_id' => $tech_id]);
         }
     }
 
-    public function destroy (Technology $community) {
-        $community->delete();
+    public function eventcommunity (Request $request) {
+        event_community::where('event_id', $request->id)->delete();
+        //for organizer
+        $community = Community::where('name', $request->community)->first()->id;
+        event_community::create(['event_id' => $request->id, 'community_id' => $community, 'position' => 'organizer']);
+        //for partner
+        // $partners_tmp = $request->partners;
+        // foreach($partners_tmp as $partner)
+        // {
+        //     $community_id = Community::where('name', $partner)->first()->id;
+        //     event_community::create(['event_id' => $request->id, 'community_id' => $community_id, 'position' => 'partner']);
+        // }
+        // return 'fck';
+    }
+
+    public function destroy (Event $event) {
+        $event->delete();
     }
 
     public function index (Request $request) {

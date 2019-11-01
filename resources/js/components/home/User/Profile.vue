@@ -233,7 +233,6 @@
           this.position = information.position
           this.avatar = information.avatar
           this.photo = information.avatar
-          this.tags = tags
           console.log(this.tags);
           
         })

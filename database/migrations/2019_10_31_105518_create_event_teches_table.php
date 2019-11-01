@@ -16,7 +16,7 @@ class CreateEventTechesTable extends Migration
         Schema::create('event_tech', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('event_id')->unsigned();
-            $table->bigInteger('info_id')->unsigned();
+            $table->bigInteger('tech_id')->unsigned();
             $table->timestamps();
 
             $table->foreign('event_id')

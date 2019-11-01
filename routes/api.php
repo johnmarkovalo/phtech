@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
     Route::post('/register', 'AuthController@register')->name('register.api');
     Route::get('/technology', 'TechnologyController@index');
     Route::get('/community', 'CommunityController@index');
+    Route::put('/event/community', 'EventController@eventcommunity');
 
     // private routes
     Route::middleware('auth:api')->group(function () {
@@ -13,6 +14,10 @@ use Illuminate\Http\Request;
         Route::get('/user', function (Request $request) {
             return $request->user();
         });
+
+        //Get all users
+        Route::get('/users', 'UserController@index');
+
         // Logout
         Route::post('/logout', 'AuthController@logout')->name('logout');
         
@@ -35,10 +40,24 @@ use Illuminate\Http\Request;
         Route::put('/community/{community}', 'CommunityController@update');
         Route::delete('/community/{community}', 'CommunityController@destroy');
         Route::get('/community/{community}', 'CommunityController@communitydetails');
+        Route::get('/communityunder', 'CommunityController@communityunder');
         // Route::get('/community/members', 'CommunityController@getmembers');
 
 
         //Community Technology
         Route::put('/communitytech/{community}', 'CommunityController@communitytech');
+
+        // Event
+        Route::post('/event', 'EventController@store');
+        Route::put('/event/{event}', 'EventController@update');
+        Route::delete('/event/{event}', 'EventController@destroy');
+        Route::get('/event/{event}', 'EventController@communitydetails');
+        // Route::get('/event/members', 'EventController@getmembers');
+
+        //Event Technology
+        Route::put('/eventtech/{event}', 'EventController@eventtech');
+
+        //Event Community
+        // Route::put('/event/community', 'EventController@eventcommunity');
     });
 

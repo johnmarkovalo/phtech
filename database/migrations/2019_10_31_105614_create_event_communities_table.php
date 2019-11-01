@@ -16,6 +16,7 @@ class CreateEventCommunitiesTable extends Migration
         Schema::create('event_community', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('event_id')->unsigned();
+            $table->string('position')->nullable();
             $table->bigInteger('community_id')->unsigned();
             $table->timestamps();
 
