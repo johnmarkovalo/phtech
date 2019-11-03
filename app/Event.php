@@ -16,13 +16,12 @@ class Event extends Model
 
     protected $fillable = [
         'organizer_id',
+        'code',
         'title',
         'description',
         'location',
-        'start_date',
-        'start_time',
-        'end_date',
-        'end_time',
+        'start',
+        'end',
         'photo',
         'fee',
         'limit',

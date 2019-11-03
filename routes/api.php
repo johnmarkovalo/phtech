@@ -6,8 +6,7 @@ use Illuminate\Http\Request;
     Route::post('/register', 'AuthController@register')->name('register.api');
     Route::get('/technology', 'TechnologyController@index');
     Route::get('/community', 'CommunityController@index');
-    Route::put('/event/{community}', 'EventController@eventcommunity');
-
+    Route::get('/event', 'EventController@index');
     // private routes
     Route::middleware('auth:api')->group(function () {
         // Get current logged in user
@@ -51,13 +50,13 @@ use Illuminate\Http\Request;
         Route::post('/event', 'EventController@store');
         Route::put('/event/{event}', 'EventController@update');
         Route::delete('/event/{event}', 'EventController@destroy');
-        Route::get('/event/{event}', 'EventController@communitydetails');
+        Route::get('/event/{event}', 'EventController@eventdetails');
         // Route::get('/event/members', 'EventController@getmembers');
 
         //Event Technology
         Route::put('/eventtech/{event}', 'EventController@eventtech');
 
         //Event Community
-        // Route::put('/event/community', 'EventController@eventcommunity');
+        Route::put('/eventcommunity/{community}', 'EventController@eventcommunity');
     });
 

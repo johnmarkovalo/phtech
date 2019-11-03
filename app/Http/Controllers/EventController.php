@@ -20,6 +20,7 @@ class EventController extends Controller
     public function store (Request $request) {
         $validator = Validator::make($request->all(), [ 
             'title' => 'required|string|max:255',
+            'code' => 'required|string|max:255',
             'organizer_id' => 'required|string|max:255',
             'description' => 'required|string',
             'start' => 'required',
@@ -30,8 +31,21 @@ class EventController extends Controller
             return response(['errors'=>$validator->errors()->all()], 422);
         }
 
-        $event = Event::create($request->all());
-        user_event::create(['user_id' => $request->organizer_id, 'event_id' => $event->id, 'position' => 'organizer']); 
+        // $event = Event::create($request->all());
+        $event = Event::create([
+            'organizer_id' => $request->organizer_id,
+            'title' => $request->title,
+            'code' => $request->code,
+            'description' => $request->description,
+            'start' => $request->start,
+            'end' => $request->end,
+            'location' => $request->location,
+            // 'fee' => '',
+            // 'limit' => '',
+
+        ]);
+
+        user_event::create(['user_id' => $request->user()->id, 'event_id' => $event->id, 'position' => 'organizer']); 
         return response(['event' => $event], 200);
 
     }
@@ -66,7 +80,7 @@ class EventController extends Controller
         event_community::where('event_id', $request->id)->delete();
         //for organizer
         $community = Community::where('name', $request->community)->first()->id;
-        event_community::create(['event_id' => $request->id, 'community_id' => $community, 'position' => 'organizer']); 
+        $event = event_community::create(['event_id' => $request->id, 'community_id' => $community, 'position' => 'organizer']); 
         //for partner
         $partners_tmp = $request->partners;
         foreach($partners_tmp as $partner)
@@ -74,6 +88,7 @@ class EventController extends Controller
             $community_id = Community::where('name', $partner)->first()->id;
             event_community::create(['event_id' => $request->id, 'community_id' => $community_id, 'position' => 'partner']);
         }
+        // return $event;
     }
 
     public function destroy (Event $event) {
@@ -81,45 +96,68 @@ class EventController extends Controller
     }
 
     public function index (Request $request) {
-        $community_tmp = Community::all();
-        $communitylist = [];
-        foreach($community_tmp as $community){
-            $communitylist[] = [
-                'id' => $community->id,
-                'name' => $community->name,
-                'description' => $community->description,
-                'photo' => $community->photo,
-                'location' => $community->location,
-                'tags' => community_tech::select('technology.name')
-                        ->join('technology', 'community_tech.tech_id', 'technology.id')
-                        ->where('community_id', $community->id)->get(),
-            ];
+        $event_tmp = Event::all();
+        $eventlist = [];
+        foreach($event_tmp as $event){
+            if($event->start < date('Y-m-d H:i:s')){
+                $eventlist[] = [
+                    'id' => $event->id,
+                    'name' => $event->title,
+                    'code' => $event->code,
+                    'details' => $event->description,
+                    'photo' => $event->photo,
+                    'location' => $event->location,
+                    'start' => $event->start,
+                    'end' => $event->end,
+                    'color' => 'teal',
+                    'community' => event_community::select('community.name')
+                            ->join('community', 'event_community.community_id', 'community.id')
+                            ->where('event_id', $event->id)->get(),
+                    'tags' => event_tech::select('technology.name')
+                            ->join('technology', 'event_tech.tech_id', 'technology.id')
+                            ->where('event_id', $event->id)->get(),
+                ];
+            }
         }
-        return response(['community' => $communitylist], 200);
+        return response(['event' => $eventlist], 200);
     }
 
-    public function communitydetails(Request $request) {
-        $community = Community::where('name', $request->name)->first();
-        $communitydetails = [
-            'id' => $community->id,
-            'name' => $community->name,
-            'location' => $community->location,
-            'photo' => $community->photo,
-            'organizer' => $community->organizer->name,
+    public function eventdetails(Request $request) {
+        $event = Event::where('code', $request->code)->first();
+        $eventdetails = [
+            'id' => $event->id,
+            'title' => $event->title,
+            'description' => $event->description,
+            'code' => $event->code,
+            'location' => $event->location,
+            'photo' => $event->photo,
+            'organizer' => [
+                'name' => $event->organizer->name,  
+                'avatar' => $event->organizer->information->avatar,
+            ],
         ];
 
-        $members_tmp = user_community::where('community_id', $community->id)->get();
-        $members = [];
-        foreach($members_tmp as $member){
-            $members[] = [
-                'id' => $member->user->id,
-                'name' => $member->user->name,
-                'position' => $member->position,
-                'avatar' => $member->user->information->avatar,
+        $attendees_tmp = user_event::where(['event_id', $event->id,'position', 'notoing'])->get();
+        $attendees = [];
+        foreach($attendees_tmp as $attendee){
+            $attendees[] = [
+                'id' => $attendee->user->id,
+                'name' => $attendee->user->name,
+                'position' => $attendee->position,
+                'avatar' => $attendee->user->information->avatar,
             ];
         }
-        // return response(['community' => $members_tmp], 200)
-        return response(['community' => $communitydetails,'members' => $members], 200);
+        $community_tmp = event_community::where('event_id', $event->id)->get();
+        $communities = [];
+        foreach($community_tmp as $community){
+            $communities[] = [
+                'id' => $community->community->id,
+                'name' => $community->community->name,
+                'position' => $community->position,
+                'photo' => $community->community->photo,
+            ];
+        }
+        return response(['event' => $eventdetails,'attendees' => $attendees, 'communities' => $communities], 200);
     }
 
     public function uploadprofile(request $request){

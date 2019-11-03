@@ -120,8 +120,6 @@
             axios.get('api/community')
             .then( response => {
                 this.cards = response.data.community
-                // console.log(this.community);
-                
             })
             .catch( error => { alert(error)})
         },
@@ -134,7 +132,7 @@
         },
         visit_community(community_name)
         {
-            this.$router.push('/community/'+community_name.split(' ').join('_'))
+            this.$router.push('/'+community_name.split(' ').join('_'))
         },
     },
     created() {

@@ -9,6 +9,7 @@ use App\Technology;
 use App\Community;
 use App\community_tech;
 use App\user_community;
+use App\event_community;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -87,6 +88,7 @@ class CommunityController extends Controller
             'name' => $community->name,
             'location' => $community->location,
             'photo' => $community->photo,
+            'description' => $community->description,
             'organizer' => $community->organizer->name,
         ];
 
@@ -100,8 +102,20 @@ class CommunityController extends Controller
                 'avatar' => $member->user->information->avatar,
             ];
         }
-        // return response(['community' => $members_tmp], 200)
-        return response(['community' => $communitydetails,'members' => $members], 200);
+
+        $events_tmp = event_community::where('community_id', $community->id)->get();
+        $upevents = [];
+        $pastevents = [];
+        foreach($events_tmp as $event){
+            if($event->event->start > date('Y-m-d H:i:s')){
+                $upevents[] = $event->event;
+            }
+            else{
+                $pastevents[] = $event->event;
+            }
+        }
+
+        return response(['community' => $communitydetails,'members' => $members, 'upevents' => $upevents, 'pastevents' => $pastevents], 200);
     }
 
     public function communityunder(Request $request) {

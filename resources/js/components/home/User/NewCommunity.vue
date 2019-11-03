@@ -244,6 +244,7 @@ export default {
             })
             .then( response => { 
                 var id = response.data.community.id
+                var community = response.data.community.name
                 axios.put('api/communitytech/' + id, { 
                     id: id,
                     tags: this.selected
@@ -263,12 +264,9 @@ export default {
             .catch( error => { alert(error)})
             .finally( x => { 
                 this.loading = false
-                this.$router.push('community/'+response.data.community.name.split(' ').join('_'))
+                this.$router.push('/'+community.name.split(' ').join('_'))
             })
         },
-        viewaddress(){
-            console.log(this.address)
-        }
     },
 }
 </script>

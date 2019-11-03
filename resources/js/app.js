@@ -1,7 +1,7 @@
 require('./bootstrap');
 window.Vue = require('vue');
 
-// import moment from 'moment';
+import moment from 'moment';
 import swal from 'sweetalert2'
 import VueProgressBar from 'vue-progressbar'
 import VueRouter from 'vue-router'
@@ -84,13 +84,16 @@ const toast = swal.mixin({
     routes // short for `routes: routes`
   })
   
-  //   Vue.filter('upText', function(text){
-    //     return text.charAt(0).toUpperCase() + text.slice(1)
-    // });
+Vue.filter('upText', function(text){
+    return text.charAt(0).toUpperCase() + text.slice(1)
+});
 
-    //   Vue.filter('myDate', function(created){
-//     return moment(created).format('LLLL')
-// });
+//filter event date and time
+Vue.filter('eventDate', function(created){
+    return moment(created).format("ddd, MMM D, h:mm A")
+});
+
+
 
 Vue.component('App', require('./components/App.vue').default);
 import App from './components/App.vue'

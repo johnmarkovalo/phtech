@@ -84,9 +84,6 @@
     },
     created() {
       this.type = (sessionStorage.getItem('user-type'));
-      console.log(sessionStorage.getItem('user-type'));
-      console.log(sessionStorage.getItem('user-token'));
-      
     },
     beforeRouteEnter (to, from, next) { 
         if (!sessionStorage.getItem('user-id')) {

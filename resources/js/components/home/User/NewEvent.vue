@@ -250,9 +250,10 @@
                                 
                             </v-row>
                         </v-container>
+                        <v-btn color="primary" outlined rounded x-large >Cancel</v-btn>
+                        <v-btn color="primary" rounded x-large @click="SaveEvent()">Save Event</v-btn>
                     </v-card-text>
-                    <v-card-actions>
-                        <v-btn color="primary" @click="SaveEvent()">Save</v-btn>
+                    <v-card-actions class="text-center">
                     </v-card-actions>
                 </v-card>
             </v-col>
@@ -354,15 +355,22 @@ export default {
             .catch( error => { alert(error)})
             .finally( x => {this.loading = false})
         },
-        SaveEvent(){
+        SaveEvent() {
             this.loading = true
+            let keychars = "1234567890" //allowed characters for key
+            let code = ''
+            for(let i=0; i < 11; i++ )
+            {
+                code += keychars.charAt(Math.floor(Math.random() * keychars.length))
+            }
             // Create Event
             axios.post('api/event' , { 
+                code: code, 
                 title: this.title, 
                 description: this.description, 
                 location: this.address, 
-                start: this.start, 
-                end: this.end, 
+                start: this.start.date + ' '+this.start.time, 
+                end: this.end.date + ' '+this.end.time,
                 organizer_id: sessionStorage.getItem('user-id')
             })
             .then( response => { 
@@ -372,7 +380,7 @@ export default {
                     tags: this.selectedTags
                 })
                 .then( response => {
-                    axios.put('api/event/' + id, { 
+                    axios.put('api/eventcommunity/' + id, { 
                         id: id,
                         community: this.community,
                         partners: this.selectedPartners
@@ -386,6 +394,7 @@ export default {
                             showConfirmButton: false,
                             timer: 1500
                         })
+                        this.$router.push('/'+this.community.split(' ').join('_')+'/'+'events/'+code)
                     })
                     .catch( error => { alert(error)})
                 })
@@ -394,12 +403,8 @@ export default {
             .catch( error => { alert(error)})
             .finally( x => { 
                 this.loading = false
-                this.$router.push('community/'+response.data.community.name)
             })
         },
-        viewaddress(){
-            console.log(this.address)
-        }
     },
 }
 </script>
