@@ -16,7 +16,7 @@
                 <!-- <v-btn text class="font-weight-bold teal--text" v-show='isLoggedIn' @click="logout">LOGOUT</v-btn> -->
             </v-toolbar-items>
             <v-menu transition="slide-x-reverse-transition" offset-y :nudge-width="200">
-                <template v-slot:activator="{ on }">
+                <template v-slot:activator="{ on }" :close-on-click="false">
                     <v-btn text class="font-weight-bold teal--text" v-on="on"  v-if='isnakalogin()'>
                         <v-avatar>
                             <cld-image :publicId="photo" >

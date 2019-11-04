@@ -1,106 +1,81 @@
 <template>
     <v-container fluid>
-        <v-row>
-            <v-col cols=12 md=12 lg=5>
-                <v-img :src="community.photo">
-                </v-img>
-            </v-col>
-            <v-col cols=12 md=12 lg=4 >
-                <p class="display-1 teal--text text--lighten-2 font-weight-bold">{{community.name}}</p>
-                <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-map-marker</v-icon>{{community.location}}</p>
-                <p class="title teal--text text--lighten-2"><v-icon color="primary">fas fa-user</v-icon>Organizers</p>
-                <p class="title ml-5" >{{community.organizer}} and <strong>7 others</strong></p>
-                <p class="title teal--text text--lighten-2"><v-icon color="primary">fas fa-users</v-icon> Members</p>
-                <v-row>
-                    <v-avatar v-for="member in members" :key="member.name">
-                        <cld-image :publicId="member.avatar" >
-                            <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
-                            <cld-transformation width="200" crop="scale" />
-                        </cld-image>
-                    </v-avatar>
+        <v-card class="transparent elevation-0">
+            <v-card-text>
+                <v-row justify=center>
+                    <v-col cols=12 md=12 lg=5>
+                        <v-row class="">
+                            <v-img :src="community.photo" max-width="100%">
+                            </v-img>
+                        </v-row>
+                    </v-col>
+                    <v-col cols=12 md=12 lg=3>
+                        <p class="display-1 teal--text text--lighten-2 font-weight-bold">{{community.name}}</p>
+                        <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-map-marker</v-icon>{{community.location}}</p>
+                        <p class="title teal--text text--lighten-2"><v-icon color="primary">fas fa-user</v-icon>Organizers</p>
+                        <p class="title ml-5" >{{community.organizer}} and <strong>7 others</strong></p>
+                        <p class="title teal--text text--lighten-2"><v-icon color="primary">fas fa-users</v-icon> Members</p>
+                        <v-row>
+                            <v-tooltip top v-for="member in members" :key="member.name">
+                                <template v-slot:activator="{ on }">
+                                    <v-avatar v-on="on" :class="{'': $vuetify.breakpoint.smAndDown, 'ml-2':$vuetify.breakpoint.mdAndUp}">
+                                        <cld-image :publicId="member.avatar" >
+                                            <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
+                                            <cld-transformation width="200" crop="scale" />
+                                        </cld-image>
+                                    </v-avatar>
+                                </template>
+                                <span>{{member.name}}</span>
+                            </v-tooltip>
+                        </v-row>
+                    </v-col>
+                    <v-col cols=12 md=12 lg=2>
+                        <v-row>
+                            <p class="title teal--text text--lighten-2"><v-icon color="primary">fas fa-tags</v-icon>Community Topics/Tags</p>
+                            <v-chip-group column>
+                                <v-chip v-for="tag in tags"  :key="tag.name" large outlined color="primary">{{tag.name}}</v-chip>
+                            </v-chip-group>
+                        </v-row>
+                        <!-- <v-row class="mt-5">
+                            <v-chip class="float-right" rounded outlined color="primary" @click="">Join This Group</v-chip>
+                        </v-row> -->
+                    </v-col>
                 </v-row>
-            </v-col>
-            <v-col cols=12 md=12 lg=3 >
-                <p class="title teal--text text--lighten-2">About {{community.name}}</p>
-                <p :class="{'title text-truncate': $vuetify.breakpoint.smAndDown, 'title': $vuetify.breakpoint.mdAndUp}">{{community.description}}</p>
-                <a class="title teal--text text--lighten-2 float-right" v-if="$vuetify.breakpoint.smAndDown">See More</a>
-            </v-col>
-        </v-row>
-        <p class="display-1 teal--text text--lighten-2">Upcomming Events:</p>
-        <v-row dense>
-            <v-col v-for="event in upcommingevents" :key="event.title"
-                cols="12" lg="3" xl="3" md="3">
-                <v-card @click="visit_event(community.name,event.code)">
-                <v-img
-                    :src="event.photo"
-                    class="white--text align-end"
-                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                    height="200px"
-                >
-                </v-img>
-                <v-card-text> 
-                    <p class="title teal--text text--lighten-2">{{event.start | eventDate}}</p>
-                    <p class="headline white--text">{{event.title}}</p>
-                    <p class="subtitle-1">{{event.location.formatted_address}}</p>
-                    <v-chip v-for="item in event.community" v-bind:key="item.id" color="primary" outlined>
-                        <v-icon left>
-                        fas fa-users
-                        </v-icon>
-                        {{item['name']}}
-                    </v-chip>
-                </v-card-text>
-
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-
-                    <v-btn icon>
-                    <v-icon>mdi-heart</v-icon>
-                    </v-btn>
-
-                    <v-btn icon>
-                    <v-icon>mdi-bookmark</v-icon>
-                    </v-btn>
-
-                    <v-btn icon>
-                    <v-icon>mdi-share-variant</v-icon>
-                    </v-btn>
-                </v-card-actions>
-                </v-card>
-            </v-col>
-        </v-row>
-        <p class="display-1 teal--text text--lighten-2">Past Events:</p>
-        <v-row dense>
-            <v-col v-for="event in pastevents" :key="event.title"
-                cols="12" lg="3" xl="3" md="3">
-                <v-card @click="visit_event(community.name,event.code)">
-                <v-img
-                    :src="event.photo"
-                    class="white--text align-end"
-                    gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                    height="200px"
-                >
-                </v-img>
-                <v-card-text> 
-                    <p class="title teal--text text--lighten-2">{{event.start | eventDate}}</p>
-                    <p class="headline white--text">{{event.title}}</p>
-                    <p class="subtitle-1">{{event.location.formatted_address}}</p>
-                    <v-chip v-for="item in event.community" v-bind:key="item.id" color="primary" outlined>
-                        <v-icon left>
-                        fas fa-users
-                        </v-icon>
-                        {{item['name']}}
-                    </v-chip>
-                </v-card-text>
-
-                <v-card-actions>
-                    <v-spacer></v-spacer>
-                    <v-btn outlined rounded medium>
-                        attend
-                    </v-btn>
-                </v-card-actions>
-                </v-card>
-            </v-col>
-        </v-row>
+                <v-row justify=center>
+                    <v-col cols=12 md=12 lg=5>
+                        <v-row class="mt-5">
+                             <v-chip-group mandatory active-class="teal--text text--lighten-1">
+                                <v-chip color="primary" outlined class="" @click="visit_about(community.name)"><v-icon left>mdi-information</v-icon>About</v-chip>
+                                <v-chip color="primary" outlined class="" @click="visit_events(community.name)"><v-icon left>mdi-calendar</v-icon>Events</v-chip>
+                                <v-chip color="primary" outlined class="" @click="visit_members(community.name)"><v-icon left>fas fa-users</v-icon>Members</v-chip>
+                                <v-chip color="primary" outlined class="" @click="visit_news(community.name)"><v-icon left>mdi-newspaper</v-icon>News</v-chip>
+                            </v-chip-group>
+                            <!-- <v-col cols=6 lg=3>
+                                <v-chip rounded outlined large width="30em" color="primary" @click="visit_events(community.name)">About</v-chip>
+                            </v-col>
+                            <v-col cols=6 lg=3>
+                                <v-chip rounded outlined large width="30em" color="primary" @click="visit_events(community.name)">Members</v-chip>
+                            </v-col>
+                            <v-col cols=6 lg=3>
+                                <v-chip rounded outlined large width="30em" color="primary" @click="visit_events(community.name)">Events</v-chip>
+                            </v-col>
+                            <v-col cols=6 lg=3>
+                                <v-chip rounded outlined large width="30em" color="primary" @click="visit_events(community.name)">News</v-chip>
+                            </v-col> -->
+                        </v-row>
+                    </v-col>
+                    <v-col cols=12 md=12 lg=5>
+                        <v-row class="mt-5" justify=center>
+                            <v-col cols=6 lg=5>
+                                <v-btn v-if="!membership" class="float-right" block rounded large color="primary" @click="joinCommunity()">Join This Group</v-btn>
+                                <v-btn v-else class="float-right" block rounded large color="primary">Membership<v-icon right>mdi-chevron-down</v-icon></v-btn>
+                            </v-col>
+                        </v-row>
+                    </v-col>
+                </v-row>
+                <router-view v-bind:community="this.community" v-bind:members="this.members" v-bind:pastevents="this.pastevents"        v-bind:upcommingevents="this.upcommingevents" name="communitydetails"></router-view>
+            </v-card-text>
+        </v-card>
     </v-container>
 </template>
 <script>
@@ -110,6 +85,9 @@
       community: {id: '', name: '', photo: '', location: '', organizer: '', description: ''},
       upcommingevents: [],
       pastevents: [],
+      tags: [],
+      membership: '',
+    //   route: community.name.split(' ').join('_'),
 
     }),
     mounted () {
@@ -117,6 +95,18 @@
     },
     methods: {
         visit_event(community_name,event_code){
+            this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
+        },
+        visit_about(community_name){
+            this.$router.push('/'+community_name.split(' ').join('_')+'/about')
+        },
+        visit_events(community_name){
+            this.$router.push('/'+community_name.split(' ').join('_')+'/events')
+        },
+        visit_members(community_name){
+            this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
+        },
+        visit_news(community_name){
             this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
         },
         retrieveCommunity(){
@@ -137,12 +127,24 @@
                         location: response.data.community.location.formatted_address,
                     }
                     this.members = response.data.members
+                    this.tags = response.data.community.tags
                     this.upcommingevents = response.data.upevents
                     this.pastevents = response.data.pastevents
+                    this.membership = response.data.membership
                     
                 })
                 .catch( error => { alert(error)})
             }
+        },
+        joinCommunity(){
+            axios.put('api/joincommunity', {
+                id: this.community.id
+            })
+            .then( response => {
+                this.membership = response.data.joiner.position
+                this.members.push(response.data.joiner)
+            })
+            .catch( error => { alert(error)})
         },
         
     },

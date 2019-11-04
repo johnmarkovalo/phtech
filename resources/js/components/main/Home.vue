@@ -89,7 +89,6 @@
         if (!sessionStorage.getItem('user-id')) {
             return next('signin');
         }
-
         next();
     }
 }

@@ -264,7 +264,7 @@ export default {
             .catch( error => { alert(error)})
             .finally( x => { 
                 this.loading = false
-                this.$router.push('/'+community.name.split(' ').join('_'))
+                this.$router.push('/'+community.name.split(' ').join('_')+'/about')
             })
         },
     },

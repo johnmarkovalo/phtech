@@ -79,11 +79,6 @@
                                 <v-icon small>mdi-card-bulleted-settings</v-icon>
                                 View
                             </v-btn>
-
-                            <v-btn outlined rounded color="primary">
-                                <v-icon small>mdi-login</v-icon>
-                                Join
-                            </v-btn>
                             </v-card-actions>
                         </v-card>
                         </v-col>
@@ -132,7 +127,7 @@
         },
         visit_community(community_name)
         {
-            this.$router.push('/'+community_name.split(' ').join('_'))
+            this.$router.push('/'+community_name.split(' ').join('_')+'/about')
         },
     },
     created() {

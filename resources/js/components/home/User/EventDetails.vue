@@ -1,7 +1,8 @@
 <template>
     <v-container fluid>
-        <v-card>
+        <v-card class="transparent elevation-0">
             <v-card-text>
+                <!-- Header -->
                 <v-row justify=center>
                     <v-col cols=12 md=12 lg=4>
                         <v-row>
@@ -60,34 +61,21 @@
                 </v-row>
                 <v-divider></v-divider>
                 <!-- Image and Google Map -->
-                <v-row justify=center align=center>
+                <v-row justify=center max-height="320px">
                     <v-col cols=12 md=12 lg=4>
+                        <!-- Image -->
                         <v-row>
-                            <v-img :src="event.photo">
+                            <v-img :src="event.photo" >
                             </v-img>
                         </v-row>
-                    </v-col>
-                    <v-col cols=12 md=12 lg=3>
-                        <GmapMap style="width: 100%; height: 500px;" :zoom="25" :center="center" 
-                                    map-type-id="terrain">
-                            <GmapMarker 
-                                v-if="this.center"
-                                label="★"
-                                :draggable="true"
-                                :position="center"
-                                />
-                        </GmapMap>
-                    </v-col>
-                </v-row>
-                <!-- Details and Attendee -->
-                <v-row justify=center align=center>
-                    <v-col cols=12 md=12 lg=4>
+                        <!-- Details -->
                         <v-row>
                             <p class="display-1 teal--text text--lighten-2 font-weight-bold">Details</p>
                         </v-row>
                         <v-row>
                             <p class="title">{{event.description}}</p>
                         </v-row>
+                        <!-- Attendees -->
                         <v-row>
                             <p class="display-1 teal--text text--lighten-2 font-weight-bold">Attendees</p>
                         </v-row>
@@ -108,8 +96,36 @@
                             </v-col>
                         </v-row>
                     </v-col>
-                    <v-col cols=12 md=12 lg=3>
-                        
+                    <v-col cols=12 md=12 lg=3 :class="{'': $vuetify.breakpoint.smAndDown, 'ml-3':$vuetify.breakpoint.mdAndUp}">
+                        <v-row>
+                            <v-spacer></v-spacer>
+                            <v-btn color="primary" rounded medium>Organizer Settings<v-icon right>mdi-chevron-down</v-icon></v-btn>
+                        </v-row>
+                        <v-row>
+                            <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-alarm</v-icon>{{event.start | eventDate}}</p>
+                        </v-row>
+                         <v-row>
+                            <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-map-marker</v-icon>{{event.location}}</p>
+                        </v-row>
+                        <!-- Maps -->
+                        <v-row>
+                            <GmapMap style="width: 100%; height: 300px;" :zoom="25" :center="location" 
+                                        map-type-id="terrain">
+                                <GmapMarker 
+                                    v-if="this.location"
+                                    label="★"
+                                    :draggable="true"
+                                    :position="location"
+                                    />
+                            </GmapMap>
+                        </v-row>
+                        <!-- Tags -->
+                        <v-row>
+                            <p class="title teal--text text--lighten-2"><v-icon color="primary">fas fa-tags</v-icon>Community Topics/Tags</p>
+                            <v-chip-group column>
+                                <v-chip v-for="tag in tags"  :key="tag.name" large outlined color="primary">{{tag.name}}</v-chip>
+                            </v-chip-group>
+                        </v-row>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -183,9 +199,10 @@
     data: () => ({
         center: { lat: 6.903975099999999 , lng: 122.07619890000001 },
         attendees: [],
-        event: {id: '', title: '', photo: '', location: '', organizer: '', description: ''},
+        event: {id: '', start: '', title: '', photo: '', location: '', organizer: '', description: ''},
         communities: [{name:''}],
         location: {},
+        tags: [],
     }),
     computed: {
     },
@@ -206,13 +223,15 @@
                         id: response.data.event.id,
                         title: response.data.event.title,
                         photo: response.data.event.photo,
+                        start: response.data.event.start,
                         description: response.data.event.description,
                         organizer: response.data.event.organizer,
                         location: response.data.event.location.formatted_address,
                     }
-                   this.location = { lat: response.data.event.location.lat, lng: response.data.event.location.lng }
+                    this.location = { lat: response.data.event.location.lat, lng: response.data.event.location.lng }
                     this.attendees = response.data.attendees
                     this.communities = response.data.communities
+                    this.tags = response.data.tags
                     console.log(this.location);
                     
                 })

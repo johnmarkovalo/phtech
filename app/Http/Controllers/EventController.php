@@ -99,7 +99,7 @@ class EventController extends Controller
         $event_tmp = Event::all();
         $eventlist = [];
         foreach($event_tmp as $event){
-            if($event->start < date('Y-m-d H:i:s')){
+            if($event->start > date('Y-m-d H:i:s')){
                 $eventlist[] = [
                     'id' => $event->id,
                     'name' => $event->title,
@@ -137,7 +137,11 @@ class EventController extends Controller
             ],
         ];
 
-        $attendees_tmp = user_event::where(['event_id', $event->id,'position', 'notoing'])->get();
+        $tags = event_tech::select('technology.name')
+                        ->join('technology', 'event_tech.tech_id', 'technology.id')
+                        ->where('event_id', $event->id)->get();
+
+        $attendees_tmp = user_event::where([['event_id', $event->id],['position', '<>', 'notgoing']])->get();
         $attendees = [];
         foreach($attendees_tmp as $attendee){
             $attendees[] = [
@@ -157,7 +161,13 @@ class EventController extends Controller
                 'photo' => $community->community->photo,
             ];
         }
-        return response(['event' => $eventdetails,'attendees' => $attendees, 'communities' => $communities], 200);
+        return response(['event' => $eventdetails,'attendees' => $attendees, 'communities' => $communities, 'tags' => $tags], 200);
+    }
+
+    public function joinevent(Request $request){
+        $attendee = user_event::create(['user_id' => $request->user()->id, 'event_id' => $request->id, 'position' => 'going']);
+
+        return response(['attendee' => $attendee], 200);
     }
 
     public function uploadprofile(request $request){

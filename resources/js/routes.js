@@ -10,10 +10,12 @@ import Signup from './components/main/Signup.vue'
 import Home from './components/main/Home.vue'
 //User
 import Information from './components/home/User/Information.vue'
-import NewComm from './components/home/User/NewCommunity.vue'
 import NewEvent from './components/home/User/NewEvent.vue'
-import CommunityDetails from './components/home/User/CommunityDetails.vue'
 import EventDetails from './components/home/User/EventDetails.vue'
+import NewComm from './components/home/User/NewCommunity.vue'
+import CommunityAbout from './components/home/User/CommunityAbout.vue'
+import CommunityDetails from './components/home/User/CommunityDetails.vue'
+import CommunityEvents from './components/home/User/CommunityEvents.vue'
 import Profile from './components/home/User/Profile.vue'
 //Admin
 import Dashboard from './components/home/Admin/Dashboard.vue'
@@ -45,8 +47,14 @@ export const routes = [
                     { path: '/info', name: 'information', components: {home: Information}},
                     { path: '/newcommunity', name: 'newcommunity', components: {home: NewComm}},
                     { path: '/newevent', name: 'newevent', components: {home: NewEvent}},
-                    { path: '/:community_name', name: 'communitydetails', components: {home: CommunityDetails}},
                     { path: '/:community_name/events/:event_code', name: 'eventdetails', components: {home: EventDetails}},
+                    { path: '/:community_name', name: 'communitydetails', components: {home: CommunityDetails},
+                        children: [
+                            { path: '/:community_name/about', name: 'communityabout', components: {communitydetails: CommunityAbout}},
+                            { path: '/:community_name/events', name: 'communityevents', components: {communitydetails: CommunityEvents}},
+                            // { path: '/:community_name/members', name: 'communitymembers', components: {communitydetails: CommunityMembers}},
+                            ]
+                    },
                 ]
             },
         ]

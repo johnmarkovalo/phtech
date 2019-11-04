@@ -9,6 +9,7 @@ use App\Technology;
 use App\Community;
 use App\community_tech;
 use App\user_community;
+use App\user_event;
 use App\event_community;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -82,6 +83,7 @@ class CommunityController extends Controller
     }
 
     public function communitydetails(Request $request) {
+        $membership = '';
         $community = Community::where('name', $request->name)->first();
         $communitydetails = [
             'id' => $community->id,
@@ -90,11 +92,17 @@ class CommunityController extends Controller
             'photo' => $community->photo,
             'description' => $community->description,
             'organizer' => $community->organizer->name,
+            'tags' => community_tech::select('technology.name')
+                        ->join('technology', 'community_tech.tech_id', 'technology.id')
+                        ->where('community_id', $community->id)->get(),
         ];
 
         $members_tmp = user_community::where('community_id', $community->id)->get();
         $members = [];
         foreach($members_tmp as $member){
+            if($member->user->id == $request->user()->id){
+                $membership = $member->position;
+            }
             $members[] = [
                 'id' => $member->user->id,
                 'name' => $member->user->name,
@@ -108,14 +116,40 @@ class CommunityController extends Controller
         $pastevents = [];
         foreach($events_tmp as $event){
             if($event->event->start > date('Y-m-d H:i:s')){
-                $upevents[] = $event->event;
+                $position = user_event::where([['user_id', $request->user()->id],['event_id',$event->event->id]])->first();
+                if(!$position){
+                    $position = 'pending';
+                }
+                $upevents[] = [
+                    'id' => $event->event->id,   
+                    'title' => $event->event->title,   
+                    'code' => $event->event->code,   
+                    'photo' => $event->event->photo,
+                    'start' => $event->event->start,
+                    'location' => $event->event->location,
+                    'photo' => $event->event->photo,
+                    'position' => $position->position,
+                ];
             }
             else{
-                $pastevents[] = $event->event;
+                $position = user_event::where([['user_id', $request->user()->id],['event_id',$event->event->id]])->first();
+                if($position){
+                    $position = 'went';
+                }
+                $pastevents[] = [
+                    'id' => $event->event->id,   
+                    'title' => $event->event->title,   
+                    'code' => $event->event->code,   
+                    'photo' => $event->event->photo,
+                    'start' => $event->event->start,
+                    'location' => $event->event->location,
+                    'photo' => $event->event->photo,
+                    'position' => $position,
+                ];
             }
         }
 
-        return response(['community' => $communitydetails,'members' => $members, 'upevents' => $upevents, 'pastevents' => $pastevents], 200);
+        return response(['community' => $communitydetails,'members' => $members, 'upevents' => $upevents, 'pastevents' => $pastevents, 'membership' => $membership], 200);
     }
 
     public function communityunder(Request $request) {
@@ -126,6 +160,17 @@ class CommunityController extends Controller
         }
 
         return response(['community' => $communities], 200);
+    }
+
+    public function joincommunity(Request $request){
+        $joinee = user_community::create(['user_id' => $request->user()->id, 'community_id' => $request->id, 'position' => 'member']);
+        $joiner = [
+            'id' => $joinee->user->id,
+            'name' => $joinee->user->name,
+            'position' => $joinee->position,
+            'avatar' => $joinee->user->information->avatar,
+        ];
+        return response(['joiner' => $joiner], 200);
     }
 
     public function uploadprofile(request $request){
