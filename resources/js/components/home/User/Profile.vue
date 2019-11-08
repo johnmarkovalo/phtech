@@ -1,78 +1,149 @@
 <template>
-  <v-container fill-height fluid grid-list-xl>
-    <v-layout justify-center wrap>
-      <v-flex xs12 md8>
-        <v-form>
-          <v-container py-0>
-            <v-layout wrap>
-              <v-flex xs12 md12 lg12 >
-                  <v-layout row wrap>
-                    <v-flex xs12 md6>
+  <v-container fluid>
+  
+    <v-card class="transparent elevation-0">
+      <v-card-text>
+          <v-row justify=center>
+              <v-col cols=12 md=12 lg=6>
+                <v-card>
+                  <v-card-title>
+                    <v-spacer></v-spacer>
+                    <v-btn icon><v-icon color="primary">mdi-pen</v-icon></v-btn>
+                  </v-card-title>
+                  <v-card-text>
+                    <v-row justify=center>
+                       <v-avatar size='130'>
+                        <v-expand-transition>
+                          <div
+                            v-if="hover"
+                            :class="{'d-flex transition-fast-in-fast-out grey lighten-5 v-card--reveal headline orange--text': !$vuetify.theme.dark, 
+                            'd-flex transition-fast-in-fast-out grey darken-4 v-card--reveal headline orange--text': $vuetify.theme.dark}"
+                            style="height: 100%;"
+                          >
+                            Edit
+                          </div>
+                        </v-expand-transition>
+                        <cld-image :publicId="photo" v-if="photo == avatar">
+                          <cld-transformation width="1000" height="1000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="fill"/> 
+                          <cld-transformation width="200" crop="scale" />
+                        </cld-image>
+                        <img :src="photo" alt="Profile" v-if="photo != avatar">
+                      </v-avatar>
+                    </v-row>
+                    <v-row justify=center>
+                        <p class="title teal--text text--lighten-2">{{name}}</p>
+                    </v-row>
+                    <v-row>
+                        <p class="title teal--text text--lighten-2">{{bio}}</p>
+                    </v-row>
+                  </v-card-text>
+                </v-card>
+              </v-col>
+              <v-col cols=12 md=12 lg=2>
+                  <v-card>
+                    <v-card-text class="text-center">
+                      <v-row>
+                        <v-col>
+                          <p class="display-2 teal--text text-lighten-2">Points</p>
+                        </v-col>
+                      </v-row>
+                      <v-row>
+                        <v-col>
+                          <p class="display-2 font-weight-black">250</p>
+                        </v-col>
+                      </v-row>
+                      <v-row>
+                        <v-col>
+                          <a href="asdasasd" class="teal--text text--lighten-2">See points log</a>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+              </v-col>
+          </v-row>
+      </v-card-text>
+    </v-card>
+      <v-dialog>
+        <v-row justify-center wrap>
+          <v-hover v-slot:default="{ hover }">
+              <v-card class="elevation-0 transparent" xs12 md4 height="200px">
+                <v-flex>
+                  <input type="file" id="imgupload" style="display:none" @change="UploadPicture"/>
+                  <v-avatar @click.prevent="openFileDialog()" slot="offset" class="mx-auto d-block" size='130'>
+                    <v-expand-transition>
+                      <div
+                        v-if="hover"
+                        :class="{'d-flex transition-fast-in-fast-out grey lighten-5 v-card--reveal headline orange--text': !$vuetify.theme.dark, 
+                        'd-flex transition-fast-in-fast-out grey darken-4 v-card--reveal headline orange--text': $vuetify.theme.dark}"
+                        style="height: 100%;"
+                      >
+                        Edit
+                      </div>
+                    </v-expand-transition>
+                    <cld-image :publicId="photo" v-if="photo == avatar">
+                      <cld-transformation width="1000" height="1000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="fill"/> 
+                      <cld-transformation width="200" crop="scale" />
+                    </cld-image>
+                    <img :src="photo" alt="Profile" v-if="photo != avatar">
+                  </v-avatar>
+                  <v-card-text class="text-center">
+                    <h6 class="title teal--text text--lighten-2 font-weight-regular mb-3">{{name}}</h6>
+                  </v-card-text>
+                </v-flex>
+              </v-card>
+          </v-hover>
+          <v-col xs12 md8>
+            <v-form>
+              <v-container py-0>
+                  <v-row>
+                    <v-col xs12 md6>
                         <v-text-field class="purple-input" id="lname" type="text" label="Last Name" v-model="lastname" required autofocus prepend-inner-icon="mdi-account-circle"/>
-                    </v-flex>
-                    <v-flex xs12 md6>
+                    </v-col>
+                    <v-col xs12 md6>
                         <v-text-field class="purple-input" id="fname" type="text" label="First Name" v-model="firstname" required />
-                    </v-flex>
-                  </v-layout>
-              </v-flex>
-              <v-flex xs12 md12>
-                <v-text-field label="Email Address" class="purple-input" v-model="email" prepend-inner-icon="mdi-at"/>
-              </v-flex>
-            </v-layout>
-          </v-container>
-          <v-container py-0>
-            <v-layout wrap>
-              <p class="display-1">Affiliate</p>
-              <v-flex xs12 md12 lg12 >
-                  <v-layout row wrap>
-                    <v-flex xs12 md6>
+                    </v-col>
+                  </v-row>
+                  <v-row>
+                    <v-col xs12 md12>
+                      <v-text-field label="Email Address" class="purple-input" v-model="email" prepend-inner-icon="mdi-at"/>
+                    </v-col>
+                  </v-row>
+              </v-container>
+              <v-container py-0>
+                <v-row>
+                  <v-col cols=12>
+                    <v-row>
+                      <v-col cols=12 lg=12>
+                        <p class="display-1">Affiliate</p>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols=12 md=6>
                         <v-text-field class="purple-input" type="text" label="Affiliate" v-model="affiliate" required prepend-inner-icon="mdi-account-circle"/>
-                    </v-flex>
-                    <v-flex xs12 md6>
+                      </v-col>
+                      <v-col cols=12 md=6>
                         <v-text-field class="purple-input" type="text" label="Position" v-model="position" required />
-                    </v-flex>
-                  </v-layout>
-              </v-flex>
-              <v-flex xs12 md12>
-                <v-text-field v-model="password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.min]" :type="show1 ? 'text' : 'password'" label="Password" hint="At least 8 characters" counter @click:append="show1 = !show1" @keydown.space.prevent prepend-inner-icon="mdi-lock"></v-text-field>
-              </v-flex>
-              <v-flex xs12 text-xs-right >
-                <v-btn class="mx-0 font-weight-light" rounded large color="success" @click="updateUser()">
-                  Update Profile
-                </v-btn>
-              </v-flex>
-            </v-layout>
-          </v-container>
-        </v-form>
-      </v-flex>
-      <v-hover v-slot:default="{ hover }">
-          <v-card class="elevation-0 transparent" xs12 md4 height="200px">
-            <v-flex>
-              <input type="file" id="imgupload" style="display:none" @change="UploadPicture"/>
-              <v-avatar @click.prevent="openFileDialog()" slot="offset" class="mx-auto d-block" size='130'>
-                <v-expand-transition>
-                  <div
-                    v-if="hover"
-                    :class="{'d-flex transition-fast-in-fast-out grey lighten-5 v-card--reveal headline orange--text': !$vuetify.theme.dark, 
-                    'd-flex transition-fast-in-fast-out grey darken-4 v-card--reveal headline orange--text': $vuetify.theme.dark}"
-                    style="height: 100%;"
-                  >
-                    Edit
-                  </div>
-                </v-expand-transition>
-                <cld-image :publicId="photo" v-if="photo == avatar">
-                  <cld-transformation width="1000" height="1000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="fill"/> 
-                  <cld-transformation width="200" crop="scale" />
-                </cld-image>
-                <img :src="photo" alt="Profile" v-if="photo != avatar">
-              </v-avatar>
-              <v-card-text class="text-center">
-                <h6 class="title teal--text text--lighten-2 font-weight-regular mb-3">{{name}}</h6>
-              </v-card-text>
-            </v-flex>
-          </v-card>
-      </v-hover>
-    </v-layout>
+                      </v-col>
+                    </v-row>
+                    <v-row>
+                      <v-col cols=12 md=12>
+                        <v-text-field v-model="password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.min]" :type="show1 ? 'text' : 'password'" label="Password" hint="At least 8 characters" counter @click:append="show1 = !show1" @keydown.space.prevent prepend-inner-icon="mdi-lock"></v-text-field>
+                      </v-col>
+                    </v-row>
+                    <v-row xs12 text-xs-right >
+                      <v-col cols=12>
+                        <v-btn class="mx-0 font-weight-light" rounded large color="success" @click="updateUser()">
+                          Update Profile
+                        </v-btn>
+                      </v-col>
+                    </v-row>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-form>
+          </v-col>
+        </v-row>
+      </v-dialog>
   </v-container>
 </template>
 
@@ -98,6 +169,8 @@
         email: '',
         affiliate: '',
         position: '',
+        bio: '',
+        occupation: '',
         avatar: '',
         photo: sessionStorage.getItem('user-avatar'),
         password: '',
@@ -231,6 +304,8 @@
           this.email = information.email
           this.affiliate = information.affiliate
           this.position = information.position
+          this.bio = information.bio
+          this.occupation = information.occupation
           this.avatar = information.avatar
           this.photo = information.avatar
           console.log(this.tags);

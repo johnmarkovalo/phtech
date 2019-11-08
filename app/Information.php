@@ -16,6 +16,8 @@ class Information extends Model
         'firstname',
         'affiliation',
         'position',
+        'occupation',
+        'bio',
         'avatar'
     ];
 

@@ -93,6 +93,10 @@ Vue.filter('eventDate', function(created){
     return moment(created).format("ddd, MMM D, h:mm A")
 });
 
+Vue.filter('attendDate', function(created){
+  return moment(created).format("MMM D, h:mm A")
+});
+
 
 
 Vue.component('App', require('./components/App.vue').default);

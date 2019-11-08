@@ -14,7 +14,7 @@
                         <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-map-marker</v-icon>{{community.location}}</p>
                         <p class="title teal--text text--lighten-2"><v-icon color="primary">fas fa-user</v-icon>Organizers</p>
                         <p class="title ml-5" >{{community.organizer}} and <strong>7 others</strong></p>
-                        <p class="title teal--text text--lighten-2"><v-icon color="primary">fas fa-users</v-icon> Members</p>
+                        <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-account-group</v-icon> Members</p>
                         <v-row>
                             <v-tooltip top v-for="member in members" :key="member.name">
                                 <template v-slot:activator="{ on }">
@@ -31,7 +31,7 @@
                     </v-col>
                     <v-col cols=12 md=12 lg=2>
                         <v-row>
-                            <p class="title teal--text text--lighten-2"><v-icon color="primary">fas fa-tags</v-icon>Community Topics/Tags</p>
+                            <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-tag-multiple</v-icon>Community Topics/Tags</p>
                             <v-chip-group column>
                                 <v-chip v-for="tag in tags"  :key="tag.name" large outlined color="primary">{{tag.name}}</v-chip>
                             </v-chip-group>
@@ -47,7 +47,7 @@
                              <v-chip-group mandatory active-class="teal--text text--lighten-1">
                                 <v-chip color="primary" outlined class="" @click="visit_about(community.name)"><v-icon left>mdi-information</v-icon>About</v-chip>
                                 <v-chip color="primary" outlined class="" @click="visit_events(community.name)"><v-icon left>mdi-calendar</v-icon>Events</v-chip>
-                                <v-chip color="primary" outlined class="" @click="visit_members(community.name)"><v-icon left>fas fa-users</v-icon>Members</v-chip>
+                                <v-chip color="primary" outlined class="" @click="visit_members(community.name)"><v-icon left>mdi-account-group</v-icon>Members</v-chip>
                                 <v-chip color="primary" outlined class="" @click="visit_news(community.name)"><v-icon left>mdi-newspaper</v-icon>News</v-chip>
                             </v-chip-group>
                             <!-- <v-col cols=6 lg=3>
@@ -142,7 +142,7 @@
             })
             .then( response => {
                 this.membership = response.data.joiner.position
-                this.members.push(response.data.joiner)
+                this.members = response.data.members
             })
             .catch( error => { alert(error)})
         },

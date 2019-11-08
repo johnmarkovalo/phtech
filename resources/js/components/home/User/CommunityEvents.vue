@@ -6,7 +6,7 @@
             </v-col>
         </v-row>
         <v-row dense justify=center>
-                <v-col cols="12" lg=10>
+            <v-col cols="12" lg=10>
                 <v-col v-for="event in upcommingevents" :key="event.title"
                     cols="10" lg="3" xl="3" md="3">
                     <v-card @click="visit_event(community.name,event.code)">
@@ -23,7 +23,7 @@
                         <p class="subtitle-1">{{event.location.formatted_address}}</p>
                         <v-chip v-for="item in event.community" v-bind:key="item.id" color="primary" outlined>
                             <v-icon left>
-                            fas fa-users
+                            mdi-account-group
                             </v-icon>
                             {{item['name']}}
                         </v-chip>
@@ -31,18 +31,8 @@
 
                     <v-card-actions>
                         <v-spacer></v-spacer>
-
-                        <v-btn icon>
-                        <v-icon>mdi-heart</v-icon>
-                        </v-btn>
-
-                        <v-btn icon>
-                        <v-icon>mdi-bookmark</v-icon>
-                        </v-btn>
-
-                        <v-btn icon>
-                        <v-icon>mdi-share-variant</v-icon>
-                        </v-btn>
+                        <v-chip v-if="event.position == 'going' || event.position == 'organizer'" rounded outlined medium color="success"><v-icon>mdi-check</v-icon>Going</v-chip>
+                        <v-chip v-if="event.position == 'notgoing'" rounded outlined medium color="error"><v-icon>mdi-ex</v-icon>NotGoing</v-chip>
                     </v-card-actions>
                     </v-card>
                 </v-col>
@@ -71,7 +61,7 @@
                         <p class="subtitle-1">{{event.location.formatted_address}}</p>
                         <v-chip v-for="item in event.community" v-bind:key="item.id" color="primary" outlined>
                             <v-icon left>
-                            fas fa-users
+                            mdi-account-group
                             </v-icon>
                             {{item['name']}}
                         </v-chip>
@@ -80,6 +70,7 @@
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-chip v-if="event.position == 'went'" rounded outlined medium color="success"><v-icon>mdi-check</v-icon>Went</v-chip>
+                        <v-chip v-else-if="event.position == 'absent'" rounded outlined medium color="warning"><v-icon>mdi-check</v-icon>Didn't Go</v-chip>
                         <!-- <v-btn outlined rounded medium>
                             attend
                         </v-btn> -->

@@ -52,6 +52,8 @@ class InformationController extends Controller
             'avatar' => $request->user()->information->avatar,
             'affiliate' => $request->user()->information->affiliation,
             'position' => $request->user()->information->position,
+            'occupation' => $request->user()->information->occupation,
+            'bio' => $request->user()->information->bio,
             'email' => $request->user()->email,
         ];
 

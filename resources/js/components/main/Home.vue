@@ -15,7 +15,7 @@
             </v-list-item>
             <v-list-item ripple="ripple" exact to="technology">
               <v-list-item-action>
-                <v-icon>fas fa-tags</v-icon>
+                <v-icon>mdi-tag-multiple</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title class="subheading font-weight-regular">Technologies
@@ -40,7 +40,7 @@
             </v-list-item>
             <v-list-item ripple="ripple" exact to="community">
               <v-list-item-action>
-                <v-icon>fas fa-users</v-icon>
+                <v-icon>mdi-account-group</v-icon>
               </v-list-item-action>
               <v-list-item-content>
                 <v-list-item-title class="subheading font-weight-regular">Communities</v-list-item-title>

@@ -141,7 +141,7 @@
                             <p class="title teal--text text--lighten-2">Event Community</p>                            
                             <v-row>
                                 <v-col cols=12 md=12 lg=12 xl=12>
-                                    <v-select color="primary" v-model="community" :items="communityUnder" outlined chips label="Community"  required prepend-inner-icon="fas fa-users"/>
+                                    <v-select color="primary" v-model="community" :items="communityUnder" outlined chips label="Community"  required prepend-inner-icon="mdi-account-group"/>
                                 </v-col>
                                 <!-- <v-col cols=12 md=12 lg=6 xl=6>
                                     <v-text-field outlined name="name" label="label"/>

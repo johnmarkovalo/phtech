@@ -4,7 +4,7 @@
         <v-data-table :loading=loading loading-text="Loading... Please wait" :headers="headers" :items="tags" class="elevation-1">
             <template v-slot:top>
                 <v-toolbar flat >
-                    <v-icon color="primary" x-large>fas fa-tags</v-icon>
+                    <v-icon color="primary" x-large>mdi-tag-multiple</v-icon>
                     <v-toolbar-title class="display-1">Technologies Tags</v-toolbar-title>
                     <v-divider  class="mx-4" inset vertical></v-divider>
                     <v-spacer></v-spacer>

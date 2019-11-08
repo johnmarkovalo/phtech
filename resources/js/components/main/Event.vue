@@ -83,7 +83,7 @@
                               <p class="subtitle-1">{{card.location.formatted_address}}</p>
                                <v-chip v-for="item in card.community" v-bind:key="item.id" color="primary" outlined>
                                   <v-icon left>
-                                    fas fa-users
+                                    mdi-account-group
                                   </v-icon>
                                   {{item['name']}}
                                 </v-chip>
@@ -92,9 +92,9 @@
                             <v-card-actions>
                               <v-spacer></v-spacer>
 
-                              <v-btn rounded large color="primary" width="5vw">
-                                attend
-                              </v-btn>
+                              <v-btn v-if="card.position == 'pending'" rounded outlined color="primary" width="5vw" >Attend</v-btn>
+                              <v-btn v-else-if="card.position == 'going' || card.position == 'organizer'" rounded outlined color="success" width="5vw">Going</v-btn>
+                              <v-btn v-else-if="card.position == 'notgoing'" rounded outlined color="error" width="5vw">Not Going</v-btn>
                             </v-card-actions>
                           </v-card>
                         </v-col>
@@ -218,7 +218,12 @@
           this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
       },
       retrieveEvent(){
-          axios.get('api/event')
+          axios.get('api/event' ,
+          {
+            params: {
+              id: sessionStorage.getItem('user-id'),
+            }
+          })
           .then( response => {
               this.events = response.data.event
           })

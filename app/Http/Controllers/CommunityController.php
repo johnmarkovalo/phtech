@@ -133,8 +133,11 @@ class CommunityController extends Controller
             }
             else{
                 $position = user_event::where([['user_id', $request->user()->id],['event_id',$event->event->id]])->first();
-                if($position){
+                if($position->position == 'went' || $position->position == 'organizer'){
                     $position = 'went';
+                }
+                else if($position->position == 'absent'){
+                    $position = "absent";
                 }
                 $pastevents[] = [
                     'id' => $event->event->id,   
@@ -170,7 +173,18 @@ class CommunityController extends Controller
             'position' => $joinee->position,
             'avatar' => $joinee->user->information->avatar,
         ];
-        return response(['joiner' => $joiner], 200);
+
+        $members_tmp = user_community::where('community_id', $community->id)->get();
+        $members = [];
+        foreach($members_tmp as $member){
+            $members[] = [
+                'id' => $member->user->id,
+                'name' => $member->user->name,
+                'position' => $member->position,
+                'avatar' => $member->user->information->avatar,
+            ];
+        }
+        return response(['joiner' => $joiner, 'members' => $members], 200);
     }
 
     public function uploadprofile(request $request){

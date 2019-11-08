@@ -100,6 +100,13 @@ class EventController extends Controller
         $eventlist = [];
         foreach($event_tmp as $event){
             if($event->start > date('Y-m-d H:i:s')){
+                $position = user_event::where([['user_id', $request->id],['event_id',$event->id]])->first();
+                if(!$position){
+                    $position = 'pending';
+                }
+                else{
+                    $position = $position->position;
+                }
                 $eventlist[] = [
                     'id' => $event->id,
                     'name' => $event->title,
@@ -116,6 +123,7 @@ class EventController extends Controller
                     'tags' => event_tech::select('technology.name')
                             ->join('technology', 'event_tech.tech_id', 'technology.id')
                             ->where('event_id', $event->id)->get(),
+                    'position' =>  $position,
                 ];
             }
         }
@@ -124,6 +132,18 @@ class EventController extends Controller
 
     public function eventdetails(Request $request) {
         $event = Event::where('code', $request->code)->first();
+        if($event->organizer->id == $request->user()->id){
+            $settings = true;
+        }
+        else{
+            $settings = false;
+        }
+        if($event->start > date('Y-m-d H:i:s')){
+            $upcomming = true;
+        }
+        else{
+            $upcomming = false;
+        }
         $eventdetails = [
             'id' => $event->id,
             'title' => $event->title,
@@ -135,20 +155,27 @@ class EventController extends Controller
                 'name' => $event->organizer->name,  
                 'avatar' => $event->organizer->information->avatar,
             ],
+            'settings' => $settings,
+            'upcomming' => $upcomming,
         ];
 
         $tags = event_tech::select('technology.name')
                         ->join('technology', 'event_tech.tech_id', 'technology.id')
                         ->where('event_id', $event->id)->get();
 
-        $attendees_tmp = user_event::where([['event_id', $event->id],['position', '<>', 'notgoing']])->get();
+        $attendees_tmp = user_event::where([['event_id', $event->id]])->get();
         $attendees = [];
+        $status = 'pending';
         foreach($attendees_tmp as $attendee){
+            if($attendee->user->id == $request->user()->id){
+                $status = $attendee->position;
+            }
             $attendees[] = [
                 'id' => $attendee->user->id,
                 'name' => $attendee->user->name,
                 'position' => $attendee->position,
                 'avatar' => $attendee->user->information->avatar,
+                'created_at' => $attendee->created_at,
             ];
         }
         $community_tmp = event_community::where('event_id', $event->id)->get();
@@ -161,13 +188,43 @@ class EventController extends Controller
                 'photo' => $community->community->photo,
             ];
         }
-        return response(['event' => $eventdetails,'attendees' => $attendees, 'communities' => $communities, 'tags' => $tags], 200);
+
+
+        return response(['event' => $eventdetails,'attendees' => $attendees, 'communities' => $communities, 'tags' => $tags, 'status' => $status], 200);
     }
 
     public function joinevent(Request $request){
-        $attendee = user_event::create(['user_id' => $request->user()->id, 'event_id' => $request->id, 'position' => 'going']);
+        user_event::where([['user_id',$request->attendee_id], ['event_id',$request->id]])->delete();
+        if($request->upcomming){
+            if($request->status == true){
+                $attendee = user_event::create(['user_id' => $request->attendee_id, 'event_id' => $request->id, 'position' => 'going']);
+            }
+            elseif($request->status == false){
+                $attendee = user_event::create(['user_id' => $request->attendee_id, 'event_id' => $request->id, 'position' => 'notgoing']);
+            }
+        }
+        else{
+            if($request->status == true){
+                $attendee = user_event::create(['user_id' => $request->attendee_id, 'event_id' => $request->id, 'position' => 'went']);
+            }
+            elseif($request->status == false){
+                $attendee = user_event::create(['user_id' => $request->attendee_id, 'event_id' => $request->id, 'position' => 'absent']);
+            }
+        }
 
-        return response(['attendee' => $attendee], 200);
+        $attendees_tmp = user_event::where([['event_id', $request->id]])->get();
+        $attendees = [];
+        foreach($attendees_tmp as $attende){
+            $attendees[] = [
+                'id' => $attende->user->id,
+                'name' => $attende->user->name,
+                'position' => $attende->position,
+                'avatar' => $attende->user->information->avatar,
+            ];
+        }
+
+        return response(['attendee' => $attendee, 'attendees' => $attendees], 200);
+        // return ($request->status);
     }
 
     public function uploadprofile(request $request){

@@ -163,7 +163,10 @@ export default {
             this.loading = true
             // Update customer
             axios.put('api/information/' + sessionStorage.getItem('user-id'), { 
-                affiliation: this.affiliation, position: this.position, user_id: sessionStorage.getItem('user-id')
+                affiliation: this.affiliation, 
+                position: this.position, 
+                user_id: sessionStorage.getItem('user-id'),
+                student: this.student,
             })
             .then( response => { 
                 

@@ -122,7 +122,7 @@
                                 <v-layout row wrap>
                                     <!-- Company -->
                                     <v-flex xs12 md12>
-                                        <v-text-field outlined type="text" label="Community Name" v-model="name" required autofocus prepend-inner-icon="fas fa-users"/>
+                                        <v-text-field outlined type="text" label="Community Name" v-model="name" required autofocus prepend-inner-icon="mdi-account-group"/>
                                     </v-flex>
                                 </v-layout>
                             </v-container>

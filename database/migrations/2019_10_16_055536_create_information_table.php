@@ -20,6 +20,8 @@ class CreateInformationTable extends Migration
             $table->string('firstname')->nullable();
             $table->string('affiliation')->nullable();
             $table->string('position')->nullable();
+            $table->string('occupation')->nullable();
+            $table->string('bio')->nullable();
             $table->string('avatar')->default('phtechpark/profiles/default');
             $table->timestamps();
 
