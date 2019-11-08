@@ -11,11 +11,38 @@
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/event">EVENTS</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/signin">SIGN-IN</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/signup">SIGN-up</v-btn>
+                <v-menu open-on-hover transition="slide-y-transition" offset-y :close-on-content-click="false">
+                    <template v-slot:activator="{ on }" :close-on-click="false">
+                        <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' v-on="on">EXPLORE</v-btn>
+                    </template>
+                    <v-list two-line >
+                        <v-list-item ripple="ripple" to="/communities">
+                            <v-list-item-avatar>
+                                <v-icon class="teal lighten-2 white--text"
+                                >mdi-account-group</v-icon>
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                                <v-list-item-title>Communities</v-list-item-title>
+                                <v-list-item-subtitle>View All Communities</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                        <v-list-item ripple="ripple" to="/event">
+                            <v-list-item-avatar>
+                                <v-icon class="teal lighten-2 white--text"
+                                >mdi-calendar</v-icon>
+                            </v-list-item-avatar>
+                            <v-list-item-content>
+                                <v-list-item-title>Events</v-list-item-title>
+                                <v-list-item-subtitle>View All Events</v-list-item-subtitle>
+                            </v-list-item-content>
+                        </v-list-item>
+                    </v-list>
+                </v-menu>
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/newcommunity"><v-icon left dark>mdi-plus</v-icon> COMMMUNITIES</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/newevent"><v-icon left dark>mdi-plus</v-icon> EVENTS</v-btn>
                 <!-- <v-btn text class="font-weight-bold teal--text" v-show='isLoggedIn' @click="logout">LOGOUT</v-btn> -->
             </v-toolbar-items>
-            <v-menu transition="slide-x-reverse-transition" offset-x :nudge-width="200"  :close-on-content-click="false">
+            <v-menu transition="slide-x-reverse-transition" offset-y :nudge-width="200"  :close-on-content-click="false">
                 <template v-slot:activator="{ on }" :close-on-click="false">
                     <v-btn text class="font-weight-bold teal--text" v-on="on"  v-if='isnakalogin()'>
                         <v-avatar>
@@ -38,48 +65,36 @@
                             <v-list-item-subtitle>Edit Profile</v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-group>
-                        <template v-slot:activator>
-                            <v-list-item-avatar>
-                                <v-icon class="teal lighten-2 white--text"
-                                >mdi-calendar</v-icon>
-                            </v-list-item-avatar>
-                            <v-list-item-content>
-                                <v-list-item-title>Events</v-list-item-title>
-                                <v-list-item-subtitle>View Events</v-list-item-subtitle>
-                            </v-list-item-content>
-                        </template>
-                        <v-list-item ripple="ripple" to="/event">
-                            <v-list-item-content>
-                                <v-list-item-title>Explore Events</v-list-item-title>
-                                <v-list-item-subtitle>View All Events</v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-list-group>
-                    <v-list-group>
-                        <template v-slot:activator>
-                            <v-list-item-avatar>
-                                <v-icon class="teal lighten-2 white--text"
-                                >mdi-account-group</v-icon>
-                            </v-list-item-avatar>
-                            <v-list-item-content>
-                                <v-list-item-title>Community</v-list-item-title>
-                                <v-list-item-subtitle>View Communities</v-list-item-subtitle>
-                            </v-list-item-content>
-                        </template>
-                        <v-list-item ripple="ripple" to="/communities">
-                            <v-list-item-content>
-                                <v-list-item-title>Explore Community</v-list-item-title>
-                                <v-list-item-subtitle>View All Communities</v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-                        <v-list-item ripple="ripple" to="/communities">
-                            <v-list-item-content>
-                                <v-list-item-title>My Community</v-list-item-title>
-                                <v-list-item-subtitle>View My Communities</v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-list-group>
+                    <v-list-item ripple="ripple" to="/notification">
+                        <v-list-item-avatar>
+                            <v-icon class="teal lighten-2 white--text"
+                            >mdi-bell</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>Notifications</v-list-item-title>
+                            <v-list-item-subtitle>See All Notifications</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item ripple="ripple" to="/myevents">
+                        <v-list-item-avatar>
+                            <v-icon class="teal lighten-2 white--text"
+                            >mdi-calendar</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>My Events</v-list-item-title>
+                            <v-list-item-subtitle>View All My Events</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item ripple="ripple" to="/mycommunities">
+                        <v-list-item-avatar>
+                            <v-icon class="teal lighten-2 white--text"
+                            >mdi-account-group</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>My Communities</v-list-item-title>
+                            <v-list-item-subtitle>View All My Communities</v-list-item-subtitle>
+                        </v-list-item-content>
+                    </v-list-item>
                     <v-list-item ripple="ripple" @click="logout">
                         <v-list-item-avatar>
                             <v-icon class="teal lighten-2 white--text"

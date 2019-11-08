@@ -28,7 +28,9 @@
                     </v-col>
                     <v-col cols=12 md=12 lg=3>
                         <v-row  v-if="upcomming">
-                            <p class="display-1 teal--text text--lighten-2 font-weight-bold">Want to go?</p>
+                            <p v-if="this.status == 'pending'" class="display-1 teal--text text--lighten-2 font-weight-bold">Want to go?</p>
+                            <p v-if="this.status == 'going' || this.status == 'organizer'" class="display-1 teal--text text--lighten-2 font-weight-bold">You're Going</p>
+                            <p v-if="this.status == 'notgoing'" class="display-1 teal--text text--lighten-2 font-weight-bold">You're not Going</p>
                         </v-row>
                         <v-row justify=center  v-if="upcomming">
                             <v-col cols=4>

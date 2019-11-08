@@ -38,6 +38,22 @@
                     </v-row>
                   </v-card-text>
                 </v-card>
+                <p class="display-1 teal--text text-ligthen-2">My Communities</p>
+                <v-card>
+                  <v-card-text>
+                    <v-row justify=center>
+                      
+                    </v-row>
+                  </v-card-text>
+                </v-card>
+                <p class="display-1 teal--text text-ligthen-2">My Events</p>
+                <v-card>
+                  <v-card-text>
+                    <v-row justify=center>
+                      
+                    </v-row>
+                  </v-card-text>
+                </v-card>
               </v-col>
               <v-col cols=12 md=12 lg=2>
                   <v-card>

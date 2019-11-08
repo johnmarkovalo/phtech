@@ -50,25 +50,39 @@
                                 <v-chip color="primary" outlined class="" @click="visit_members(community.name)"><v-icon left>mdi-account-group</v-icon>Members</v-chip>
                                 <v-chip color="primary" outlined class="" @click="visit_news(community.name)"><v-icon left>mdi-newspaper</v-icon>News</v-chip>
                             </v-chip-group>
-                            <!-- <v-col cols=6 lg=3>
-                                <v-chip rounded outlined large width="30em" color="primary" @click="visit_events(community.name)">About</v-chip>
-                            </v-col>
-                            <v-col cols=6 lg=3>
-                                <v-chip rounded outlined large width="30em" color="primary" @click="visit_events(community.name)">Members</v-chip>
-                            </v-col>
-                            <v-col cols=6 lg=3>
-                                <v-chip rounded outlined large width="30em" color="primary" @click="visit_events(community.name)">Events</v-chip>
-                            </v-col>
-                            <v-col cols=6 lg=3>
-                                <v-chip rounded outlined large width="30em" color="primary" @click="visit_events(community.name)">News</v-chip>
-                            </v-col> -->
                         </v-row>
                     </v-col>
                     <v-col cols=12 md=12 lg=5>
                         <v-row class="mt-5" justify=center>
                             <v-col cols=6 lg=5>
                                 <v-btn v-if="!membership" class="float-right" block rounded large color="primary" @click="joinCommunity()">Join This Group</v-btn>
-                                <v-btn v-else class="float-right" block rounded large color="primary">Membership<v-icon right>mdi-chevron-down</v-icon></v-btn>
+                                <v-menu v-else transition="slide-y-transition" offset-y :close-on-content-click="false">
+                                    <template v-slot:activator="{ on }" :close-on-click="false">
+                                        <v-btn class="float-right" v-on="on" block rounded large color="primary">Membership<v-icon right>mdi-chevron-down</v-icon></v-btn>
+                                    </template>
+                                    <v-list two-line >
+                                        <v-list-item v-if="settings" ripple="ripple" @click="">
+                                            <v-list-item-avatar>
+                                                <v-icon class="teal lighten-2 white--text"
+                                                >mdi-setting</v-icon>
+                                            </v-list-item-avatar>
+                                            <v-list-item-content>
+                                                <v-list-item-title>Manage Roles</v-list-item-title>
+                                                <v-list-item-subtitle></v-list-item-subtitle>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                        <v-list-item else ripple="ripple" @click="">
+                                            <v-list-item-avatar>
+                                                <v-icon class="teal lighten-2 white--text"
+                                                >mdi-logout-variant</v-icon>
+                                            </v-list-item-avatar>
+                                            <v-list-item-content>
+                                                <v-list-item-title>Leave this Community</v-list-item-title>
+                                                <v-list-item-subtitle></v-list-item-subtitle>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
                             </v-col>
                         </v-row>
                     </v-col>
