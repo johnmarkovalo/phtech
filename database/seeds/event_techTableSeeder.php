@@ -16,6 +16,10 @@ class event_techTableSeeder extends Seeder
             ['tech_id' => '6', 'event_id' => '1'],
             ['tech_id' => '7', 'event_id' => '1'],
             ['tech_id' => '8', 'event_id' => '1'],
+            ['tech_id' => '4', 'event_id' => '2'],
+            ['tech_id' => '7', 'event_id' => '2'],
+            ['tech_id' => '8', 'event_id' => '2'],
+            ['tech_id' => '4', 'event_id' => '3'],
         ]);
     }
 }

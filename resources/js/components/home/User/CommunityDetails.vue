@@ -101,6 +101,7 @@
       pastevents: [],
       tags: [],
       membership: '',
+      settings: '',
     //   route: community.name.split(' ').join('_'),
 
     }),

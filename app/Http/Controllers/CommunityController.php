@@ -74,16 +74,13 @@ class CommunityController extends Controller
                 'description' => $community->description,
                 'photo' => $community->photo,
                 'location' => $community->location,
-                'tags' => community_tech::select('technology.name')
-                        ->join('technology', 'community_tech.tech_id', 'technology.id')
-                        ->where('community_id', $community->id)->get(),
+                'tags' => $this->getTags($community->id),
             ];
         }
         return response(['community' => $communitylist], 200);
     }
 
     public function communitydetails(Request $request) {
-        $membership = '';
         $community = Community::where('name', $request->name)->first();
         $communitydetails = [
             'id' => $community->id,
@@ -92,65 +89,21 @@ class CommunityController extends Controller
             'photo' => $community->photo,
             'description' => $community->description,
             'organizer' => $community->organizer->name,
-            'tags' => community_tech::select('technology.name')
-                        ->join('technology', 'community_tech.tech_id', 'technology.id')
-                        ->where('community_id', $community->id)->get(),
+            'tags' => $this->getTags($community->id),
         ];
 
-        $members_tmp = user_community::where('community_id', $community->id)->get();
-        $members = [];
-        foreach($members_tmp as $member){
-            if($member->user->id == $request->user()->id){
-                $membership = $member->position;
-            }
-            $members[] = [
-                'id' => $member->user->id,
-                'name' => $member->user->name,
-                'position' => $member->position,
-                'avatar' => $member->user->information->avatar,
-            ];
-        }
+        $membership = user_community::where([['user_id', $request->user()->id],['community_id',$community->id]])->first()->position;
 
-        $events_tmp = event_community::where('community_id', $community->id)->get();
-        $upevents = [];
-        $pastevents = [];
-        foreach($events_tmp as $event){
-            if($event->event->start > date('Y-m-d H:i:s')){
-                $position = user_event::where([['user_id', $request->user()->id],['event_id',$event->event->id]])->first();
-                if(!$position){
-                    $position = 'pending';
-                }
-                $upevents[] = [
-                    'id' => $event->event->id,   
-                    'title' => $event->event->title,   
-                    'code' => $event->event->code,   
-                    'photo' => $event->event->photo,
-                    'start' => $event->event->start,
-                    'location' => $event->event->location,
-                    'photo' => $event->event->photo,
-                    'position' => $position->position,
-                ];
-            }
-            else{
-                $position = user_event::where([['user_id', $request->user()->id],['event_id',$event->event->id]])->first();
-                if($position->position == 'went' || $position->position == 'organizer'){
-                    $position = 'went';
-                }
-                else if($position->position == 'absent'){
-                    $position = "absent";
-                }
-                $pastevents[] = [
-                    'id' => $event->event->id,   
-                    'title' => $event->event->title,   
-                    'code' => $event->event->code,   
-                    'photo' => $event->event->photo,
-                    'start' => $event->event->start,
-                    'location' => $event->event->location,
-                    'photo' => $event->event->photo,
-                    'position' => $position,
-                ];
-            }
-        }
+        $members = $this->getMembers($community->id);
+
+        
+        $events_tmp = event_community::where('community_id', $community->id)->orderBy('id', 'desc')->get();
+        
+        $events = $this->getEvents($events_tmp,$request->user()->id);
+        
+        $upevents = $events['upevents'];
+
+        $pastevents = $events['pastevents'];
 
         return response(['community' => $communitydetails,'members' => $members, 'upevents' => $upevents, 'pastevents' => $pastevents, 'membership' => $membership], 200);
     }
@@ -174,7 +127,82 @@ class CommunityController extends Controller
             'avatar' => $joinee->user->information->avatar,
         ];
 
-        $members_tmp = user_community::where('community_id', $community->id)->get();
+        $members = $this->getMembers($request->id);
+
+        return response(['joiner' => $joiner, 'members' => $members], 200);
+    }
+
+    public function getEvents($events, $id){
+        $upevents = [];
+        $pastevents = [];
+        $position = '';
+        foreach($events as $event){
+            if($event->event->start > date('Y-m-d H:i:s')){
+                $position = user_event::where([['user_id', $id],['event_id',$event->event->id]])->first();
+                if(!$position){
+                    $position = 'pending';
+                }
+                else{
+                    $position = $position->position;
+                }
+                $upevents[] = [
+                    'id' => $event->event->id,   
+                    'title' => $event->event->title,   
+                    'code' => $event->event->code,   
+                    'photo' => $event->event->photo,
+                    'start' => $event->event->start,
+                    'location' => $event->event->location,
+                    'photo' => $event->event->photo,
+                    'position' => $position,
+                ];
+            }
+            else{
+                $position = user_event::where([['user_id', $id],['event_id',$event->event->id]])->first();
+                if(!$position){
+                    $position = '';
+                }
+                else if($position->position == 'went' || $position->position == 'organizer'){
+                    $position = 'went';
+                }
+                else if($position->position == 'absent'){
+                    $position = "absent";
+                }
+                $pastevents[] = [
+                    'id' => $event->event->id,   
+                    'title' => $event->event->title,   
+                    'code' => $event->event->code,   
+                    'photo' => $event->event->photo,
+                    'start' => $event->event->start,
+                    'location' => $event->event->location,
+                    'photo' => $event->event->photo,
+                    'position' => $position,
+                ];
+            }
+            $newevents[] = [
+                'id' => $event->event->id,   
+                'title' => $event->event->title,   
+                'code' => $event->event->code,   
+                'photo' => $event->event->photo,
+                'start' => $event->event->start,
+                'location' => $event->event->location,
+                'photo' => $event->event->photo,
+                'position' => $position,
+            ];
+        }
+
+        // $newevents = array_merge($upevents, $pastevents);
+
+        $events = [
+            'events' => $newevents,
+            'pastevents' => $pastevents,
+            'upevents' => $upevents,
+        ];
+
+        return $events;
+    }
+
+    public function getMembers($id){
+        $members_tmp = user_community::where('community_id', $id)->get();
         $members = [];
         foreach($members_tmp as $member){
             $members[] = [
@@ -184,7 +212,16 @@ class CommunityController extends Controller
                 'avatar' => $member->user->information->avatar,
             ];
         }
-        return response(['joiner' => $joiner, 'members' => $members], 200);
+
+        return $members;
+    }
+
+    public function getTags($id){
+        $tags = community_tech::select('technology.name')
+                ->join('technology', 'community_tech.tech_id', 'technology.id')
+                ->where('community_id', $id)->get();
+
+        return $tags;
     }
 
     public function uploadprofile(request $request){

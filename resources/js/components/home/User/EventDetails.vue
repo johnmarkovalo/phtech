@@ -26,7 +26,7 @@
                             </v-col>
                         </v-row>
                     </v-col>
-                    <v-col cols=12 md=12 lg=3>
+                    <v-col cols=12 md=12 lg=3 align=center>
                         <v-row  v-if="upcomming">
                             <p v-if="this.status == 'pending'" class="display-1 teal--text text--lighten-2 font-weight-bold">Want to go?</p>
                             <p v-if="this.status == 'going' || this.status == 'organizer'" class="display-1 teal--text text--lighten-2 font-weight-bold">You're Going</p>
@@ -39,6 +39,12 @@
                             <v-col cols=4>
                                 <v-btn class="white--text" color="primary" :outlined="xoutlined()" large rounded block @click="joinEvent(user_id,false)"><v-icon>mdi-close</v-icon></v-btn>
                             </v-col>
+                        </v-row>
+                        <v-row  v-if="!upcomming">
+                            <p class="display-1 teal--text text--lighten-2 font-weight-bold">Event Rating</p>
+                        </v-row>
+                        <v-row justify=center  v-if="!upcomming">
+                            <v-rating size="50" v-model="ratings" background-color="teal lighten-3"  color="teal"></v-rating>
                         </v-row>
                         <!-- Icons -->
                         <v-row justify=center  v-if="upcomming">
@@ -159,14 +165,21 @@
                 <v-card-text>
                     <v-row>
                         <v-col cols=12 lg-10>
-                            <v-tabs v-if="upcomming" color="primary">
+                            <v-tabs color="primary">
                                  <!-- Tab for Did -->
-                                <v-tab href="#tab-1">
+                                <v-tab  v-if="upcomming" href="#tab-1">
                                     Going
+                                </v-tab>
+
+                                <v-tab  v-else href="#tab-1">
+                                    Went
                                 </v-tab>
                                 
                                 <!-- Tab for Not/Didn't go -->
-                                <v-tab href="#tab-2">
+                                <v-tab v-if="upcomming" href="#tab-2">
+                                    Not Going
+                                </v-tab>
+                                <v-tab v-else href="#tab-2">
                                     Not Going
                                 </v-tab>
                                 <v-tab-item :value="'tab-' + 1">
@@ -193,6 +206,11 @@
                                                         <v-list-item v-if="upcomming" ripple="ripple" @click="joinEvent(attendee.id,false)">
                                                             <v-list-item-content>
                                                                 <v-list-item-title>Move to "Not Going"</v-list-item-title>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
+                                                        <v-list-item v-else ripple="ripple" @click="joinEvent(attendee.id,false)">
+                                                            <v-list-item-content>
+                                                                <v-list-item-title>Move to "Didn't Going"</v-list-item-title>
                                                             </v-list-item-content>
                                                         </v-list-item>
                                                     </v-list>
@@ -228,80 +246,9 @@
                                                                 <v-list-item-title>Move to "Going"</v-list-item-title>
                                                             </v-list-item-content>
                                                         </v-list-item>
-                                                    </v-list>
-                                                </v-menu>
-                                            </v-list-item-action>
-                                        </v-list-item>
-                                    </v-list>
-                                </v-tab-item>
-                            </v-tabs>
-                            <v-tabs v-if="!upcomming" color="primary">
-                                 <!-- Tab for Did -->
-                                <v-tab href="#tab-1">
-                                    Went
-                                </v-tab>
-                                
-                                <!-- Tab for Not/Didn't go -->
-                                <v-tab href="#tab-2">
-                                    Didn't Go
-                                </v-tab>
-                                <v-tab-item :value="'tab-' + 1">
-                                    <v-list two-line>
-                                        <v-list-item v-for="attendee in GoingAttendee" :key="attendee.name">
-                                            <v-list-item-avatar>
-                                                <cld-image :publicId="attendee.avatar" >
-                                                    <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
-                                                    <cld-transformation width="200" crop="scale" />
-                                                </cld-image>
-                                            </v-list-item-avatar>
-                                            <v-list-item-content>
-                                                <v-list-item-title>{{attendee.name}}</v-list-item-title>
-                                                <v-list-item-subtitle>{{attendee.created_at | eventDate}}</v-list-item-subtitle>
-                                            </v-list-item-content>
-                                            <v-list-item-action>
-                                                <v-menu transition="slide-y-transition" offset-y nudge-width="100px" :close-on-content-click="false">
-                                                    <template v-slot:activator="{ on }" :close-on-click="false">
-                                                        <v-btn icon color="primary" v-on="on">
-                                                        <v-icon>mdi-dots-vertical</v-icon>
-                                                        </v-btn>
-                                                    </template>
-                                                    <v-list two-line>
-                                                        <v-list-item v-if="upcomming" ripple="ripple" @click="joinEvent(attendee.id,false)">
+                                                        <v-list-item v-else ripple="ripple" @click="joinEvent(attendee.id,true)">
                                                             <v-list-item-content>
                                                                 <v-list-item-title>Move to "Went"</v-list-item-title>
-                                                            </v-list-item-content>
-                                                        </v-list-item>
-                                                    </v-list>
-                                                </v-menu>
-                                            </v-list-item-action>
-                                        </v-list-item>
-                                    </v-list>
-                                </v-tab-item>
-
-                                <v-tab-item :value="'tab-' + 2">
-                                    <v-list two-line>
-                                        <v-list-item v-for="attendee in NotGoingAttendee" :key="attendee.name">
-                                            <v-list-item-avatar>
-                                                <cld-image :publicId="attendee.avatar" >
-                                                    <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
-                                                    <cld-transformation width="200" crop="scale" />
-                                                </cld-image>
-                                            </v-list-item-avatar>
-                                            <v-list-item-content>
-                                                <v-list-item-title>{{attendee.name}}</v-list-item-title>
-                                                <v-list-item-subtitle>{{attendee.created_at | eventDate}}</v-list-item-subtitle>
-                                            </v-list-item-content>
-                                            <v-list-item-action>
-                                                <v-menu transition="slide-y-transition" offset-y nudge-width="100px" :close-on-content-click="false">
-                                                    <template v-slot:activator="{ on }" :close-on-click="false">
-                                                        <v-btn icon color="primary" v-on="on">
-                                                        <v-icon>mdi-dots-vertical</v-icon>
-                                                        </v-btn>
-                                                    </template>
-                                                    <v-list two-line>
-                                                        <v-list-item v-if="upcomming" ripple="ripple" @click="joinEvent(attendee.id,true)">
-                                                            <v-list-item-content>
-                                                                <v-list-item-title>Move to "Didn't go"</v-list-item-title>
                                                             </v-list-item-content>
                                                         </v-list-item>
                                                     </v-list>
@@ -332,11 +279,12 @@
         tags: [],
         dialog: false,
         upcomming: null,
+        ratings: '4',
     }),
     computed: {
         GoingAttendee: function() {
             return this.attendees.filter(function(attendee) {
-                if(attendee.position == 'going' || attendee.position == 'organizer' || attendee.position == 'going'){
+                if(attendee.position == 'going' || attendee.position == 'organizer' || attendee.position == 'went'){
                     return attendee
                 }
             })

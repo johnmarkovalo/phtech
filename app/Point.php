@@ -19,7 +19,7 @@ class Point extends Model
         return $this->belongsTo('App\User');
     }
 
-    // public function info_tech() {
-    //     return $this->hasMany('App\info_tech', 'info_id', 'id');
-    // }
+    public function point_logs() {
+        return $this->hasMany('App\point_logs', 'point_id', 'id');
+    }
 }

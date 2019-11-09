@@ -13,6 +13,8 @@ class event_communityTableSeeder extends Seeder
     {
         DB::table('event_community')->insert([
             ['event_id' => '1', 'community_id' => '1', 'position' => 'organizer'],
+            ['event_id' => '2', 'community_id' => '1', 'position' => 'organizer'],
+            ['event_id' => '3', 'community_id' => '1', 'position' => 'organizer'],
         ]);
     }
 }

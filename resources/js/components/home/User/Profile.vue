@@ -36,6 +36,9 @@
                     <v-row>
                         <p class="title teal--text text--lighten-2">{{bio}}</p>
                     </v-row>
+                    <!-- <v-row>
+                        <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-map-marker</v-icon>{{address.formatted_address}}</p>
+                    </v-row> -->
                   </v-card-text>
                 </v-card>
                 <p class="display-1 teal--text text-ligthen-2">My Communities</p>
@@ -181,6 +184,7 @@
         id: sessionStorage.getItem('user-id'),
         lastname: '',
         firstname: '',
+        address:'',
         name: '',
         email: '',
         affiliate: '',
@@ -321,10 +325,10 @@
           this.affiliate = information.affiliate
           this.position = information.position
           this.bio = information.bio
+          this.address = information.address
           this.occupation = information.occupation
           this.avatar = information.avatar
           this.photo = information.avatar
-          console.log(this.tags);
           
         })
         .catch( error => { alert(error)})

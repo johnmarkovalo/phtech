@@ -54,6 +54,7 @@ class InformationController extends Controller
             'position' => $request->user()->information->position,
             'occupation' => $request->user()->information->occupation,
             'bio' => $request->user()->information->bio,
+            'address' => $request->user()->information->address,
             'email' => $request->user()->email,
         ];
 

@@ -12,6 +12,8 @@ use App\event_community;
 use App\event_tech;
 use App\user_community;
 use App\user_event;
+use App\Point;
+use App\point_logs;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -117,19 +119,15 @@ class EventController extends Controller
                     'start' => $event->start,
                     'end' => $event->end,
                     'color' => 'teal',
-                    'community' => event_community::select('community.name')
-                            ->join('community', 'event_community.community_id', 'community.id')
-                            ->where('event_id', $event->id)->get(),
-                    'tags' => event_tech::select('technology.name')
-                            ->join('technology', 'event_tech.tech_id', 'technology.id')
-                            ->where('event_id', $event->id)->get(),
+                    'community' => $this->getCommunities($event->id),
+                    'tags' => $this->getTags($event->id),
                     'position' =>  $position,
                 ];
             }
         }
         return response(['event' => $eventlist], 200);
     }
-
+    
     public function eventdetails(Request $request) {
         $event = Event::where('code', $request->code)->first();
         if($event->organizer->id == $request->user()->id){
@@ -158,36 +156,19 @@ class EventController extends Controller
             'settings' => $settings,
             'upcomming' => $upcomming,
         ];
-
-        $tags = event_tech::select('technology.name')
-                        ->join('technology', 'event_tech.tech_id', 'technology.id')
-                        ->where('event_id', $event->id)->get();
-
-        $attendees_tmp = user_event::where([['event_id', $event->id]])->get();
-        $attendees = [];
-        $status = 'pending';
-        foreach($attendees_tmp as $attendee){
-            if($attendee->user->id == $request->user()->id){
-                $status = $attendee->position;
-            }
-            $attendees[] = [
-                'id' => $attendee->user->id,
-                'name' => $attendee->user->name,
-                'position' => $attendee->position,
-                'avatar' => $attendee->user->information->avatar,
-                'created_at' => $attendee->created_at,
-            ];
+        $status = user_event::where([['event_id',$event->id],['user_id',$request->user()->id]])->first();
+        if($status){
+            $status = $status->position;
         }
-        $community_tmp = event_community::where('event_id', $event->id)->get();
-        $communities = [];
-        foreach($community_tmp as $community){
-            $communities[] = [
-                'id' => $community->community->id,
-                'name' => $community->community->name,
-                'position' => $community->position,
-                'photo' => $community->community->photo,
-            ];
+        else{
+            $status = 'pending';
         }
+
+        $tags = $this->getTags($event->id);
+
+        $attendees = $this->getAttendees($event->id);
+
+        $communities = $this->getCommunities($event->id);
 
 
         return response(['event' => $eventdetails,'attendees' => $attendees, 'communities' => $communities, 'tags' => $tags, 'status' => $status], 200);
@@ -206,9 +187,13 @@ class EventController extends Controller
         else{
             if($request->status == true){
                 $attendee = user_event::create(['user_id' => $request->attendee_id, 'event_id' => $request->id, 'position' => 'went']);
+                point_logs::create(['point_id' => $attendee->user->point->id, 'event_id' => $request->id, 'position' => 'attendee', 'point' => '5']);
+                Point::where('id', $attendee->user->point->id)->increment('points', 5);
             }
             elseif($request->status == false){
                 $attendee = user_event::create(['user_id' => $request->attendee_id, 'event_id' => $request->id, 'position' => 'absent']);
+                point_logs::where([['point_id',$attendee->user->point->id], ['event_id',$request->id]])->delete();
+                Point::where('id', $attendee->user->point->id)->decrement('points', 5);
             }
         }
 
@@ -225,6 +210,44 @@ class EventController extends Controller
 
         return response(['attendee' => $attendee, 'attendees' => $attendees], 200);
         // return ($request->status);
+    }
+
+    public function getTags($id){
+        $tags = event_tech::select('technology.name')
+                        ->join('technology', 'event_tech.tech_id', 'technology.id')
+                        ->where('event_id', $id)->get();
+
+        return $tags;
+    }
+
+    public function getAttendees($id){
+        $attendees_tmp = user_event::where([['event_id', $id]])->get();
+        $attendees = [];
+        foreach($attendees_tmp as $attende){
+            $attendees[] = [
+                'id' => $attende->user->id,
+                'name' => $attende->user->name,
+                'position' => $attende->position,
+                'avatar' => $attende->user->information->avatar,
+            ];
+        }
+
+        return $attendees;
+    }
+
+    public function getCommunities($id){
+        $community_tmp = event_community::where('event_id', $id)->get();
+        $communities = [];
+        foreach($community_tmp as $community){
+            $communities[] = [
+                'id' => $community->community->id,
+                'name' => $community->community->name,
+                'position' => $community->position,
+                'photo' => $community->community->photo,
+            ];
+        }
+
+        return $communities;
     }
 
     public function uploadprofile(request $request){
