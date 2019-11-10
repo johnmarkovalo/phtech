@@ -77,54 +77,28 @@
                             <p class="title teal--text text--lighten-2">Event End</p>
                             <v-row>
                                 <v-col cols=12 md=12 lg=6 xl=6>
-                                    <v-dialog
-                                        ref="dialog3"
-                                        v-model="modal3"
-                                        :return-value.sync="end.date"
-                                        persistent
-                                        width="290px"
-                                    >
+                                    <v-dialog ref="dialog3" v-model="modal3" :return-value.sync="end.date"
+                                                persistent width="290px">
                                         <template v-slot:activator="{ on }">
-                                        <v-text-field outlined
-                                            v-model="end.date"
-                                            label="Event Date"
-                                            prepend-inner-icon="mdi-calendar"
-                                            readonly
-                                            v-on="on"
-                                        ></v-text-field>
+                                            <v-text-field outlined v-model="end.date" label="Event Date" prepend-inner-icon="mdi-calendar" readonly v-on="on"></v-text-field>
                                         </template>
                                         <v-date-picker v-model="end.date" color="primary" scrollable>
-                                        <v-spacer></v-spacer>
-                                        <v-btn text color="primary" @click="modal3 = false">Cancel</v-btn>
-                                        <v-btn text color="primary" @click="$refs.dialog3.save(end.date)">OK</v-btn>
+                                            <v-spacer></v-spacer>
+                                            <v-btn text color="primary" @click="modal3 = false">Cancel</v-btn>
+                                            <v-btn text color="primary" @click="$refs.dialog3.save(end.date)">OK</v-btn>
                                         </v-date-picker>
                                     </v-dialog>
                                 </v-col>
                                 <v-col cols=12 md=12 lg=6 xl=6>
-                                    <v-dialog
-                                        ref="dialog4"
-                                        v-model="modal4"
-                                        :return-value.sync="end.time"
-                                        persistent
-                                        width="290px"
-                                    >
+                                    <v-dialog ref="dialog4" v-model="modal4" :return-value.sync="end.time"
+                                        persistent width="290px">
                                         <template v-slot:activator="{ on }">
-                                        <v-text-field outlined
-                                            v-model="end.time"
-                                            label="Event Time"
-                                            prepend-inner-icon="mdi-alarm"
-                                            readonly
-                                            v-on="on"
-                                        ></v-text-field>
+                                            <v-text-field outlined v-model="end.time" label="Event Time" prepend-inner-icon="mdi-alarm" readonly v-on="on"></v-text-field>
                                         </template>
-                                        <v-time-picker color="primary"
-                                        v-if="modal4"
-                                        v-model="end.time"
-                                        full-width
-                                        >
-                                        <v-spacer></v-spacer>
-                                        <v-btn text color="primary" @click="modal4 = false">Cancel</v-btn>
-                                        <v-btn text color="primary" @click="$refs.dialog4.save(end.time)">OK</v-btn>
+                                        <v-time-picker color="primary" v-if="modal4" v-model="end.time" full-width>
+                                            <v-spacer></v-spacer>
+                                            <v-btn text color="primary" @click="modal4 = false">Cancel</v-btn>
+                                            <v-btn text color="primary" @click="$refs.dialog4.save(end.time)">OK</v-btn>
                                         </v-time-picker>
                                     </v-dialog>
                                 </v-col>
@@ -134,18 +108,12 @@
                                 <v-col cols=12 md=12 lg=12 xl=12>
                                     <v-text-field outlined type="text" label="Event Description" v-model="description" required autofocus prepend-inner-icon="mdi-calendar"/>
                                 </v-col>
-                                <!-- <v-col cols=12 md=12 lg=6 xl=6>
-                                    <v-text-field outlined name="name" label="label"/>
-                                </v-col> -->
                             </v-row>    
                             <p class="title teal--text text--lighten-2">Event Community</p>                            
                             <v-row>
                                 <v-col cols=12 md=12 lg=12 xl=12>
                                     <v-select color="primary" v-model="community" :items="communityUnder" outlined chips label="Community"  required prepend-inner-icon="mdi-account-group"/>
                                 </v-col>
-                                <!-- <v-col cols=12 md=12 lg=6 xl=6>
-                                    <v-text-field outlined name="name" label="label"/>
-                                </v-col> -->
                             </v-row>                          
                             <p class="title teal--text text--lighten-2">Event Location</p>
                             <v-row>
@@ -160,12 +128,7 @@
                                     </v-row>
                                     <GmapMap style="width: 100%; height: 400px;" :zoom="25" :center="center" 
                                                 map-type-id="terrain">
-                                    <GmapMarker
-                                        v-if="this.address"
-                                        label="★"
-                                        :draggable="true"
-                                        :position="center"
-                                        />
+                                        <GmapMarker v-if="this.address" label="★" :draggable="true" :position="center"/>
                                     </GmapMap>
                                 </v-col>
                             </v-row>
@@ -176,31 +139,21 @@
                                         filled chips color="primary" label="Select Speakers"
                                         item-text="name" item-value="name" multiple outlined>
                                         <template v-slot:selection="data">
-                                            <v-chip
-                                            v-bind="data.attrs"
-                                            :input-value="data.selectedSpeakers"
-                                            close
-                                            @click="data.select"
-                                            @click:close="remove(data.item)"
-                                            >
-                                            <!-- <v-avatar left>
-                                                <v-img :src="data.item.avatar"></v-img>
-                                            </v-avatar> -->
-                                            {{ data.item.name }}
+                                            <v-chip v-bind="data.attrs" :input-value="data.selectedSpeakers" close @click="data.select"
+                                                @click:close="remove(data.item)">
+                                                <v-avatar left>
+                                                    <v-img :src="data.item.avatar"></v-img>
+                                                </v-avatar>
+                                                {{ data.item.name }}
                                             </v-chip>
                                         </template>
                                         <template v-slot:item="data">
-                                            
                                             <template v-if="typeof data.item !== 'object'">
-                                            <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                <v-list-item-content v-text="data.item"></v-list-item-content>
                                             </template>
                                             <template v-else>
-                                            <!-- <v-list-item-avatar>
-                                                <img :src="data.item.avatar">
-                                            </v-list-item-avatar> -->
                                             <v-list-item-content>
                                                 <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                                <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
                                             </v-list-item-content>
                                             </template>
                                         </template>
@@ -280,7 +233,7 @@ export default {
             markers: [],
             address: null,
             users: [],
-            community: '',
+            community: this.$route.params.community_name.split('_').join(' '),
             communityUnder: [],
             communities: [],
             currentPlace: null,
@@ -298,7 +251,7 @@ export default {
      mounted() {
         this.retrieveTags()
         this.retrieveUsers()
-        this.retrieveCommunityUnder()
+        // this.retrieveCommunityUnder()
     },
     watch: {
       isUpdating (val) {
@@ -329,7 +282,7 @@ export default {
         },
         retrieveTags() {
             this.loading = true
-            axios.get('api/technology')
+            axios.get('/api/technology')
             .then( response => {
                 this.tags = response.data.tags
             })
@@ -338,7 +291,7 @@ export default {
         },
         retrieveUsers() {
             this.loading = true
-            axios.get('api/users')
+            axios.get('/api/users')
             .then( response => {
                 this.users = response.data.users
             })
@@ -347,7 +300,7 @@ export default {
         },
         retrieveCommunityUnder() {
             this.loading = true
-            axios.get('api/communityunder',)
+            axios.get('/api/communityunder',)
             .then( response => {
                 this.communityUnder = response.data.community
                 

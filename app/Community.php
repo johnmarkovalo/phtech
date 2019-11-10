@@ -20,6 +20,7 @@ class Community extends Model
         'description',
         'location',
         'photo',
+        'status',
     ];
 
     public function organizer() {

@@ -38,8 +38,8 @@
                         </v-list-item>
                     </v-list>
                 </v-menu>
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/newcommunity"><v-icon left dark>mdi-plus</v-icon> COMMMUNITIES</v-btn>
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/newevent"><v-icon left dark>mdi-plus</v-icon> EVENTS</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/newcommunity"><v-icon left dark>mdi-plus</v-icon> COMMMUNITY</v-btn>
+                <!-- <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/newevent"><v-icon left dark>mdi-plus</v-icon> EVENTS</v-btn> -->
                 <!-- <v-btn text class="font-weight-bold teal--text" v-show='isLoggedIn' @click="logout">LOGOUT</v-btn> -->
             </v-toolbar-items>
             <v-menu transition="slide-x-reverse-transition" offset-y :nudge-width="200"  :close-on-content-click="false">

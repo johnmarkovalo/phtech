@@ -61,13 +61,23 @@
                                         <v-btn class="float-right" v-on="on" block rounded large color="primary">Membership<v-icon right>mdi-chevron-down</v-icon></v-btn>
                                     </template>
                                     <v-list two-line >
-                                        <v-list-item v-if="settings" ripple="ripple" @click="">
+                                        <v-list-item v-if="membership == 'organizer'" ripple="ripple" @click="">
                                             <v-list-item-avatar>
                                                 <v-icon class="teal lighten-2 white--text"
-                                                >mdi-setting</v-icon>
+                                                >mdi-shield-account</v-icon>
                                             </v-list-item-avatar>
                                             <v-list-item-content>
                                                 <v-list-item-title>Manage Roles</v-list-item-title>
+                                                <v-list-item-subtitle></v-list-item-subtitle>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                        <v-list-item v-if="membership == 'organizer'" ripple="ripple" to="newevent">
+                                            <v-list-item-avatar>
+                                                <v-icon class="teal lighten-2 white--text"
+                                                >mdi-calendar-plus</v-icon>
+                                            </v-list-item-avatar>
+                                            <v-list-item-content>
+                                                <v-list-item-title>Create Event</v-list-item-title>
                                                 <v-list-item-subtitle></v-list-item-subtitle>
                                             </v-list-item-content>
                                         </v-list-item>
@@ -101,7 +111,6 @@
       pastevents: [],
       tags: [],
       membership: '',
-      settings: '',
     //   route: community.name.split(' ').join('_'),
 
     }),

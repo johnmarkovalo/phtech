@@ -14,49 +14,77 @@
                     <v-row justify=center>
                        <v-avatar size='130'>
                         <v-expand-transition>
-                          <div
-                            v-if="hover"
+                          <div v-if="hover"
                             :class="{'d-flex transition-fast-in-fast-out grey lighten-5 v-card--reveal headline orange--text': !$vuetify.theme.dark, 
                             'd-flex transition-fast-in-fast-out grey darken-4 v-card--reveal headline orange--text': $vuetify.theme.dark}"
-                            style="height: 100%;"
-                          >
+                            style="height: 100%;" >
                             Edit
                           </div>
                         </v-expand-transition>
-                        <cld-image :publicId="photo" v-if="photo == avatar">
+                        <cld-image :publicId="photo" v-if="photo == user.avatar">
                           <cld-transformation width="1000" height="1000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="fill"/> 
                           <cld-transformation width="200" crop="scale" />
                         </cld-image>
-                        <img :src="photo" alt="Profile" v-if="photo != avatar">
+                        <img :src="photo" alt="Profile" v-if="photo != user.avatar">
                       </v-avatar>
                     </v-row>
                     <v-row justify=center>
-                        <p class="title teal--text text--lighten-2">{{name}}</p>
+                        <p class="title teal--text text--lighten-2">{{user.name}}</p>
                     </v-row>
                     <v-row>
-                        <p class="title teal--text text--lighten-2">{{bio}}</p>
+                        <p class="title teal--text text--lighten-2">{{user.bio}}</p>
                     </v-row>
                     <!-- <v-row>
                         <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-map-marker</v-icon>{{address.formatted_address}}</p>
                     </v-row> -->
                   </v-card-text>
                 </v-card>
-                <p class="display-1 teal--text text-ligthen-2">My Communities</p>
-                <v-card>
-                  <v-card-text>
-                    <v-row justify=center>
-                      
-                    </v-row>
-                  </v-card-text>
-                </v-card>
-                <p class="display-1 teal--text text-ligthen-2">My Events</p>
-                <v-card>
-                  <v-card-text>
-                    <v-row justify=center>
-                      
-                    </v-row>
-                  </v-card-text>
-                </v-card>
+                <div class="hidden-sm-and-down">
+                  <v-card class="mt-5">
+                    <p class="display-1 teal--text text-ligthen-2">My Communities</p>
+                    <v-card-text>
+                      <v-row justify=start>
+                        <v-col v-for="community in communities"  :key="community.name" cols=12 md=6>
+                          <v-row align=center>
+                            <v-col cols="12" md=3>
+                              <v-img :src="community.photo"></v-img>
+                            </v-col>
+                            <v-col cols="12" md=9>
+                              <v-row class="teal--text text--lighten-2">
+                                {{community.name}}
+                              </v-row>
+                              <v-row>
+                                organizer
+                              </v-row>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                  <v-card class="mt-5">
+                    <p class="display-1 teal--text text-ligthen-2">My Events</p>
+                    <v-card-text>
+                      <v-row justify=start>
+                        <v-col v-for="event in events"  :key="event.name" cols=12 md=6>
+                          <v-row align=center>
+                            <v-col cols="12" md=3>
+                              <v-img :src="event.photo"></v-img>
+                            </v-col>
+                            <v-col cols="12" md=9>
+                              <v-row class="teal--text text--lighten-2">
+                                {{event.title}}
+                              </v-row>
+                              <v-row>
+                                {{event.start | eventDate}}
+                              </v-row>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </div>
               </v-col>
               <v-col cols=12 md=12 lg=2>
                   <v-card>
@@ -68,16 +96,81 @@
                       </v-row>
                       <v-row>
                         <v-col>
-                          <p class="display-2 font-weight-black">250</p>
+                          <p class="display-2 font-weight-black">{{user.points}}</p>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                    <v-card-actions>
+                      <v-spacer></v-spacer>
+                      <a href="asdasasd" class="teal--text text--lighten-2">See points log</a>
+                    </v-card-actions>
+                  </v-card>
+                  <v-card  class="mt-5">
+                    <v-card-text class="text-center">
+                      <v-row>
+                        <v-col>
+                          <p class="title teal--text text-lighten-2">Technologies Interested</p>
                         </v-col>
                       </v-row>
                       <v-row>
                         <v-col>
-                          <a href="asdasasd" class="teal--text text--lighten-2">See points log</a>
+                          <v-chip v-for="tag in tags"  :key="tag.name" small outlined color="primary">{{tag.name}}</v-chip>
                         </v-col>
                       </v-row>
                     </v-card-text>
                   </v-card>
+              </v-col>
+          </v-row>
+          <v-row justify=center>
+              <v-col cols=12 md=12 lg=6>
+                <div class="hidden-md-and-up">
+                  <v-card class="mt-5">
+                    <p class="display-1 teal--text text-ligthen-2">My Communities</p>
+                    <v-card-text>
+                      <v-row justify=start>
+                        <v-col v-for="community in communities"  :key="community.name" cols=12 md=6>
+                          <v-row align=center>
+                            <v-col cols="3" md=3>
+                              <v-img :src="community.photo"></v-img>
+                            </v-col>
+                            <v-col cols="9" md=9>
+                              <v-row class="teal--text text--lighten-2">
+                                {{community.name}}
+                              </v-row>
+                              <v-row>
+                                organizer
+                              </v-row>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                  <v-card class="mt-5">
+                    <p class="display-1 teal--text text-ligthen-2">My Events</p>
+                    <v-card-text>
+                      <v-row justify=start>
+                        <v-col v-for="event in events"  :key="event.name" cols=12 md=6>
+                          <v-row align=center>
+                            <v-col cols="3" md=3>
+                              <v-img :src="event.photo"></v-img>
+                            </v-col>
+                            <v-col cols="9" md=9>
+                              <v-row class="teal--text text--lighten-2">
+                                {{event.title}}
+                              </v-row>
+                              <v-row>
+                                {{event.start | eventDate}}
+                              </v-row>
+                            </v-col>
+                          </v-row>
+                        </v-col>
+                      </v-row>
+                    </v-card-text>
+                  </v-card>
+                </div>
+              </v-col>
+              <v-col cols=12 md=12 lg=2>
               </v-col>
           </v-row>
       </v-card-text>
@@ -90,12 +183,10 @@
                   <input type="file" id="imgupload" style="display:none" @change="UploadPicture"/>
                   <v-avatar @click.prevent="openFileDialog()" slot="offset" class="mx-auto d-block" size='130'>
                     <v-expand-transition>
-                      <div
-                        v-if="hover"
+                      <div v-if="hover"
                         :class="{'d-flex transition-fast-in-fast-out grey lighten-5 v-card--reveal headline orange--text': !$vuetify.theme.dark, 
                         'd-flex transition-fast-in-fast-out grey darken-4 v-card--reveal headline orange--text': $vuetify.theme.dark}"
-                        style="height: 100%;"
-                      >
+                        style="height: 100%;" >
                         Edit
                       </div>
                     </v-expand-transition>
@@ -182,16 +273,20 @@
     data(){
       return {
         id: sessionStorage.getItem('user-id'),
-        lastname: '',
-        firstname: '',
-        address:'',
-        name: '',
-        email: '',
-        affiliate: '',
-        position: '',
-        bio: '',
-        occupation: '',
-        avatar: '',
+        user: {
+          lastname: '',
+          firstname: '',
+          address:'',
+          name: '',
+          email: '',
+          affiliate: '',
+          position: '',
+          bio: '',
+          occupation: '',
+          avatar: '',
+        },
+        communities: [],
+        events: [],
         photo: sessionStorage.getItem('user-avatar'),
         password: '',
         show1: false,
@@ -297,6 +392,20 @@
             })
           })
         }
+      },
+      getInformation(){
+        axios.get('api/information', { 
+          // params: { user_id: '1', }
+        })   
+        .then( response => {
+          this.tags = response.data.tags
+          this.user = response.data.information
+          this.photo = response.data.information.avatar
+          this.communities = response.data.communities
+          this.events = response.data.events
+        })
+        .catch( error => { alert(error)})
+        .finally( x => { this.loading = false})
       }
     },
     watch:
@@ -311,30 +420,7 @@
         },
     },
     created() {
-        axios.get('api/information', { 
-          // params: { user_id: '1', }
-        })   
-        .then( response => {
-          var information = response.data.information
-          var tags = response.data.tags
-          // Create a local storage item
-          this.firstname = information.firstname
-          this.lastname = information.lastname
-          this.name = information.name
-          this.email = information.email
-          this.affiliate = information.affiliate
-          this.position = information.position
-          this.bio = information.bio
-          this.address = information.address
-          this.occupation = information.occupation
-          this.avatar = information.avatar
-          this.photo = information.avatar
-          
-        })
-        .catch( error => { alert(error)})
-        .finally( x => { this.loading = false})
-        
-        
+      this.getInformation()
     }
 }
 </script>

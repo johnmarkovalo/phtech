@@ -17,6 +17,7 @@ class CreateTechnologiesTable extends Migration
             $table->bigIncrements('id');
             $table->string('name')->nullable();
             $table->string('description')->nullable();
+            $table->string('status')->default('ACTIVE');
             $table->timestamps();
         });
     }

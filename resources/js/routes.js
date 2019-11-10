@@ -48,7 +48,7 @@ export const routes = [
                     { path: '/profile', name: 'profile', components: {home: Profile}},
                     { path: '/info', name: 'information', components: {home: Information}},
                     { path: '/newcommunity', name: 'newcommunity', components: {home: NewComm}},
-                    { path: '/newevent', name: 'newevent', components: {home: NewEvent}},
+                    { path: '/:community_name/newevent', name: 'newevent', components: {home: NewEvent}},
                     { path: '/:community_name/events/:event_code', name: 'eventdetails', components: {home: EventDetails}},
                     { path: '/:community_name', name: 'communitydetails', components: {home: CommunityDetails},
                         children: [
