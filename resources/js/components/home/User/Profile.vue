@@ -39,47 +39,67 @@
                 </v-card>
                 <div class="hidden-sm-and-down">
                   <v-card class="mt-5">
-                    <p class="display-1 teal--text text-ligthen-2">My Communities</p>
                     <v-card-text>
-                      <v-row justify=start>
-                        <v-col v-for="community in communities"  :key="community.name" cols=12 md=6>
-                          <v-row align=center>
-                            <v-col cols="12" md=3>
-                              <v-img :src="community.photo"></v-img>
-                            </v-col>
-                            <v-col cols="12" md=9>
-                              <v-row class="teal--text text--lighten-2">
-                                {{community.name}}
-                              </v-row>
-                              <v-row>
-                                organizer
-                              </v-row>
-                            </v-col>
-                          </v-row>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                  <v-card class="mt-5">
-                    <p class="display-1 teal--text text-ligthen-2">My Events</p>
-                    <v-card-text>
-                      <v-row justify=start>
-                        <v-col v-for="event in events"  :key="event.name" cols=12 md=6>
-                          <v-row align=center>
-                            <v-col cols="12" md=3>
-                              <v-img :src="event.photo"></v-img>
-                            </v-col>
-                            <v-col cols="12" md=9>
-                              <v-row class="teal--text text--lighten-2">
-                                {{event.title}}
-                              </v-row>
-                              <v-row>
-                                {{event.start | eventDate}}
-                              </v-row>
-                            </v-col>
-                          </v-row>
-                        </v-col>
-                      </v-row>
+                      <v-tabs color="primary" icons-and-text>
+                        <!-- Tab for List -->
+                        <v-tab href="#tab-1">
+                            Community
+                            <v-icon>mdi-account-group</v-icon>
+                        </v-tab>
+                        
+                        <!-- Tab for Calendar -->
+                        <v-tab href="#tab-2">
+                            Event
+                            <v-icon>mdi-calendar</v-icon>
+                        </v-tab>
+                        
+                        <!-- Tab Value for List -->
+                        <v-tab-item :value="'tab-' + 1">
+                            <v-row>
+                              <p class="display-1 teal--text text-ligthen-2">My Communities</p>
+                            </v-row>
+                            <v-row justify=start>
+                              <v-col v-for="community in communities"  :key="community.name" cols=12 md=6>
+                                <v-row align=center>
+                                  <v-col cols="12" md=3>
+                                    <v-img :src="community.photo"></v-img>
+                                  </v-col>
+                                  <v-col cols="12" md=9>
+                                    <v-row class="teal--text text--lighten-2">
+                                      {{community.name}}
+                                    </v-row>
+                                    <v-row>
+                                      {{community.position | upText}}
+                                    </v-row>
+                                  </v-col>
+                                </v-row>
+                              </v-col>
+                            </v-row>
+                        </v-tab-item>
+                        <!-- Tab Value for Calendar -->
+                        <v-tab-item :value="'tab-' + 2">
+                            <v-row>
+                              <p class="display-1 teal--text text-ligthen-2">My Events</p>
+                            </v-row>
+                            <v-row justify=start>
+                              <v-col v-for="event in events"  :key="event.name" cols=12 md=6>
+                                <v-row align=center>
+                                  <v-col cols="12" md=3>
+                                    <v-img :src="event.photo"></v-img>
+                                  </v-col>
+                                  <v-col cols="12" md=9>
+                                    <v-row class="teal--text text--lighten-2">
+                                      {{event.title}}
+                                    </v-row>
+                                    <v-row>
+                                      {{event.start | eventDate}}
+                                    </v-row>
+                                  </v-col>
+                                </v-row>
+                              </v-col>
+                            </v-row>
+                        </v-tab-item>
+                      </v-tabs>
                     </v-card-text>
                   </v-card>
                 </div>
@@ -123,47 +143,67 @@
               <v-col cols=12 md=12 lg=6>
                 <div class="hidden-md-and-up">
                   <v-card class="mt-5">
-                    <p class="display-1 teal--text text-ligthen-2">My Communities</p>
                     <v-card-text>
-                      <v-row justify=start>
-                        <v-col v-for="community in communities"  :key="community.name" cols=12 md=6>
-                          <v-row align=center>
-                            <v-col cols="3" md=3>
-                              <v-img :src="community.photo"></v-img>
-                            </v-col>
-                            <v-col cols="9" md=9>
-                              <v-row class="teal--text text--lighten-2">
-                                {{community.name}}
-                              </v-row>
-                              <v-row>
-                                organizer
-                              </v-row>
-                            </v-col>
-                          </v-row>
-                        </v-col>
-                      </v-row>
-                    </v-card-text>
-                  </v-card>
-                  <v-card class="mt-5">
-                    <p class="display-1 teal--text text-ligthen-2">My Events</p>
-                    <v-card-text>
-                      <v-row justify=start>
-                        <v-col v-for="event in events"  :key="event.name" cols=12 md=6>
-                          <v-row align=center>
-                            <v-col cols="3" md=3>
-                              <v-img :src="event.photo"></v-img>
-                            </v-col>
-                            <v-col cols="9" md=9>
-                              <v-row class="teal--text text--lighten-2">
-                                {{event.title}}
-                              </v-row>
-                              <v-row>
-                                {{event.start | eventDate}}
-                              </v-row>
-                            </v-col>
-                          </v-row>
-                        </v-col>
-                      </v-row>
+                      <v-tabs color="primary" icons-and-text>
+                        <!-- Tab for List -->
+                        <v-tab href="#tab-1">
+                            Community
+                            <v-icon>mdi-account-group</v-icon>
+                        </v-tab>
+                        
+                        <!-- Tab for Calendar -->
+                        <v-tab href="#tab-2">
+                            Event
+                            <v-icon>mdi-calendar</v-icon>
+                        </v-tab>
+                        
+                        <!-- Tab Value for List -->
+                        <v-tab-item :value="'tab-' + 1">
+                            <v-row>
+                              <p class="display-1 teal--text text-ligthen-2">My Communities</p>
+                            </v-row>
+                            <v-row justify=start>
+                              <v-col v-for="community in communities"  :key="community.name" cols=12 md=6>
+                                <v-row align=center>
+                                  <v-col cols="12" md=3>
+                                    <v-img :src="community.photo"></v-img>
+                                  </v-col>
+                                  <v-col cols="12" md=9>
+                                    <v-row class="teal--text text--lighten-2">
+                                      {{community.name}}
+                                    </v-row>
+                                    <v-row>
+                                      {{community.position | upText}}
+                                    </v-row>
+                                  </v-col>
+                                </v-row>
+                              </v-col>
+                            </v-row>
+                        </v-tab-item>
+                        <!-- Tab Value for Calendar -->
+                        <v-tab-item :value="'tab-' + 2">
+                            <v-row>
+                              <p class="display-1 teal--text text-ligthen-2">My Events</p>
+                            </v-row>
+                            <v-row justify=start>
+                              <v-col v-for="event in events"  :key="event.name" cols=12 md=6>
+                                <v-row align=center>
+                                  <v-col cols="12" md=3>
+                                    <v-img :src="event.photo"></v-img>
+                                  </v-col>
+                                  <v-col cols="12" md=9>
+                                    <v-row class="teal--text text--lighten-2">
+                                      {{event.title}}
+                                    </v-row>
+                                    <v-row>
+                                      {{event.start | eventDate}}
+                                    </v-row>
+                                  </v-col>
+                                </v-row>
+                              </v-col>
+                            </v-row>
+                        </v-tab-item>
+                      </v-tabs>
                     </v-card-text>
                   </v-card>
                 </div>
@@ -174,83 +214,7 @@
       </v-card-text>
     </v-card>
       <v-dialog>
-        <v-row justify-center wrap>
-          <v-hover v-slot:default="{ hover }">
-              <v-card class="elevation-0 transparent" xs12 md4 height="200px">
-                <v-flex>
-                  <input type="file" id="imgupload" style="display:none" @change="UploadPicture"/>
-                  <v-avatar @click.prevent="openFileDialog()" slot="offset" class="mx-auto d-block" size='130'>
-                    <v-expand-transition>
-                      <div v-if="hover"
-                        :class="{'d-flex transition-fast-in-fast-out grey lighten-5 v-card--reveal headline orange--text': !$vuetify.theme.dark, 
-                        'd-flex transition-fast-in-fast-out grey darken-4 v-card--reveal headline orange--text': $vuetify.theme.dark}"
-                        style="height: 100%;" >
-                        Edit
-                      </div>
-                    </v-expand-transition>
-                    <cld-image :publicId="photo" v-if="photo == avatar">
-                      <cld-transformation width="1000" height="1000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="fill"/> 
-                      <cld-transformation width="200" crop="scale" />
-                    </cld-image>
-                    <img :src="photo" alt="Profile" v-if="photo != avatar">
-                  </v-avatar>
-                  <v-card-text class="text-center">
-                    <h6 class="title teal--text text--lighten-2 font-weight-regular mb-3">{{name}}</h6>
-                  </v-card-text>
-                </v-flex>
-              </v-card>
-          </v-hover>
-          <v-col xs12 md8>
-            <v-form>
-              <v-container py-0>
-                  <v-row>
-                    <v-col xs12 md6>
-                        <v-text-field class="purple-input" id="lname" type="text" label="Last Name" v-model="lastname" required autofocus prepend-inner-icon="mdi-account-circle"/>
-                    </v-col>
-                    <v-col xs12 md6>
-                        <v-text-field class="purple-input" id="fname" type="text" label="First Name" v-model="firstname" required />
-                    </v-col>
-                  </v-row>
-                  <v-row>
-                    <v-col xs12 md12>
-                      <v-text-field label="Email Address" class="purple-input" v-model="email" prepend-inner-icon="mdi-at"/>
-                    </v-col>
-                  </v-row>
-              </v-container>
-              <v-container py-0>
-                <v-row>
-                  <v-col cols=12>
-                    <v-row>
-                      <v-col cols=12 lg=12>
-                        <p class="display-1">Affiliate</p>
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col cols=12 md=6>
-                        <v-text-field class="purple-input" type="text" label="Affiliate" v-model="affiliate" required prepend-inner-icon="mdi-account-circle"/>
-                      </v-col>
-                      <v-col cols=12 md=6>
-                        <v-text-field class="purple-input" type="text" label="Position" v-model="position" required />
-                      </v-col>
-                    </v-row>
-                    <v-row>
-                      <v-col cols=12 md=12>
-                        <v-text-field v-model="password" :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'" :rules="[rules.min]" :type="show1 ? 'text' : 'password'" label="Password" hint="At least 8 characters" counter @click:append="show1 = !show1" @keydown.space.prevent prepend-inner-icon="mdi-lock"></v-text-field>
-                      </v-col>
-                    </v-row>
-                    <v-row xs12 text-xs-right >
-                      <v-col cols=12>
-                        <v-btn class="mx-0 font-weight-light" rounded large color="success" @click="updateUser()">
-                          Update Profile
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-container>
-            </v-form>
-          </v-col>
-        </v-row>
+        
       </v-dialog>
   </v-container>
 </template>

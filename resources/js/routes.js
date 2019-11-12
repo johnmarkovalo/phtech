@@ -4,6 +4,7 @@ import Landing from './components/main/Landing.vue'
 import About from './components/main/About.vue'
 import Communities from './components/main/Communities.vue'
 import Event from './components/main/Event.vue'
+import Explore from './components/main/Explore.vue'
 import Signin from './components/main/Signin.vue'
 import Signup from './components/main/Signup.vue'
 import ErrorPage from './components/main/Error.vue'
@@ -32,6 +33,7 @@ export const routes = [
             { path: '/about', name: 'about', components: {main: About}},
             { path: '/communities', name: 'communities', components: {main: Communities}},
             { path: '/event', name: 'event', components: {main: Event}},
+            { path: '/explore', name: 'explore', components: {main: Explore}},
             { path: '/signin', name: 'Signin', components: {main: Signin}},
             { path: '/signup', name: 'Signup', components: {main: Signup}},
             { path: '/error', name: 'Error', components: {main: ErrorPage}},

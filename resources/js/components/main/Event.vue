@@ -25,7 +25,7 @@
                 <v-toolbar flat align="center">
                   <v-icon medium color="primary">fas fa-search</v-icon>
                   <v-toolbar-title class="hidden-sm-and-down display-1">Search Using Tags:</v-toolbar-title>
-                  <v-flex xs="12" md="5">
+                  <!-- <v-flex xs="12" md="5">
                       <v-autocomplete dense v-model="selected" :disabled="isUpdating" :items="tags"
                         filled chips color="primary" class="transparent mt-6"
                         item-text="name" item-value="name" multiple rounded>
@@ -37,9 +37,9 @@
                             @click="data.select"
                             @click:close="remove(data.item)"
                             >
-                            <!-- <v-avatar left>
+                            <v-avatar left>
                                 <v-img :src="data.item.avatar"></v-img>
-                            </v-avatar> -->
+                            </v-avatar>
                             {{ data.item.name }}
                             </v-chip>
                         </template>
@@ -49,17 +49,17 @@
                             <v-list-item-content v-text="data.item"></v-list-item-content>
                             </template>
                             <template v-else>
-                            <!-- <v-list-item-avatar>
+                            <v-list-item-avatar>
                                 <img :src="data.item.avatar">
-                            </v-list-item-avatar> -->
+                            </v-list-item-avatar>
                             <v-list-item-content>
                                 <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle>
                             </v-list-item-content>
                             </template>
                         </template>
                       </v-autocomplete>
-                  </v-flex>
+                  </v-flex> -->
                 </v-toolbar>
                 <v-card-text>
                   <v-container fluid>

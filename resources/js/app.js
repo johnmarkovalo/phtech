@@ -22,15 +22,6 @@ Vue.use(Cloudinary, {
     cloudName: "mactimestwo"
   }
 });
-
-
-// import VuetifyGoogleAutocomplete from 'vuetify-google-autocomplete';
-// Vue.use(VuetifyGoogleAutocomplete, {
-//   apiKey: 'AIzaSyBLvHFeixDacvhmdX-L_0EoG4of6n0pM1A', // Can also be an object. E.g, for Google Maps Premium API, pass `{ client: <YOUR-CLIENT-ID> }`
-//   // version: '...', // Optional
-//   // language: '...', // Optional
-// });
-
 import * as VueGoogleMaps from 'vue2-google-maps'
 Vue.use(VueGoogleMaps, {
   load: {
@@ -101,10 +92,6 @@ Vue.filter('attendDate', function(created){
 
 Vue.component('App', require('./components/App.vue').default);
 import App from './components/App.vue'
-// import Event from './components/main/EventTemplate.vue'
-// Vue.component('Home', require('./components/main/Home.vue').default);
-// import Home from './components/main/Home.vue'
-
 const app = new Vue({
   el: '#app',
   vuetify: new Vuetify(opts),
