@@ -64,39 +64,32 @@
                 <v-card-text>
                   <v-container fluid>
                       <v-row dense>
-                        <v-col
-                          v-for="card in events"
-                          :key="card.title"
-                          cols="12" lg="3" xl="3" md="3"
-                        >
-                          <v-card @click="visit_event(card.community['0'].name,card.code)">
-                            <v-img
-                              :src="card.photo"
-                              class="white--text align-end"
-                              gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                              height="200px"
-                            >
-                            </v-img>
-                            <v-card-text> 
-                              <p class="title teal--text text--lighten-2">{{card.start | eventDate}}</p>
-                              <p class="headline white--text">{{card.name}}</p>
-                              <p class="subtitle-1">{{card.location.formatted_address}}</p>
-                               <v-chip v-for="item in card.community" v-bind:key="item.id" color="primary" outlined>
-                                  <v-icon left>
-                                    mdi-account-group
-                                  </v-icon>
-                                  {{item['name']}}
-                                </v-chip>
-                            </v-card-text>
+                        <v-col v-for="card in events" :key="card.title" cols="12" lg="3" xl="3" md="3">
+                          <v-hover v-slot:default="{ hover }">
+                            <v-card :elevation="hover ? 12 : 2" @click="visit_event(card.community['0'].name,card.code)">
+                              <v-img :src="card.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
+                              </v-img>
+                              <v-card-text> 
+                                <p class="title teal--text text--lighten-2">{{card.start | eventDate}}</p>
+                                <p class="headline white--text">{{card.name}}</p>
+                                <p class="subtitle-1">{{card.location.formatted_address}}</p>
+                                <v-chip v-for="item in card.community" v-bind:key="item.id" color="primary" outlined>
+                                    <v-icon left>
+                                      mdi-account-group
+                                    </v-icon>
+                                    {{item['name']}}
+                                  </v-chip>
+                              </v-card-text>
 
-                            <v-card-actions>
-                              <v-spacer></v-spacer>
+                              <v-card-actions>
+                                <v-spacer></v-spacer>
 
-                              <v-btn v-if="card.position == 'pending'" rounded outlined color="primary" width="5vw" >Attend</v-btn>
-                              <v-btn v-else-if="card.position == 'going' || card.position == 'organizer'" rounded outlined color="success" width="5vw">Going</v-btn>
-                              <v-btn v-else-if="card.position == 'notgoing'" rounded outlined color="error" width="5vw">Not Going</v-btn>
-                            </v-card-actions>
-                          </v-card>
+                                <v-btn v-if="card.position == 'pending'" rounded outlined color="primary" width="5vw" >Attend</v-btn>
+                                <v-btn v-else-if="card.position == 'going' || card.position == 'organizer'" rounded outlined color="success" width="5vw">Going</v-btn>
+                                <v-btn v-else-if="card.position == 'notgoing'" rounded outlined color="error" width="5vw">Not Going</v-btn>
+                              </v-card-actions>
+                            </v-card>
+                          </v-hover>
                         </v-col>
                       </v-row>
                   </v-container>
@@ -134,31 +127,6 @@
                       :event-margin-bottom="3"  :type="type" @click:event="showEvent"
                       @change="updateRange"
                     ></v-calendar>
-                    <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
-                      <v-card min-width="350px" flat>
-                        <v-toolbar :color="selectedEvent.color" dark>
-                          <v-btn icon>
-                            <v-icon>mdi-pen</v-icon>
-                          </v-btn>
-                          <v-toolbar-title>{{selectedEvent.name}}</v-toolbar-title>
-                          <div class="flex-grow-1"></div>
-                          <v-btn icon>
-                            <v-icon>mdi-heart</v-icon>
-                          </v-btn>
-                          <v-btn icon>
-                            <v-icon>mdi-chevron-down</v-icon>
-                          </v-btn>
-                        </v-toolbar>
-                        <v-card-text>
-                          <p>{{selectedEvent.details}}</p>
-                        </v-card-text>
-                        <v-card-actions>
-                          <v-btn text color="secondary"  @click="selectedOpen = false">
-                            Cancel
-                          </v-btn>
-                        </v-card-actions>
-                      </v-card>
-                    </v-menu>
                   </v-sheet>
                 </v-col>
               </v-row>

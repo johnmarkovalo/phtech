@@ -5,7 +5,18 @@
                 <v-row justify=center>
                     <v-col cols=12 md=12 lg=5>
                         <v-row class="">
-                            <v-img :src="community.photo" max-width="100%">
+                            <v-hover v-if="membership == 'organizer'" v-slot:default="{ hover }">
+                                <v-img :src="community.photo" max-width="100%">
+                                    <v-expand-transition>
+                                        <div v-if="hover"
+                                        :class="hover ? 'd-flex transition-fast-in-fast-out grey darken-3 v-card--reveal headline white--text' : ''"
+                                        style="height: 100%;" >
+                                        Edit
+                                        </div>
+                                    </v-expand-transition>
+                                </v-img>
+                            </v-hover>
+                            <v-img v-else :src="community.photo" max-width="100%">
                             </v-img>
                         </v-row>
                     </v-col>
@@ -36,9 +47,6 @@
                                 <v-chip v-for="tag in tags"  :key="tag.name" large outlined color="primary">{{tag.name}}</v-chip>
                             </v-chip-group>
                         </v-row>
-                        <!-- <v-row class="mt-5">
-                            <v-chip class="float-right" rounded outlined color="primary" @click="">Join This Group</v-chip>
-                        </v-row> -->
                     </v-col>
                 </v-row>
                 <v-row justify=center>
@@ -48,17 +56,32 @@
                                 <v-chip color="primary" outlined class="" @click="visit_about(community.name)"><v-icon left>mdi-information</v-icon>About</v-chip>
                                 <v-chip color="primary" outlined class="" @click="visit_events(community.name)"><v-icon left>mdi-calendar</v-icon>Events</v-chip>
                                 <v-chip color="primary" outlined class="" @click="visit_members(community.name)"><v-icon left>mdi-account-group</v-icon>Members</v-chip>
-                                <v-chip color="primary" outlined class="" @click="visit_news(community.name)"><v-icon left>mdi-newspaper</v-icon>News</v-chip>
                             </v-chip-group>
                         </v-row>
                     </v-col>
                     <v-col cols=12 md=12 lg=5>
                         <v-row class="mt-5" justify=center>
                             <v-col cols=6 lg=5>
-                                <v-btn v-if="!membership" class="float-right" block rounded large color="primary" @click="joinCommunity()">Join This Group</v-btn>
-                                <v-menu v-else transition="slide-y-transition" offset-y :close-on-content-click="false">
+                                <v-menu v-if="membership == 'member'" transition="slide-y-transition" offset-y :close-on-content-click="false">
                                     <template v-slot:activator="{ on }" :close-on-click="false">
                                         <v-btn class="float-right" v-on="on" block rounded large color="primary">Membership<v-icon right>mdi-chevron-down</v-icon></v-btn>
+                                    </template>
+                                    <v-list two-line >
+                                        <v-list-item else ripple="ripple" @click="">
+                                            <v-list-item-avatar>
+                                                <v-icon class="teal lighten-2 white--text"
+                                                >mdi-logout-variant</v-icon>
+                                            </v-list-item-avatar>
+                                            <v-list-item-content>
+                                                <v-list-item-title>Leave this Community</v-list-item-title>
+                                                <v-list-item-subtitle></v-list-item-subtitle>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                    </v-list>
+                                </v-menu>
+                                <v-menu v-else-if="membership == 'organizer'" transition="slide-y-transition" offset-y :close-on-content-click="false">
+                                    <template v-slot:activator="{ on }" :close-on-click="false">
+                                        <v-btn class="float-right" v-on="on" block rounded large color="primary">Manage Community<v-icon right>mdi-chevron-down</v-icon></v-btn>
                                     </template>
                                     <v-list two-line >
                                         <v-list-item v-if="membership == 'organizer'" ripple="ripple" @click="">
@@ -93,6 +116,7 @@
                                         </v-list-item>
                                     </v-list>
                                 </v-menu>
+                                <v-btn v-else class="float-right" block rounded large color="primary" @click="joinCommunity()">Join This Group</v-btn>
                             </v-col>
                         </v-row>
                     </v-col>
@@ -128,7 +152,7 @@
             this.$router.push('/'+community_name.split(' ').join('_')+'/events')
         },
         visit_members(community_name){
-            this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
+            this.$router.push('/'+community_name.split(' ').join('_')+'/members')
         },
         visit_news(community_name){
             this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)

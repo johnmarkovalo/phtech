@@ -9,14 +9,10 @@
             <v-col cols="12" lg=10>
                 <v-row>
                     <v-col v-for="event in upcommingevents" :key="event.title"
-                        cols="10" lg="3" xl="3" md="3">
-                        <v-card max-height="700px" @click="visit_event(community.name,event.code)">
-                            <v-img
-                                :src="event.photo"
-                                class="white--text align-end"
-                                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                                height="200px"
-                            >
+                        cols="12" lg="3" xl="3" md="3">
+                        <v-hover v-slot:default="{ hover }">
+                        <v-card :elevation="hover ? 12 : 2" @click="visit_event(community.name,event.code)">
+                            <v-img :src="event.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
                             </v-img>
                             <v-card-text> 
                                 <p class="title teal--text text--lighten-2">{{event.start | eventDate}}</p>
@@ -37,6 +33,7 @@
                                 <v-chip v-else rounded outlined medium color="primary">Attend</v-chip>
                             </v-card-actions>
                         </v-card>
+                        </v-hover>
                     </v-col>
                 </v-row>
             </v-col>
@@ -51,13 +48,9 @@
                 <v-row>
                     <v-col v-for="event in pastevents" :key="event.title"
                         cols="12" lg="3" xl="3" md="3">
-                        <v-card @click="visit_event(community.name,event.code)">
-                            <v-img
-                                :src="event.photo"
-                                class="white--text align-end"
-                                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                                height="200px"
-                            >
+                        <v-hover v-slot:default="{ hover }">
+                        <v-card :elevation="hover ? 12 : 2" @click="visit_event(community.name,event.code)">
+                            <v-img :src="event.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
                             </v-img>
                             <v-card-text> 
                                 <p class="title teal--text text--lighten-2">{{event.start | eventDate}}</p>
@@ -76,11 +69,9 @@
                                 <v-chip v-if="event.position == 'went'" rounded outlined medium color="success"><v-icon>mdi-check</v-icon>Went</v-chip>
                                 <v-chip v-else-if="event.position == 'absent'" rounded outlined medium color="warning"><v-icon>mdi-check</v-icon>Didn't Go</v-chip>
                                 <v-chip v-else rounded outlined medium color="primary"><v-icon>mdi-eye</v-icon>See</v-chip>
-                                <!-- <v-btn outlined rounded medium>
-                                    attend
-                                </v-btn> -->
                             </v-card-actions>
                         </v-card>
+                        </v-hover>
                     </v-col>
                 </v-row>
             </v-col>

@@ -3,7 +3,6 @@ import Main from './components/main/Main.vue'
 import Landing from './components/main/Landing.vue'
 import About from './components/main/About.vue'
 import Communities from './components/main/Communities.vue'
-import News from './components/main/News.vue'
 import Event from './components/main/Event.vue'
 import Signin from './components/main/Signin.vue'
 import Signup from './components/main/Signup.vue'
@@ -17,6 +16,7 @@ import NewComm from './components/home/User/NewCommunity.vue'
 import CommunityAbout from './components/home/User/CommunityAbout.vue'
 import CommunityDetails from './components/home/User/CommunityDetails.vue'
 import CommunityEvents from './components/home/User/CommunityEvents.vue'
+import CommunityMembers from './components/home/User/CommunityMembers.vue'
 import Profile from './components/home/User/Profile.vue'
 //Admin
 import Dashboard from './components/home/Admin/Dashboard.vue'
@@ -31,7 +31,6 @@ export const routes = [
             { path: '/', name: 'landing', components: {main: Landing}},
             { path: '/about', name: 'about', components: {main: About}},
             { path: '/communities', name: 'communities', components: {main: Communities}},
-            { path: '/news', name: 'news', components: {main: News}},
             { path: '/event', name: 'event', components: {main: Event}},
             { path: '/signin', name: 'Signin', components: {main: Signin}},
             { path: '/signup', name: 'Signup', components: {main: Signup}},
@@ -54,7 +53,7 @@ export const routes = [
                         children: [
                             { path: '/:community_name/about', name: 'communityabout', components: {communitydetails: CommunityAbout}},
                             { path: '/:community_name/events', name: 'communityevents', components: {communitydetails: CommunityEvents}},
-                            // { path: '/:community_name/members', name: 'communitymembers', components: {communitydetails: CommunityMembers}},
+                            { path: '/:community_name/members', name: 'communitymembers', components: {communitydetails: CommunityMembers}},
                             ]
                     },
                 ]

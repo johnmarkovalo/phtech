@@ -149,6 +149,7 @@ class EventController extends Controller
             'code' => $event->code,
             'location' => $event->location,
             'photo' => $event->photo,
+            'start' => $event->start,
             'organizer' => [
                 'name' => $event->organizer->name,  
                 'avatar' => $event->organizer->information->avatar,

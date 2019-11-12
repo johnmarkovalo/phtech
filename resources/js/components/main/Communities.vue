@@ -49,38 +49,26 @@
                 <v-card-text>
                 <v-container fluid>
                     <v-row dense>
-                        <v-col
-                        v-for="card in cards"
-                        :key="card.name"
-                        cols="12" lg="3" xl="3" md="3"
-                        >
-                        <v-card>
-                            <v-img
-                                :src="card.photo"
-                                class="white--text align-end"
-                                gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)"
-                                height="200px"
-                            >
-                                <!-- <cld-image :publicId="card.photo">
-                                <cld-transformation crop="fill"/> 
-                                <cld-transformation crop="scale" />
-                                </cld-image> -->
-                            </v-img>
-                            <v-card-text> 
-                            <p class="headline teal--text text--lighten-2">{{card.name}}</p>
-                            <p class="title white--text text-truncate">{{card.description}}</p>
-                            <p class="subtitle-1">{{card.location.formatted_address}}</p>
-                            </v-card-text>
+                        <v-col v-for="card in cards" :key="card.name" cols="12" lg="3" xl="3" md="3">
+                            <v-hover v-slot:default="{ hover }">
+                                <v-card :elevation="hover ? 12 : 2">
+                                    <v-img :src="card.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px"></v-img>
+                                    <v-card-text> 
+                                        <p class="headline teal--text text--lighten-2">{{card.name}}</p>
+                                        <p class="title white--text text-truncate">{{card.description}}</p>
+                                        <p class="subtitle-1">{{card.location.formatted_address}}</p>
+                                    </v-card-text>
 
-                            <v-card-actions>
-                            <v-spacer></v-spacer>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
 
-                            <v-btn outlined rounded color="primary" @click="visit_community(card.name)">
-                                <v-icon small>mdi-card-bulleted-settings</v-icon>
-                                View
-                            </v-btn>
-                            </v-card-actions>
-                        </v-card>
+                                        <v-btn outlined rounded color="primary" @click="visit_community(card.name)">
+                                            <v-icon small>mdi-card-bulleted-settings</v-icon>
+                                            View
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-hover>
                         </v-col>
                     </v-row>
                     </v-container>

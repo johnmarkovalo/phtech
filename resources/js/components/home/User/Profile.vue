@@ -12,21 +12,22 @@
                   </v-card-title>
                   <v-card-text>
                     <v-row justify=center>
-                       <v-avatar size='130'>
-                        <v-expand-transition>
-                          <div v-if="hover"
-                            :class="{'d-flex transition-fast-in-fast-out grey lighten-5 v-card--reveal headline orange--text': !$vuetify.theme.dark, 
-                            'd-flex transition-fast-in-fast-out grey darken-4 v-card--reveal headline orange--text': $vuetify.theme.dark}"
-                            style="height: 100%;" >
-                            Edit
-                          </div>
-                        </v-expand-transition>
-                        <cld-image :publicId="photo" v-if="photo == user.avatar">
-                          <cld-transformation width="1000" height="1000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="fill"/> 
-                          <cld-transformation width="200" crop="scale" />
-                        </cld-image>
-                        <img :src="photo" alt="Profile" v-if="photo != user.avatar">
-                      </v-avatar>
+                      <v-hover v-slot:default="{ hover }">
+                        <v-avatar size='130'>
+                          <v-expand-transition>
+                            <div v-if="hover"
+                              :class="hover ? 'd-flex transition-fast-in-fast-out grey darken-3 v-card--reveal headline white--text' : ''"
+                              style="height: 100%;" >
+                              Edit
+                            </div>
+                          </v-expand-transition>
+                          <cld-image :publicId="photo" v-if="photo == user.avatar">
+                            <cld-transformation width="1000" height="1000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="fill"/> 
+                            <cld-transformation width="200" crop="scale" />
+                          </cld-image>
+                          <img :src="photo" alt="Profile" v-if="photo != user.avatar">
+                        </v-avatar>
+                      </v-hover>
                     </v-row>
                     <v-row justify=center>
                         <p class="title teal--text text--lighten-2">{{user.name}}</p>
@@ -34,9 +35,6 @@
                     <v-row>
                         <p class="title teal--text text--lighten-2">{{user.bio}}</p>
                     </v-row>
-                    <!-- <v-row>
-                        <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-map-marker</v-icon>{{address.formatted_address}}</p>
-                    </v-row> -->
                   </v-card-text>
                 </v-card>
                 <div class="hidden-sm-and-down">
