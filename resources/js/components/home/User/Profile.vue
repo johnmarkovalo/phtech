@@ -60,19 +60,25 @@
                             </v-row>
                             <v-row justify=start>
                               <v-col v-for="community in communities"  :key="community.name" cols=12 md=6>
-                                <v-row align=center>
-                                  <v-col cols="12" md=3>
-                                    <v-img :src="community.photo"></v-img>
-                                  </v-col>
-                                  <v-col cols="12" md=9>
-                                    <v-row class="teal--text text--lighten-2">
-                                      {{community.name}}
-                                    </v-row>
-                                    <v-row>
-                                      {{community.position | upText}}
-                                    </v-row>
-                                  </v-col>
-                                </v-row>
+                                <v-hover v-slot:default="{ hover }">
+                                  <v-card :elevation="hover ? 12 : 2" @click="visit_community(community.name)">
+                                    <v-card-text>
+                                      <v-row align=center>
+                                        <v-col cols="12" md=3>
+                                          <v-img :src="community.photo"></v-img>
+                                        </v-col>
+                                        <v-col cols="12" md=9>
+                                          <v-row class="teal--text text--lighten-2">
+                                            {{community.name}}
+                                          </v-row>
+                                          <v-row>
+                                            {{community.position | upText}}
+                                          </v-row>
+                                        </v-col>
+                                      </v-row>
+                                    </v-card-text>
+                                  </v-card>
+                                </v-hover>
                               </v-col>
                             </v-row>
                         </v-tab-item>
@@ -82,20 +88,26 @@
                               <p class="display-1 teal--text text-ligthen-2">My Events</p>
                             </v-row>
                             <v-row justify=start>
-                              <v-col v-for="event in events"  :key="event.name" cols=12 md=6>
-                                <v-row align=center>
-                                  <v-col cols="12" md=3>
-                                    <v-img :src="event.photo"></v-img>
-                                  </v-col>
-                                  <v-col cols="12" md=9>
-                                    <v-row class="teal--text text--lighten-2">
-                                      {{event.title}}
-                                    </v-row>
-                                    <v-row>
-                                      {{event.start | eventDate}}
-                                    </v-row>
-                                  </v-col>
-                                </v-row>
+                              <v-col v-for="event in events"  :key="event.title" cols=12 md=6>
+                                <v-hover v-slot:default="{ hover }">
+                                  <v-card :elevation="hover ? 12 : 2" @click="visit_event(event.community_name,event.code)">
+                                    <v-card-text>
+                                      <v-row align=center>
+                                        <v-col cols="12" md=3>
+                                          <v-img :src="event.photo"></v-img>
+                                        </v-col>
+                                        <v-col cols="12" md=9>
+                                          <v-row class="teal--text text--lighten-2">
+                                            {{event.title}}
+                                          </v-row>
+                                          <v-row>
+                                            {{event.start | eventDate}}
+                                          </v-row>
+                                        </v-col>
+                                      </v-row>
+                                    </v-card-text>
+                                  </v-card>
+                                </v-hover>
                               </v-col>
                             </v-row>
                         </v-tab-item>
@@ -164,19 +176,25 @@
                             </v-row>
                             <v-row justify=start>
                               <v-col v-for="community in communities"  :key="community.name" cols=12 md=6>
-                                <v-row align=center>
-                                  <v-col cols="12" md=3>
-                                    <v-img :src="community.photo"></v-img>
-                                  </v-col>
-                                  <v-col cols="12" md=9>
-                                    <v-row class="teal--text text--lighten-2">
-                                      {{community.name}}
-                                    </v-row>
-                                    <v-row>
-                                      {{community.position | upText}}
-                                    </v-row>
-                                  </v-col>
-                                </v-row>
+                                <v-hover v-slot:default="{ hover }">
+                                  <v-card :elevation="hover ? 12 : 2" @click="visit_community(community.name)">
+                                    <v-card-text>
+                                      <v-row align=center>
+                                        <v-col cols="12" md=3>
+                                          <v-img :src="community.photo"></v-img>
+                                        </v-col>
+                                        <v-col cols="12" md=9>
+                                          <v-row class="teal--text text--lighten-2">
+                                            {{community.name}}
+                                          </v-row>
+                                          <v-row>
+                                            {{community.position | upText}}
+                                          </v-row>
+                                        </v-col>
+                                      </v-row>
+                                    </v-card-text>
+                                  </v-card>
+                                </v-hover>
                               </v-col>
                             </v-row>
                         </v-tab-item>
@@ -186,20 +204,26 @@
                               <p class="display-1 teal--text text-ligthen-2">My Events</p>
                             </v-row>
                             <v-row justify=start>
-                              <v-col v-for="event in events"  :key="event.name" cols=12 md=6>
-                                <v-row align=center>
-                                  <v-col cols="12" md=3>
-                                    <v-img :src="event.photo"></v-img>
-                                  </v-col>
-                                  <v-col cols="12" md=9>
-                                    <v-row class="teal--text text--lighten-2">
-                                      {{event.title}}
-                                    </v-row>
-                                    <v-row>
-                                      {{event.start | eventDate}}
-                                    </v-row>
-                                  </v-col>
-                                </v-row>
+                              <v-col v-for="event in events"  :key="event.title" cols=12 md=6>
+                                <v-hover v-slot:default="{ hover }">
+                                  <v-card :elevation="hover ? 12 : 2" @click="visit_event(event.community_name,event.code)">
+                                    <v-card-text>
+                                      <v-row align=center>
+                                        <v-col cols="12" md=3>
+                                          <v-img :src="event.photo"></v-img>
+                                        </v-col>
+                                        <v-col cols="12" md=9>
+                                          <v-row class="teal--text text--lighten-2">
+                                            {{event.title}}
+                                          </v-row>
+                                          <v-row>
+                                            {{event.start | eventDate}}
+                                          </v-row>
+                                        </v-col>
+                                      </v-row>
+                                    </v-card-text>
+                                  </v-card>
+                                </v-hover>
                               </v-col>
                             </v-row>
                         </v-tab-item>
@@ -368,7 +392,13 @@
         })
         .catch( error => { alert(error)})
         .finally( x => { this.loading = false})
-      }
+      },
+      visit_community(community_name){
+          this.$router.push('/'+community_name.split(' ').join('_')+'/about')
+      },
+      visit_event(community_name,event_code){
+          this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
+      },
     },
     watch:
       {

@@ -12,6 +12,7 @@ use App\Information;
 use App\info_tech;
 use App\user_event;
 use App\user_community;
+use App\event_community;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -67,11 +68,14 @@ class InformationController extends Controller
         $events = [];
         foreach($events_tmp as $event_tmp){
             $event = Event::where('id', $event_tmp->event_id)->first();
+            $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
             $events [] = [
                 'id' => $event->id,
                 'title' => $event->title,
+                'code' => $event->code,
                 'photo' => $event->photo,
                 'start' => $event->start,
+                'community_name' => $community_tmp->community->name,
             ];
         }
 
