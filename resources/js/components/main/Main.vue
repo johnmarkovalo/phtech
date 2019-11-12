@@ -43,7 +43,70 @@
                 <!-- <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/newevent"><v-icon left dark>mdi-plus</v-icon> EVENTS</v-btn> -->
                 <!-- <v-btn text class="font-weight-bold teal--text" v-show='isLoggedIn' @click="logout">LOGOUT</v-btn> -->
             </v-toolbar-items>
-            <v-menu transition="slide-x-reverse-transition" offset-y :nudge-width="200"  :close-on-content-click="false">
+            <v-menu transition="slide-x-reverse-transition" offset-y>
+                <template v-slot:activator="{ on }" :close-on-click="false">
+                    <v-btn class="hidden-md-and-up" icon v-on="on" v-if='!isnakalogin()'>
+                        <v-icon>mdi-menu</v-icon>
+                    </v-btn>
+                </template>
+                <v-list>
+                    <v-list-item ripple="ripple" to="/">
+                        <v-list-item-avatar>
+                            <v-icon class="teal lighten-2 white--text"
+                            >mdi-home</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>HOME</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item ripple="ripple" to="/about">
+                        <v-list-item-avatar>
+                            <v-icon class="teal lighten-2 white--text"
+                            >mdi-information</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>ABOUT</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item ripple="ripple" to="/event">
+                        <v-list-item-avatar>
+                            <v-icon class="teal lighten-2 white--text"
+                            >mdi-calendar</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>EVENTS</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item ripple="ripple" to="/communities">
+                        <v-list-item-avatar>
+                            <v-icon class="teal lighten-2 white--text"
+                            >mdi-account-group</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>COMMUNITIES</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item ripple="ripple" to="/signin">
+                        <v-list-item-avatar>
+                            <v-icon class="teal lighten-2 white--text"
+                            >mdi-clipboard-account</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>SIGN-IN</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                    <v-list-item ripple="ripple" to="/signup">
+                        <v-list-item-avatar>
+                            <v-icon class="teal lighten-2 white--text"
+                            >mdi-account-plus</v-icon>
+                        </v-list-item-avatar>
+                        <v-list-item-content>
+                            <v-list-item-title>SIGN-UP</v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list>
+            </v-menu>
+            <v-menu transition="slide-x-reverse-transition" offset-y :nudge-width="200">
                 <template v-slot:activator="{ on }" :close-on-click="false">
                     <v-btn text class="font-weight-bold teal--text" v-on="on"  v-if='isnakalogin()'>
                         <v-avatar>
@@ -76,24 +139,24 @@
                             <v-list-item-subtitle>See All Notifications</v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item ripple="ripple" to="/myevents">
+                    <v-list-item class="hidden-md-and-up" ripple="ripple" to="/explore">
                         <v-list-item-avatar>
                             <v-icon class="teal lighten-2 white--text"
                             >mdi-calendar</v-icon>
                         </v-list-item-avatar>
                         <v-list-item-content>
-                            <v-list-item-title>My Events</v-list-item-title>
-                            <v-list-item-subtitle>View All My Events</v-list-item-subtitle>
+                            <v-list-item-title>Explore Events</v-list-item-title>
+                            <v-list-item-subtitle>Explore All My Events</v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item ripple="ripple" to="/mycommunities">
+                    <v-list-item class="hidden-md-and-up" ripple="ripple" to="/newcommunity">
                         <v-list-item-avatar>
                             <v-icon class="teal lighten-2 white--text"
-                            >mdi-account-group</v-icon>
+                            >mdi-plus</v-icon>
                         </v-list-item-avatar>
                         <v-list-item-content>
-                            <v-list-item-title>My Communities</v-list-item-title>
-                            <v-list-item-subtitle>View All My Communities</v-list-item-subtitle>
+                            <v-list-item-title>Create Community</v-list-item-title>
+                            <v-list-item-subtitle>Create a new Community</v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item ripple="ripple" @click="logout">

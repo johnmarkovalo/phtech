@@ -119,6 +119,7 @@ class EventController extends Controller
                     'start' => $event->start,
                     'end' => $event->end,
                     'color' => 'teal',
+                    // 'community_organizer' => $this->getCommunities($event->id),
                     'community' => $this->getCommunities($event->id),
                     'tags' => $this->getTags($event->id),
                     'position' =>  $position,
