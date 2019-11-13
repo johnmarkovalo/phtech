@@ -24,7 +24,7 @@
               <v-card class="mt-5 elevation-0">
                 <v-toolbar flat align="center">
                   <v-icon medium color="primary">fas fa-search</v-icon>
-                  <v-toolbar-title class="hidden-sm-and-down display-1">Search Using Tags:</v-toolbar-title>
+                  <v-toolbar-title class="hidden-sm-and-down display-1">Search Using Event:</v-toolbar-title>
                   <!-- <v-flex xs="12" md="5">
                       <v-autocomplete dense v-model="selected" :disabled="isUpdating" :items="tags"
                         filled chips color="primary" class="transparent mt-6"
@@ -64,15 +64,15 @@
                 <v-card-text>
                   <v-container fluid>
                       <v-row dense>
-                        <v-col v-for="card in events" :key="card.title" cols="12" lg="3" xl="3" md="3">
+                        <v-col v-for="event in events" :key="event.title" cols="12" lg="3" xl="3" md="3">
                           <v-hover v-slot:default="{ hover }">
-                            <v-card :elevation="hover ? 12 : 2" @click="visit_event(card.community['0'].name,card.code)">
-                              <v-img :src="card.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
+                            <v-card :elevation="hover ? 12 : 2" @click="visit_event(event.community['0'].name,event.code)">
+                              <v-img :src="event.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
                               </v-img>
                               <v-card-text> 
-                                <p class="title teal--text text--lighten-2">{{card.start | eventDate}}</p>
-                                <p class="headline white--text">{{card.name}}</p>
-                                <p class="subtitle-1">{{card.location.formatted_address}}</p>
+                                <p class="title teal--text text--lighten-2">{{event.start | eventDate}}</p>
+                                <p class="headline white--text">{{event.name}}</p>
+                                <p class="subtitle-1">{{event.location.formatted_address}}</p>
                                 <v-chip v-for="item in card.community" v-bind:key="item.id" color="primary" outlined>
                                     <v-icon left>
                                       mdi-account-group
@@ -84,9 +84,9 @@
                               <v-card-actions>
                                 <v-spacer></v-spacer>
 
-                                <v-btn v-if="card.position == 'pending'" rounded outlined color="primary" width="5vw" >Attend</v-btn>
-                                <v-btn v-else-if="card.position == 'going' || card.position == 'organizer'" rounded outlined color="success" width="5vw">Going</v-btn>
-                                <v-btn v-else-if="card.position == 'notgoing'" rounded outlined color="error" width="5vw">Not Going</v-btn>
+                                <v-btn v-if="event.position == 'pending'" rounded outlined color="primary" width="5vw" >Attend</v-btn>
+                                <v-btn v-else-if="event.position == 'going' || event.position == 'organizer'" rounded outlined color="success" width="5vw">Going</v-btn>
+                                <v-btn v-else-if="event.position == 'notgoing'" rounded outlined color="error" width="5vw">Not Going</v-btn>
                               </v-card-actions>
                             </v-card>
                           </v-hover>

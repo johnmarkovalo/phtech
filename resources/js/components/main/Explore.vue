@@ -22,7 +22,7 @@
                               <v-card-text> 
                                 <p class="title teal--text text--lighten-2">{{card.start | eventDate}}</p>
                                 <p class="headline white--text">{{card.name}}</p>
-                                <p class="subtitle-1 teal--text text--lighten-2">GDG Zamboanga</p>
+                                <p class="subtitle-1 teal--text text--lighten-2">{{card.community_organizer}}</p>
                                 <p class="subtitle-2">{{card.location.formatted_address}}</p>
                                 <v-chip v-for="item in card.tags" v-bind:key="item.id" color="primary" outlined>
                                     <v-icon left>
@@ -67,7 +67,22 @@
       selectedOpen: false,
     }),
     computed: {
-      
+      eventRecommended: function() {
+          return this.events.filter(function(event) {
+              event.tags.forEach(function(tag) {
+                if(tag.name == 'going' || tag.name == 'organizer' || tag.name == 'went'){
+                    return event
+                }
+              })
+          })
+      },
+      NotGoingAttendee: function() {
+          return this.attendees.filter(function(attendee) {
+              if(attendee.position == 'notgoing' || attendee.position == 'absent'){
+                  return attendee
+              }
+          })
+      },
     },
     mounted () {
       

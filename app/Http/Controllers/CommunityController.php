@@ -8,6 +8,7 @@ use Hash;
 use App\Technology;
 use App\Community;
 use App\community_tech;
+use App\event_tech;
 use App\user_community;
 use App\user_event;
 use App\event_community;
@@ -135,8 +136,10 @@ class CommunityController extends Controller
     public function getEvents($events, $id){
         $upevents = [];
         $pastevents = [];
+        $newevents = [];
         $position = '';
         foreach($events as $event){
+            $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
             if($event->event->start > date('Y-m-d H:i:s')){
                 $position = user_event::where([['user_id', $id],['event_id',$event->event->id]])->first();
                 if(!$position){
@@ -154,6 +157,8 @@ class CommunityController extends Controller
                     'location' => $event->event->location,
                     'photo' => $event->event->photo,
                     'position' => $position,
+                    'tags' => $this->getEventTags($event->id),
+                    'community_name' => $community_tmp->community->name,
                 ];
             }
             else{
@@ -176,6 +181,8 @@ class CommunityController extends Controller
                     'location' => $event->event->location,
                     'photo' => $event->event->photo,
                     'position' => $position,
+                    'tags' => $this->getEventTags($event->id),
+                    'community_name' => $community_tmp->community->name,
                 ];
             }
             $newevents[] = [
@@ -187,6 +194,8 @@ class CommunityController extends Controller
                 'location' => $event->event->location,
                 'photo' => $event->event->photo,
                 'position' => $position,
+                'tags' => $this->getEventTags($event->id),
+                'community_name' => $community_tmp->community->name,
             ];
         }
 
@@ -220,6 +229,14 @@ class CommunityController extends Controller
         $tags = community_tech::select('technology.name')
                 ->join('technology', 'community_tech.tech_id', 'technology.id')
                 ->where('community_id', $id)->get();
+
+        return $tags;
+    }
+
+    public function getEventTags($id){
+        $tags = event_tech::select('technology.name')
+                ->join('technology', 'event_tech.tech_id', 'technology.id')
+                ->where('event_id', $id)->get();
 
         return $tags;
     }

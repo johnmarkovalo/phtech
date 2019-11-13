@@ -9,6 +9,7 @@ use App\Technology;
 use App\Community;
 use App\Event;
 use App\event_community;
+use App\info_tech;
 use App\event_tech;
 use App\user_community;
 use App\user_event;
@@ -103,6 +104,7 @@ class EventController extends Controller
         foreach($event_tmp as $event){
             if($event->start > date('Y-m-d H:i:s')){
                 $position = user_event::where([['user_id', $request->id],['event_id',$event->id]])->first();
+                $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
                 if(!$position){
                     $position = 'pending';
                 }
@@ -119,13 +121,37 @@ class EventController extends Controller
                     'start' => $event->start,
                     'end' => $event->end,
                     'color' => 'teal',
-                    // 'community_organizer' => $this->getCommunities($event->id),
+                    'community_organizer' => $community_tmp->community->name,
                     'community' => $this->getCommunities($event->id),
                     'tags' => $this->getTags($event->id),
                     'position' =>  $position,
                 ];
             }
         }
+
+        // $tags = info_tech::select('technology.id')
+        //                    ->join('technology', 'info_tech.tech_id', 'technology.id')
+        //                    ->where('info_id', $request->user()->information->id)->get();
+
+        // $recommended = Event::join('technology', 'info_tech.tech_id', 'technology.id')->
+        //                    whereHas('genres.users', function($q) use ($userId){
+        //                        $q->where('users.id', $userId);
+        //                    })->whereHas('years.users', function($q) use ($userId){
+        //                        $q->where('users.id', $userId);
+        //                    })->whereHas('runtimes.users', function($q) use ($userId){
+        //                        $q->where('users.id', $userId);
+        //                    })->get();
+   
+
+        // $recommended = Event::join('technology', 'info_tech.tech_id', 'technology.id')->
+        //                 whereHas('genres.users', function($q) use ($userId){
+        //                     $q->where('users.id', $userId);
+        //                 })->whereHas('years.users', function($q) use ($userId){
+        //                     $q->where('users.id', $userId);
+        //                 })->whereHas('runtimes.users', function($q) use ($userId){
+        //                     $q->where('users.id', $userId);
+        //                 })->get();
+
         return response(['event' => $eventlist], 200);
     }
     
