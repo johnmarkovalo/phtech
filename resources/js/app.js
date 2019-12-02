@@ -32,13 +32,13 @@ Vue.use(VueGoogleMaps, {
 
 const opts = {
   theme: {
-    dark: true,
+    dark: false,
     themes: {
       light: {
-        primary: colors.teal.lighten2
+        primary: colors.teal.darken2
       },
       dark: {
-        primary: colors.teal.lighten2
+        primary: colors.teal.darken2
       }
     }
   },
@@ -51,7 +51,7 @@ Vue.use(Vuetify)
 Vue.use(VueRouter)
 
 Vue.use(VueProgressBar, {
-  color: '#FF8F00',
+  color: '#4DB6AC',
   thickness: '7px',
   failedColor: 'red',
   height: '3px'

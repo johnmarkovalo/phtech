@@ -51,7 +51,7 @@ export default {
     methods: {
         register() {
             this.loading = true
-            axios.post('api/register', { 
+            axios.post('/api/register', { 
                 password: this.user.password, 
                 name: this.user.firstname + " " + this.user.lastname,
                 lastname: this.user.lastname,
@@ -60,7 +60,7 @@ export default {
                 user_type: "user"
             })   
             .then( response => { 
-                axios.post('api/login', { 
+                axios.post('/api/login', { 
                     email: this.user.email, password: this.user.password
                 })
                 .then( response => {

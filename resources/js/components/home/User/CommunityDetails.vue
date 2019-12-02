@@ -21,11 +21,11 @@
                         </v-row>
                     </v-col>
                     <v-col cols=12 md=12 lg=3>
-                        <p class="display-1 teal--text text--lighten-2 font-weight-bold">{{community.name}}</p>
-                        <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-map-marker</v-icon>{{community.location}}</p>
-                        <p class="title teal--text text--lighten-2"><v-icon color="primary">fas fa-user</v-icon>Organizers</p>
+                        <p class="display-1 teal--text text--darken-2 font-weight-bold">{{community.name}}</p>
+                        <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-map-marker</v-icon>{{community.location}}</p>
+                        <p class="title teal--text text--darken-2"><v-icon color="primary">fas fa-user</v-icon>Organizers</p>
                         <p class="title ml-5" >{{community.organizer}} and <strong>7 others</strong></p>
-                        <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-account-group</v-icon> Members</p>
+                        <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-account-group</v-icon> Members</p>
                         <v-row>
                             <v-tooltip top v-for="member in members" :key="member.name">
                                 <template v-slot:activator="{ on }">
@@ -42,7 +42,7 @@
                     </v-col>
                     <v-col cols=12 md=12 lg=2>
                         <v-row>
-                            <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-tag-multiple</v-icon>Community Topics/Tags</p>
+                            <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-tag-multiple</v-icon>Community Topics/Tags</p>
                             <v-chip-group column>
                                 <v-chip v-for="tag in tags"  :key="tag.name" large outlined color="primary">{{tag.name}}</v-chip>
                             </v-chip-group>
@@ -185,7 +185,7 @@
             }
         },
         joinCommunity(){
-            axios.put('api/joincommunity', {
+            axios.put('/api/joincommunity', {
                 id: this.community.id
             })
             .then( response => {

@@ -7,8 +7,8 @@
                     <v-col cols=12 md=12 lg=4>
                         <v-row>
                             <v-col cols="12">
-                                <p class="subtitle-1 teal--text text--lighten-2 font-weight-bold">{{event.start | eventDate}}</p>
-                                <p class="display-2 teal--text text--lighten-2 font-weight-bold">{{event.title}}</p>
+                                <p class="subtitle-1 teal--text text--darken-2 font-weight-bold">{{event.start | eventDate}}</p>
+                                <p class="display-2 teal--text text--darken-2 font-weight-bold">{{event.title}}</p>
                             </v-col>
                         </v-row>
                         <v-row>
@@ -21,16 +21,16 @@
                                 </v-avatar>
                             </v-col>
                             <v-col cols=9 lg=10>
-                                <p :class="{'caption': $vuetify.breakpoint.smAndDown, 'title': $vuetify.breakpoint.mdAndUp}">Created by <strong class="teal--text text--lighten-2">{{event.organizer.name}}</strong></p>
-                                <p :class="{'caption': $vuetify.breakpoint.smAndDown, 'title': $vuetify.breakpoint.mdAndUp}">Hosted by <strong class="teal--text text--lighten-2">{{communities[0].name}}</strong></p>
+                                <p :class="{'caption': $vuetify.breakpoint.smAndDown, 'title': $vuetify.breakpoint.mdAndUp}">Created by <strong class="teal--text text--darken-2">{{event.organizer.name}}</strong></p>
+                                <p :class="{'caption': $vuetify.breakpoint.smAndDown, 'title': $vuetify.breakpoint.mdAndUp}">Hosted by <strong class="teal--text text--darken-2">{{communities[0].name}}</strong></p>
                             </v-col>
                         </v-row>
                     </v-col>
                     <v-col cols=12 md=12 lg=3 align=center>
                         <v-row  v-if="upcomming">
-                            <p v-if="this.status == 'pending'" class="display-1 teal--text text--lighten-2 font-weight-bold">Want to go?</p>
-                            <p v-if="this.status == 'going' || this.status == 'organizer'" class="display-1 teal--text text--lighten-2 font-weight-bold">You're Going</p>
-                            <p v-if="this.status == 'notgoing'" class="display-1 teal--text text--lighten-2 font-weight-bold">You're not Going</p>
+                            <p v-if="this.status == 'pending'" class="display-1 teal--text text--darken-2 font-weight-bold">Want to go?</p>
+                            <p v-if="this.status == 'going' || this.status == 'organizer'" class="display-1 teal--text text--darken-2 font-weight-bold">You're Going</p>
+                            <p v-if="this.status == 'notgoing'" class="display-1 teal--text text--darken-2 font-weight-bold">You're not Going</p>
                         </v-row>
                         <v-row justify=center  v-if="upcomming">
                             <v-col cols=4>
@@ -41,7 +41,7 @@
                             </v-col>
                         </v-row>
                         <v-row  v-if="!upcomming">
-                            <p class="display-1 teal--text text--lighten-2 font-weight-bold">Event Rating</p>
+                            <p class="display-1 teal--text text--darken-2 font-weight-bold">Event Rating</p>
                         </v-row>
                         <v-row justify=center  v-if="!upcomming">
                             <v-rating size="50" v-model="ratings" background-color="teal lighten-3"  color="teal"></v-rating>
@@ -78,14 +78,14 @@
                         </v-row>
                         <!-- Details -->
                         <v-row>
-                            <p class="display-1 teal--text text--lighten-2 font-weight-bold">Details</p>
+                            <p class="display-1 teal--text text--darken-2 font-weight-bold">Details</p>
                         </v-row>
                         <v-row>
                             <p class="title">{{event.description}}</p>
                         </v-row>
                         <!-- Attendees -->
                         <v-row>
-                            <p class="display-1 teal--text text--lighten-2 font-weight-bold">Attendees</p>
+                            <p class="display-1 teal--text text--darken-2 font-weight-bold">Attendees</p>
                         </v-row>
                         <v-row>
                             <v-tooltip top v-for="attendee in GoingAttendee" :key="attendee.name">
@@ -125,15 +125,15 @@
                             </v-menu>
                         </v-row>
                         <v-row>
-                            <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-alarm</v-icon>{{event.start | eventDate}}</p>
+                            <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-alarm</v-icon>{{event.start | eventDate}}</p>
                         </v-row>
                          <v-row>
-                            <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-map-marker</v-icon>{{event.location}}</p>
+                            <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-map-marker</v-icon>{{event.location}}</p>
                         </v-row>
                         <!-- Maps -->
                         <v-row>
                             <GmapMap style="width: 100%; height: 300px;" :zoom="25" :center="location" 
-                                        map-type-id="terrain">
+                                        >
                                 <GmapMarker 
                                     v-if="this.location"
                                     label="★"
@@ -145,7 +145,7 @@
                         <!-- Tags -->
                         <v-row>
                             <v-col>
-                                <p class="title teal--text text--lighten-2"><v-icon color="primary">mdi-tag-multiple</v-icon>Community Topics/Tags</p>
+                                <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-tag-multiple</v-icon>Event Topics/Tags</p>
                                 <v-chip-group column>
                                     <v-chip v-for="tag in tags"  :key="tag.name" large outlined color="primary">{{tag.name}}</v-chip>
                                 </v-chip-group>

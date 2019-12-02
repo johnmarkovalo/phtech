@@ -23,11 +23,13 @@ use Illuminate\Http\Request;
         // Technology
         Route::post('/technology', 'TechnologyController@store');
         Route::put('/technology/{technology}', 'TechnologyController@update');
+        Route::put('/newtechnology', 'TechnologyController@saveNew');
         Route::delete('/technology/{technology}', 'TechnologyController@destroy');
         
         // Information
         Route::get('/information', 'InformationController@index');
         // Route::get('/information/{information}', 'InformationController@show');
+        Route::put('/information/upload-profile', 'InformationController@upload_profile');
         Route::put('/information/{information}', 'InformationController@update');
         Route::delete('/information/{information}', 'InformationController@destroy');
 
@@ -49,7 +51,7 @@ use Illuminate\Http\Request;
         Route::put('/communitytech/{community}', 'CommunityController@communitytech');
 
         // Event
-        Route::post('/event', 'EventController@store');
+        Route::post('/create_event', 'EventController@store');
         Route::put('/event/{event}', 'EventController@update');
         Route::delete('/event/{event}', 'EventController@destroy');
         Route::get('/event/{event}', 'EventController@eventdetails');

@@ -86,7 +86,7 @@ export default {
     methods: {
         retrieveTags() {
             this.loading = true
-            axios.get('api/technology')
+            axios.get('/api/technology')
             .then( response => {
                 this.tags = response.data.tags
             })
@@ -103,7 +103,7 @@ export default {
         deleteTags(item) {
             var itemDeletion = confirm('Are you sure you want to delete this tags?')
             if(itemDeletion == true) {
-                axios.delete('api/technology/' + item.id)
+                axios.delete('/api/technology/' + item.id)
                 .then( response => { 
                     const index = this.tags.indexOf(item)
                     this.tags.splice(index, 1)
@@ -124,7 +124,7 @@ export default {
             this.loading = true
             if (this.editedIndex > -1) {
                 // Update customer
-                axios.put('api/technology/' + this.editedTag.id, { 
+                axios.put('/api/technology/' + this.editedTag.id, { 
                     name: this.editedTag.name, description: this.editedTag.description,
                 })
                 .then( response => { 
@@ -135,7 +135,7 @@ export default {
                 .finally( x => { this.loading = false})
             } else {
                 // Create New Technology Tag
-                axios.post('api/technology', { 
+                axios.post('/api/technology', { 
                     name: this.editedTag.name, description: this.editedTag.description,
                 })   
                 .then( response => { 

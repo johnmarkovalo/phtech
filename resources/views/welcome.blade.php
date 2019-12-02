@@ -67,7 +67,7 @@
               height: 150px;
               margin: -75px 0 0 -75px;
               margin-top: 250px;
-              border: 16px solid #FF8F00;
+              border: 16px solid #4DB6AC;
               border-radius: 50%;
               border-top: 16px solid #f0e10e;
               width: 120px;

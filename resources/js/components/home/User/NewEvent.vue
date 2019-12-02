@@ -10,7 +10,7 @@
                     </v-toolbar>
                     <v-card-text>
                         <v-container grid-list-xl v-if="true">
-                            <p class="title teal--text text--lighten-2">Event Title</p>                            
+                            <p class="title teal--text text--darken-2">Event Title</p>                            
                             <v-row>
                                 <v-col cols=12 md=12 lg=12 xl=12>
                                     <v-text-field outlined type="text" label="Event Title" v-model="title" required autofocus prepend-inner-icon="mdi-calendar"/>
@@ -19,7 +19,7 @@
                                     <v-text-field outlined name="name" label="label"/>
                                 </v-col> -->
                             </v-row>
-                            <p class="title teal--text text--lighten-2">Event Start</p>
+                            <p class="title teal--text text--darken-2">Event Start</p>
                             <v-row>
                                 <v-col cols=12 md=12 lg=6 xl=6>
                                     <v-dialog
@@ -74,7 +74,7 @@
                                     </v-dialog>
                                 </v-col>
                             </v-row>
-                            <p class="title teal--text text--lighten-2">Event End</p>
+                            <p class="title teal--text text--darken-2">Event End</p>
                             <v-row>
                                 <v-col cols=12 md=12 lg=6 xl=6>
                                     <v-dialog ref="dialog3" v-model="modal3" :return-value.sync="end.date"
@@ -103,36 +103,36 @@
                                     </v-dialog>
                                 </v-col>
                             </v-row>
-                            <p class="title teal--text text--lighten-2">Event Description</p>                            
+                            <p class="title teal--text text--darken-2">Event Description</p>                            
                             <v-row>
                                 <v-col cols=12 md=12 lg=12 xl=12>
                                     <v-text-field outlined type="text" label="Event Description" v-model="description" required autofocus prepend-inner-icon="mdi-calendar"/>
                                 </v-col>
                             </v-row>    
-                            <p class="title teal--text text--lighten-2">Event Community</p>                            
+                            <p class="title teal--text text--darken-2">Event Community</p>                            
                             <v-row>
                                 <v-col cols=12 md=12 lg=12 xl=12>
                                     <v-select color="primary" v-model="community" :items="communityUnder" outlined chips label="Community"  required prepend-inner-icon="mdi-account-group"/>
                                 </v-col>
                             </v-row>                          
-                            <p class="title teal--text text--lighten-2">Event Location</p>
+                            <p class="title teal--text text--darken-2">Event Location</p>
                             <v-row>
                                 <v-col cols=12 md=12 lg=12 xl=12>
                                     <v-row>
                                         <v-icon medium color="primary">mdi-map-marker</v-icon>
-                                        <h2 class="teal--text text--lighten-2">
+                                        <h2 class="teal--text text--darken-2">
                                             <gmap-autocomplete
                                             @place_changed="setPlace">
                                             </gmap-autocomplete>
                                         </h2>
                                     </v-row>
                                     <GmapMap style="width: 100%; height: 400px;" :zoom="25" :center="center" 
-                                                map-type-id="terrain">
+                                                >
                                         <GmapMarker v-if="this.address" label="★" :draggable="true" :position="center"/>
                                     </GmapMap>
                                 </v-col>
                             </v-row>
-                            <p class="title teal--text text--lighten-2">Event Speaker</p>
+                            <p class="title teal--text text--darken-2">Event Speaker</p>
                             <v-row>
                                 <v-col cols=12 md=12 lg=12 xl=12>
                                     <v-autocomplete v-model="selectedSpeakers" :disabled="isUpdating" :items="users"
@@ -160,7 +160,7 @@
                                     </v-autocomplete>
                                 </v-col>
                             </v-row>
-                            <p class="title teal--text text--lighten-2">Event Topic</p>
+                            <p class="title teal--text text--darken-2">Event Topic</p>
                             <v-row>
                                 <v-col cols=12 md=12 lg=12 xl=12>
                                     <v-autocomplete v-model="selectedTags" :disabled="isUpdating" :items="tags"
@@ -198,7 +198,7 @@
                                     </v-autocomplete>
                                 </v-col>
                             </v-row>
-                            <p class="title teal--text text--lighten-2">Optional Settings</p>
+                            <p class="title teal--text text--darken-2">Optional Settings</p>
                             <v-row>
                                 
                             </v-row>
@@ -317,7 +317,7 @@ export default {
                 code += keychars.charAt(Math.floor(Math.random() * keychars.length))
             }
             // Create Event
-            axios.post('api/event' , { 
+            axios.post('/api/create_event' , { 
                 code: code, 
                 title: this.title, 
                 description: this.description, 
@@ -328,12 +328,12 @@ export default {
             })
             .then( response => { 
                 var id = response.data.event.id
-                axios.put('api/eventtech/' + id, { 
+                axios.put('/api/eventtech/' + id, { 
                     id: id,
                     tags: this.selectedTags
                 })
                 .then( response => {
-                    axios.put('api/eventcommunity/' + id, { 
+                    axios.put('/api/eventcommunity/' + id, { 
                         id: id,
                         community: this.community,
                         partners: this.selectedPartners

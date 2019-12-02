@@ -22,23 +22,10 @@ class AuthController extends Controller
             'email' => 'required|string|max:255',
             'user_type' => 'required|string|max:255',
         ]);
-
-        if ($validator->fails()){
-            return response(['errors'=>$validator->errors()->all()], 422);
-        }
-
-        if($request->student){
-            $occupation = 'Student';
-            $bio = 'Student at '.$request->affilation;
-        }
-        else{
-            $occupation = $request->position;
-            $bio = $occupation.' at '.$request->affilation;
-        }
-
+        
         $request['password'] = Hash::make($request['password']);
         $user = User::create($request->all());
-        $information = Information::create(array_merge($request->toArray(),["user_id"=>$user->id, "firstname"=>$request->firstname, "lastname"=>$request->lastname, "occupation"=>$occupation, "bio"=>$bio]));
+        $information = Information::create(array_merge($request->toArray(),["user_id"=>$user->id, "firstname"=>$request->firstname, "lastname"=>$request->lastname]));
         $points = Point::create(array_merge($request->toArray(),["user_id"=>$user->id, "points"=>'0']));
         $token = $user->createToken('Laravel Password Grant Client')->accessToken;
         return response(['token' => $token], 200);

@@ -133,14 +133,15 @@ class EventController extends Controller
         //                    ->join('technology', 'info_tech.tech_id', 'technology.id')
         //                    ->where('info_id', $request->user()->information->id)->get();
 
-        // $recommended = Event::join('technology', 'info_tech.tech_id', 'technology.id')->
-        //                    whereHas('genres.users', function($q) use ($userId){
-        //                        $q->where('users.id', $userId);
-        //                    })->whereHas('years.users', function($q) use ($userId){
-        //                        $q->where('users.id', $userId);
-        //                    })->whereHas('runtimes.users', function($q) use ($userId){
-        //                        $q->where('users.id', $userId);
-        //                    })->get();
+        // $recommended = Event::join('event_tech', 'event_tech.event_id', 'event.id')->
+        //                     join('technology', 'event_tech.tech_id', 'technology.id')->
+        //                     whereHas('genres.users', function($q) use ($userId){
+        //                         $q->where('users.id', $userId);
+        //                     })->whereHas('years.users', function($q) use ($userId){
+        //                         $q->where('users.id', $userId);
+        //                     })->whereHas('runtimes.users', function($q) use ($userId){
+        //                         $q->where('users.id', $userId);
+        //                     })->get();
    
 
         // $recommended = Event::join('technology', 'info_tech.tech_id', 'technology.id')->

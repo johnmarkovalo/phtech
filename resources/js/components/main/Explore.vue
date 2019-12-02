@@ -3,7 +3,7 @@
       <v-flex col-12 >
         <v-card class="mt-1 elevation-0">
           <v-toolbar color="primary">
-            <v-toolbar-title class="display-1">Find events you're interested with</v-toolbar-title>
+            <v-toolbar-title class="display-1 white--text">Find events you're interested with</v-toolbar-title>
             <!-- <v-icon x-large>information</v-icon> -->
           </v-toolbar>
           <v-card-text>
@@ -17,12 +17,12 @@
                         <v-col v-for="card in events" :key="card.title" cols="12" lg="3" xl="3" md="3">
                           <v-hover v-slot:default="{ hover }">
                             <v-card :elevation="hover ? 12 : 2" @click="visit_event(card.community['0'].name,card.code)">
-                              <v-img :src="card.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
+                              <v-img :src="card.photo" class=" align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
                               </v-img>
                               <v-card-text> 
-                                <p class="title teal--text text--lighten-2">{{card.start | eventDate}}</p>
-                                <p class="headline white--text">{{card.name}}</p>
-                                <p class="subtitle-1 teal--text text--lighten-2">{{card.community_organizer}}</p>
+                                <p class="title teal--text text--darken-2">{{card.start | eventDate}}</p>
+                                <p class="headline ">{{card.name}}</p>
+                                <p class="subtitle-1 teal--text text--darken-2">{{card.community_organizer}}</p>
                                 <p class="subtitle-2">{{card.location.formatted_address}}</p>
                                 <v-chip v-for="item in card.tags" v-bind:key="item.id" color="primary" outlined>
                                     <v-icon left>
@@ -92,7 +92,7 @@
           this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
       },
       retrieveEvent(){
-          axios.get('api/event' ,
+          axios.get('/api/event' ,
           {
             params: {
               id: sessionStorage.getItem('user-id'),
@@ -104,7 +104,7 @@
           .catch( error => { alert(error)})
       },
       retrieveTags() {
-          axios.get('api/technology')
+          axios.get('/api/technology')
           .then( response => {
               this.tags = response.data.tags
           })

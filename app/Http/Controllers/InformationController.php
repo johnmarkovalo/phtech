@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use JD\Cloudder\Facades\Cloudder;
+use Cloudder;
 use Hash;
 use App\Technology;
 use App\Community;
@@ -92,18 +92,27 @@ class InformationController extends Controller
             ];
         }
 
-        $tags = info_tech::select('technology.name')
+        $tags_tmp = info_tech::select('technology.name')
                            ->join('technology', 'info_tech.tech_id', 'technology.id')
                            ->where('info_id', $request->user()->information->id)->get();
+        $tags = [];
+        foreach($tags_tmp as $tag){
+            $tags[] = $tag->name;
+        };
                            
         return response(['information' => $info, 'tags' =>  $tags ,'events' => $events ,'communities' => $communities], 200);
     }
 
-    public function uploadprofile(request $request){
-        $user = User::findOrFail($request->id);
-        if($request['nopic']==false){
+    public function upload_profile (Request $request){
+        try {
             Cloudder::upload($request['photo'], null, ['folder'=>'phtechpark/profiles/']);
-            $request['photo'] = Cloudder::getPublicId();
+
+            $request->user()->information()->update(['avatar' => Cloudder::getPublicId()]);
+
+            return response(['success' => ['avatar' => Cloudder::getPublicId()]]);
+
+        } catch (\Throwable $th) {
+            return ['error'=>true, 'message'=>$th];
         }
     }
 }

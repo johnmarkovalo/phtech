@@ -2,7 +2,7 @@
     <div>
         <v-row justify=center>
             <v-col cols=12 lg=10>
-                <p class="display-1 teal--text text--lighten-2">Upcomming Events:</p>
+                <p class="display-1 teal--text text--darken-2">Upcomming Events:</p>
             </v-col>
         </v-row>
         <v-row dense justify=center>
@@ -15,9 +15,9 @@
                             <v-img :src="event.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
                             </v-img>
                             <v-card-text> 
-                                <p class="title teal--text text--lighten-2">{{event.start | eventDate}}</p>
+                                <p class="title teal--text text--darken-2">{{event.start | eventDate}}</p>
                                 <p class="headline white--text">{{event.title}}</p>
-                                <p class="subtitle-1 teal--text text--lighten-2">{{event.community_organizer}}</p>
+                                <p class="subtitle-1 teal--text text--darken-2">{{event.community_organizer}}</p>
                                 <p class="subtitle-1 text-truncate">{{event.location.formatted_address}}</p>
                                 <v-chip small v-for="item in event.tags" v-bind:key="item.id" color="primary" outlined>
                                     <v-icon small left>
@@ -41,7 +41,7 @@
         </v-row>
         <v-row justify=center>
             <v-col cols=12 lg=10>
-                <p class="display-1 teal--text text--lighten-2">Past Events:</p>
+                <p class="display-1 teal--text text--darken-2">Past Events:</p>
             </v-col>
         </v-row>
         <v-row dense justify=center>
@@ -54,9 +54,9 @@
                             <v-img :src="event.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
                             </v-img>
                             <v-card-text> 
-                                <p class="title teal--text text--lighten-2">{{event.start | eventDate}}</p>
+                                <p class="title teal--text text--darken-2">{{event.start | eventDate}}</p>
                                 <p class="headline white--text">{{event.title}}</p>
-                                <p class="subtitle-1 teal--text text--lighten-2">{{event.community_organizer}}</p>
+                                <p class="subtitle-1 teal--text text--darken-2">{{event.community_organizer}}</p>
                                 <p class="subtitle-1 text-truncate">{{event.location.formatted_address}}</p>
                                 <v-chip small v-for="item in event.tags" v-bind:key="item.id" color="primary" outlined>
                                     <v-icon small left>

@@ -1,17 +1,17 @@
 <template>
     <div class="container-fluid pa-0 pb-2">
         <v-app-bar hide-on-scroll app class="transparent elevation-0">
-            <v-overlay absolute opacity="0.3" value="true" z-index="0"></v-overlay>
+            
             <v-img v-show="!type == 'admin'" src="img/Phtech.png" max-width="200px" alt="avatar"/>
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/">HOME</v-btn>
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/about">ABOUT</v-btn>
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/communities">COMMMUNITIES</v-btn>
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/event">EVENTS</v-btn>
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/signin">SIGN-IN</v-btn>
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='!isnakalogin()' to="/signup">SIGN-up</v-btn>
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/explore">EXPLORE</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/">HOME</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/about">ABOUT</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/communities">COMMMUNITIES</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/event">EVENTS</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/signin">SIGN-IN</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/signup">SIGN-up</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='isnakalogin()' to="/explore">EXPLORE</v-btn>
                 <!-- <v-menu open-on-hover transition="slide-y-transition" offset-y :close-on-content-click="false">
                     <template v-slot:activator="{ on }" :close-on-click="false">
                         <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' v-on="on">EXPLORE</v-btn>
@@ -109,12 +109,11 @@
             <v-menu transition="slide-x-reverse-transition" offset-y :nudge-width="200">
                 <template v-slot:activator="{ on }" :close-on-click="false">
                     <v-btn text class="font-weight-bold teal--text" v-on="on"  v-if='isnakalogin()'>
-                        <v-avatar>
-                            <cld-image :publicId="photo" >
-                                <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
-                                <cld-transformation width="200" crop="scale" />
+                        <!-- <v-avatar> -->
+                            <cld-image :publicId="photo" width="50">
+                                <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>  
                             </cld-image>
-                        </v-avatar>
+                        <!-- </v-avatar> -->
                         <v-icon>mdi-chevron-down</v-icon>
                     </v-btn>
                 </template>
@@ -191,7 +190,7 @@
         methods:{
             logout() {
                 this.loading = true
-                axios.post('api/logout')   
+                axios.post('/api/logout')   
                 .then( response => { 
                     sessionStorage.clear();
                     // Redirect user

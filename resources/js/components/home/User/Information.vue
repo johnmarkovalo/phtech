@@ -47,7 +47,8 @@
                                   <v-row justify="center">
                                       <v-col xs="12" md="12" justify="center">
                                           <v-btn v-if="!student" pa-1 class="teal--text font-weight-bold" block x-large text @click="student = !student">I'm a Student</v-btn>
-                                          <v-btn v-if="student" pa-1 class="teal--text font-weight-bold" block x-large text @click="student = !student">I'm not a Student</v-btn>
+                                          <v-btn v-else pa-1 class="teal--text font-weight-bold" block x-large text @click="student = !student">I'm not a Student</v-btn>
+                                          <v-btn  pa-1 class="teal--text font-weight-bold" block x-large text @click="e1 = 2, freelance = true">I'm a Freelance</v-btn>
                                       </v-col>
                                   </v-row>
                                   <v-btn x-large rounded color="primary" @click="e1 = 2">
@@ -59,9 +60,11 @@
                           <v-stepper-content step="2">
                                   <v-container grid-list-sm bt-0>
                                       <v-layout row wrap>
+                                          <form v-on:submit.prevent="">
                                             <v-autocomplete v-model="selected" :disabled="isUpdating" :items="tags"
                                                 filled chips color="primary" label="Select Technology tags"
-                                                item-text="name" item-value="name" multiple>
+                                                :search-input.sync="searchInput" rounded
+                                                item-text="name" item-value="name" multiple dense>
                                                 <template v-slot:selection="data">
                                                     <v-chip
                                                     v-bind="data.attrs"
@@ -92,6 +95,8 @@
                                                     </template>
                                                 </template>
                                             </v-autocomplete>
+                                            <button v-show="false" type="submit" @click="AddTag()">Submit</button>
+                                          </form>
                                       </v-layout>
                                   </v-container>
                                   <v-btn x-large rounded color="primary" @click="e1 = 3">
@@ -132,6 +137,9 @@ export default {
             autoUpdate: true,
             selected: [],
             isUpdating: false,
+            freelance: false,
+            searchInput: null,
+            newTags: [],
         }
     },
      mounted() {
@@ -150,9 +158,17 @@ export default {
             const index = this.selected.indexOf(item.name)
             if (index >= 0) this.selected.splice(index, 1)
         },
+        AddTag(item){
+
+            let newItem = { name: this.searchInput };
+            this.tags.push(newItem);
+            this.selected.push(newItem);
+            this.newTags.push(newItem);
+            
+        },
         retrieveTags() {
             this.loading = true
-            axios.get('api/technology')
+            axios.get('/api/technology')
             .then( response => {
                 this.tags = response.data.tags
             })
@@ -162,11 +178,28 @@ export default {
         SaveInformation(){
             this.loading = true
             // Update customer
-            axios.put('api/information/' + sessionStorage.getItem('user-id'), { 
+             var bio 
+             var occupation
+
+            if(this.student){
+                occupation = 'Student';
+                bio = 'Student at '+ this.affiliation;
+            }
+            else{
+                occupation = this.position;
+                bio = occupation + ' at '+ this.affiliation;
+            }
+            if(this.freelance){
+                bio = 'Freelance'
+                occupation = 'Freelance'
+            }
+            axios.put('/api/information/' + sessionStorage.getItem('user-id'), { 
                 affiliation: this.affiliation, 
-                position: this.position, 
+                position: this.position,
+                occupation: occupation,
+                address: this.address,
                 user_id: sessionStorage.getItem('user-id'),
-                student: this.student,
+                bio: bio,
             })
             .then( response => { 
                 
@@ -177,7 +210,7 @@ export default {
         SaveTechnology(){
             this.loading = true
             // Update customer
-            axios.put('api/infotech/' + sessionStorage.getItem('user-id'), { 
+            axios.put('/api/infotech/' + sessionStorage.getItem('user-id'), { 
                 tags: this.selected, user_id: sessionStorage.getItem('user-id')
             })
             .then( response => { 
@@ -197,8 +230,19 @@ export default {
                 this.$router.push('profile')
             })
         },
+        SaveNewTechnology(){
+            axios.put('/api/newtechnology', { 
+                    newTags: this.newTags
+                })   
+                .then( response => { 
+                })
+                .catch( error => { alert(error)})
+        },
         SaveInfoAndTech(){
             this.SaveInformation()
+            if(this.newTags != null){
+                this.SaveNewTechnology()
+            }
             this.SaveTechnology()
         },
     },

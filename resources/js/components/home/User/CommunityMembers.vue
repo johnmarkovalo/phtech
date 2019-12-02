@@ -2,7 +2,7 @@
     <div>
         <v-row justify=center>
             <v-col cols12 lg=10>
-                <p class="display-1 teal--text text--lighten-2">Members</p>
+                <p class="display-1 teal--text text--darken-2">Members</p>
             </v-col>
         </v-row>
         <v-row dense justify=center>

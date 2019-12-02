@@ -38,8 +38,25 @@ class TechnologyController extends Controller
 
     public function index (Request $request) {
         $technology = Technology::all();
-        return response(['tags' => $technology], 200);
-        // return 'fuck';
+        $tags = [];
+        foreach($technology as $tag ){
+            $tags[] = [
+                'id' => $tag->id,
+                'name' => $tag->name,
+            ];
+        }
+        return response(['tags' => $tags], 200);
+    }
+
+    public function saveNew (Request $request) {
+
+        $NewTags  = $request->newTags;
+        $technology = [];
+        foreach($NewTags as $tag){
+            $technology[] = Technology::create(['name' => $tag['name'], 'description' => null]);
+        }
+        return response(['tag' => $technology], 200);
+
     }
 
 }

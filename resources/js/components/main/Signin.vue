@@ -59,7 +59,7 @@
         methods: {
             login() {
                 this.loading = true
-                axios.post('api/login', { 
+                axios.post('/api/login', { 
                     email: this.email, password: this.password
                 })
                 .then( response => {

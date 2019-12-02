@@ -3,7 +3,7 @@
       <v-flex col-12 >
         <v-card class="mt-1 elevation-0">
             <v-toolbar color="primary">
-            <v-toolbar-title class="display-1">Find community you're interested with</v-toolbar-title>
+            <v-toolbar-title class="display-1 white--text">Find community you're interested with</v-toolbar-title>
                 <!-- <v-icon x-large>information</v-icon> -->
             </v-toolbar>
             <v-card class="mt-5 elevation-0">
@@ -54,7 +54,7 @@
                                 <v-card :elevation="hover ? 12 : 2">
                                     <v-img :src="card.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px"></v-img>
                                     <v-card-text> 
-                                        <p class="headline teal--text text--lighten-2">{{card.name}}</p>
+                                        <p class="headline teal--text text--darken-2">{{card.name}}</p>
                                         <p class="title white--text text-truncate">{{card.description}}</p>
                                         <p class="subtitle-1">{{card.location.formatted_address}}</p>
                                     </v-card-text>
@@ -100,14 +100,14 @@
     },
     methods: {
         retrieveCommunity(){
-            axios.get('api/community')
+            axios.get('/api/community')
             .then( response => {
                 this.cards = response.data.community
             })
             .catch( error => { alert(error)})
         },
         retrieveTags() {
-            axios.get('api/technology')
+            axios.get('/api/technology')
             .then( response => {
                 this.tags = response.data.tags
             })

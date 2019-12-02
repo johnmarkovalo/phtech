@@ -3,7 +3,7 @@
       <v-flex col-12 >
         <v-card class="mt-1 elevation-0">
           <v-toolbar color="primary">
-            <v-toolbar-title class="display-1">Find events you're interested with</v-toolbar-title>
+            <v-toolbar-title class="display-1 white--text">Find events you're interested with</v-toolbar-title>
             <!-- <v-icon x-large>information</v-icon> -->
           </v-toolbar>
           <v-tabs color="primary" icons-and-text grow>
@@ -70,7 +70,7 @@
                               <v-img :src="event.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
                               </v-img>
                               <v-card-text> 
-                                <p class="title teal--text text--lighten-2">{{event.start | eventDate}}</p>
+                                <p class="title teal--text text--darken-2">{{event.start | eventDate}}</p>
                                 <p class="headline white--text">{{event.name}}</p>
                                 <p class="subtitle-1">{{event.location.formatted_address}}</p>
                                 <v-chip v-for="item in card.community" v-bind:key="item.id" color="primary" outlined>
@@ -186,7 +186,7 @@
           this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
       },
       retrieveEvent(){
-          axios.get('api/event' ,
+          axios.get('/api/event' ,
           {
             params: {
               id: sessionStorage.getItem('user-id'),
@@ -198,7 +198,7 @@
           .catch( error => { alert(error)})
       },
       retrieveTags() {
-          axios.get('api/technology')
+          axios.get('/api/technology')
           .then( response => {
               this.tags = response.data.tags
           })
