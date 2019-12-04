@@ -401,8 +401,9 @@
                   sessionStorage.setItem('user-avatar',response.data.success.avatar),
                   window.location.reload();
               }
-              else
-              this.$Progress.fail();
+              else{
+                this.$Progress.fail();
+              }
           }).catch(error => {
               this.$Progress.fail();
           })

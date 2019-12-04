@@ -13,16 +13,13 @@
                         </v-row>
                         <v-row>
                             <v-col cols=3 lg=2>
-                                <v-avatar size="5em">
-                                    <cld-image :publicId="event.organizer.avatar" >
-                                        <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
-                                        <cld-transformation width="400" crop="scale" />
-                                    </cld-image>
-                                </v-avatar>
+                                <cld-image :publicId="event.organizer.avatar" width="100" class="mr-2">
+                                    <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                </cld-image>
                             </v-col>
                             <v-col cols=9 lg=10>
                                 <p :class="{'caption': $vuetify.breakpoint.smAndDown, 'title': $vuetify.breakpoint.mdAndUp}">Created by <strong class="teal--text text--darken-2">{{event.organizer.name}}</strong></p>
-                                <p :class="{'caption': $vuetify.breakpoint.smAndDown, 'title': $vuetify.breakpoint.mdAndUp}">Hosted by <strong class="teal--text text--darken-2">{{communities[0].name}}</strong></p>
+                                <p :class="{'caption': $vuetify.breakpoint.smAndDown, 'title': $vuetify.breakpoint.mdAndUp}">Hosted by <strong class="teal--text text--darken-2"><a @click="visit_community(communities[0].name)">{{communities[0].name}}</a></strong></p>
                             </v-col>
                         </v-row>
                     </v-col>
@@ -90,12 +87,11 @@
                         <v-row>
                             <v-tooltip top v-for="attendee in GoingAttendee" :key="attendee.name">
                                 <template v-slot:activator="{ on }">
-                                    <v-avatar v-on="on" :class="{'': $vuetify.breakpoint.smAndDown, 'ml-2':$vuetify.breakpoint.mdAndUp}">
-                                        <cld-image :publicId="attendee.avatar" >
-                                            <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
-                                            <cld-transformation width="200" crop="scale" />
+                                    <div v-on="on" :class="{'': $vuetify.breakpoint.smAndDown, 'ml-2':$vuetify.breakpoint.mdAndUp}">
+                                        <cld-image :publicId="attendee.avatar" width="50">
+                                            <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>  
                                         </cld-image>
-                                    </v-avatar>
+                                    </div>
                                 </template>
                                 <span>{{attendee.name}}</span>
                             </v-tooltip>
@@ -185,12 +181,9 @@
                                 <v-tab-item :value="'tab-' + 1">
                                     <v-list two-line>
                                         <v-list-item v-for="attendee in GoingAttendee" :key="attendee.name">
-                                            <v-list-item-avatar>
-                                                <cld-image :publicId="attendee.avatar" >
-                                                    <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
-                                                    <cld-transformation width="200" crop="scale" />
-                                                </cld-image>
-                                            </v-list-item-avatar>
+                                             <cld-image :publicId="attendee.avatar" width="50" class="mr-2">
+                                                <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                            </cld-image>
                                             <v-list-item-content>
                                                 <v-list-item-title>{{attendee.name}}</v-list-item-title>
                                                 <v-list-item-subtitle>{{attendee.created_at | eventDate}}</v-list-item-subtitle>
@@ -223,12 +216,9 @@
                                 <v-tab-item :value="'tab-' + 2">
                                     <v-list two-line>
                                         <v-list-item v-for="attendee in NotGoingAttendee" :key="attendee.name">
-                                            <v-list-item-avatar>
-                                                <cld-image :publicId="attendee.avatar" >
-                                                    <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
-                                                    <cld-transformation width="200" crop="scale" />
-                                                </cld-image>
-                                            </v-list-item-avatar>
+                                             <cld-image :publicId="attendee.avatar" width="50" class="mr-2">
+                                                <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                            </cld-image>
                                             <v-list-item-content>
                                                 <v-list-item-title>{{attendee.name}}</v-list-item-title>
                                                 <v-list-item-subtitle>{{attendee.created_at | eventDate}}</v-list-item-subtitle>
@@ -377,6 +367,9 @@
                 .catch( error => { alert(error)})
             }
         },
+        visit_community(community_name){
+          this.$router.push('/'+community_name.split(' ').join('_')+'/about')
+      },
     },
     created() {
 

@@ -35,18 +35,17 @@ class CommunityController extends Controller
 
     }
     
-    public function update (Request $request) {
+    public function update (Request $request, Community $community) {
         $validator = Validator::make($request->all(), [ 
             'name' => 'required|string|max:255',
-            'organizer' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+            'description' => 'required|string',
+            'location' => 'required',
         ]);
         if ($validator->fails()){
             return response(['errors'=>$validator->errors()->all()], 422);
         }
 
-        $community = Community::where('user_id', $request->user_id)->first()->update($request->toArray());
+        $community->update($request->toArray());
 
         return response(['community' => $community], 200);
     }
@@ -93,7 +92,12 @@ class CommunityController extends Controller
             'tags' => $this->getTags($community->id),
         ];
 
-        $membership = user_community::where([['user_id', $request->user()->id],['community_id',$community->id]])->first()->position;
+        if(user_community::where([['user_id', $request->user()->id],['community_id',$community->id]])->exists()){
+            $membership = user_community::where([['user_id', $request->user()->id],['community_id',$community->id]])->first()->position;
+        }
+        else{
+            $membership = null;
+        }
 
         $members = $this->getMembers($community->id);
 
@@ -226,10 +230,14 @@ class CommunityController extends Controller
     }
 
     public function getTags($id){
-        $tags = community_tech::select('technology.name')
+        $tags_tmp = community_tech::select('technology.name')
                 ->join('technology', 'community_tech.tech_id', 'technology.id')
                 ->where('community_id', $id)->get();
 
+        $tags = [];
+        foreach($tags_tmp as $tag){
+            $tags[] = $tag->name;
+        }
         return $tags;
     }
 
@@ -241,11 +249,16 @@ class CommunityController extends Controller
         return $tags;
     }
 
-    public function uploadprofile(request $request){
-        $user = User::findOrFail($request->id);
-        if($request['nopic']==false){
-            Cloudder::upload($request['photo'], null, ['folder'=>'phtechpark/profiles/']);
-            $request['photo'] = Cloudder::getPublicId();
+    public function upload_profile (Request $request , Community $community){
+        try {
+            Cloudder::upload($request['photo'], null, ['folder'=>'phtechpark/community/']);
+
+            $community->update(['photo' => Cloudder::getResult()['secure_url']]);
+
+            return response(['success' => ['photo' => Cloudder::getResult()['secure_url']]]);
+
+        } catch (\Throwable $th) {
+            return ['error'=>true, 'message'=>$th];
         }
     }
 }

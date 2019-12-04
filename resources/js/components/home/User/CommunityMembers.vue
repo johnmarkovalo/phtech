@@ -10,12 +10,9 @@
                 <v-row>
                     <v-list two-line>
                         <v-list-item v-for="attendee in members" :key="attendee.name">
-                            <v-list-item-avatar>
-                                <cld-image :publicId="attendee.avatar" >
-                                    <cld-transformation width="1000" height="1000" gravity="face" radius="max" crop="fill"/> 
-                                    <cld-transformation width="200" crop="scale" />
-                                </cld-image>
-                            </v-list-item-avatar>
+                            <cld-image :publicId="attendee.avatar" width="50" class="mr-2">
+                                <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                            </cld-image>
                             <v-list-item-content>
                                 <v-list-item-title>{{attendee.name}}</v-list-item-title>
                                 <v-list-item-subtitle>{{attendee.created_at | eventDate}}</v-list-item-subtitle>

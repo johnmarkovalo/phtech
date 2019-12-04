@@ -43,6 +43,8 @@ use Illuminate\Http\Request;
         Route::get('/community/{community}', 'CommunityController@communitydetails');
         Route::get('/communityunder', 'CommunityController@communityunder');
         Route::put('/joincommunity', 'CommunityController@joincommunity');
+        Route::put('/community/upload-profile/{community}', 'CommunityController@upload_profile');
+
 
         // Route::get('/community/members', 'CommunityController@getmembers');
 
