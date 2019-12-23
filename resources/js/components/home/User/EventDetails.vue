@@ -46,20 +46,16 @@
                         <!-- Icons -->
                         <v-row justify=center  v-if="upcomming">
                             <v-btn icon>
-                                    <v-icon color=white
-                                    >mdi-facebook</v-icon>
+                                    <v-icon>mdi-facebook</v-icon>
                             </v-btn>
                             <v-btn icon>
-                                    <v-icon color=white
-                                    >mdi-twitter</v-icon>
+                                    <v-icon>mdi-twitter</v-icon>
                             </v-btn>
                             <v-btn icon>
-                                    <v-icon color=white
-                                    >mdi-instagram</v-icon>
+                                    <v-icon>mdi-instagram</v-icon>
                             </v-btn>
                             <v-btn icon>
-                                    <v-icon color=white
-                                    >mdi-linkedin</v-icon>
+                                    <v-icon>mdi-linkedin</v-icon>
                             </v-btn>
                         </v-row>
                     </v-col>
@@ -70,7 +66,27 @@
                     <v-col cols=12 md=12 lg=4>
                         <!-- Image -->
                         <v-row>
-                            <v-img :src="event.photo" >
+                            <v-hover v-if="organizer()" v-slot:default="{ hover }">
+                                <v-img v-if="event.photo == ''" src="https://res.cloudinary.com/mactimestwo/image/upload/v1576912557/phtechpark/community/Upload_Photo.png" max-width="100%">
+                                    <v-expand-transition>
+                                        <div v-if="hover"
+                                        :class="hover ? 'd-flex transition-fast-in-fast-out grey lighten-2 v-card--reveal headline teal--text' : ''"
+                                        style="height: 100%;" >
+                                        <v-btn class="float-right" icon @click="Cover_Dialog = true"><v-icon color="primary">mdi-pen</v-icon></v-btn>
+                                        </div>
+                                    </v-expand-transition>
+                                </v-img>
+                                <v-img v-else :src="event.photo" max-width="100%">
+                                    <v-expand-transition>
+                                        <div v-if="hover"
+                                        :class="hover ? 'd-flex transition-fast-in-fast-out grey lighten-2 v-card--reveal headline teal--text' : ''"
+                                        style="height: 100%;" >
+                                        <v-btn class="float-right" icon @click="Cover_Dialog = true"><v-icon color="primary">mdi-pen</v-icon></v-btn>
+                                        </div>
+                                    </v-expand-transition>
+                                </v-img>
+                            </v-hover>
+                            <v-img v-else :src="event.photo" max-width="100%">
                             </v-img>
                         </v-row>
                         <!-- Details -->
@@ -107,6 +123,16 @@
                                     </v-btn>
                                 </template>
                                 <v-list two-line>
+                                    <v-list-item ripple="ripple" @click="Settings_Dialog = true">
+                                        <v-list-item-avatar>
+                                            <v-icon class="teal lighten-2 white--text"
+                                            >mdi-settings</v-icon>
+                                        </v-list-item-avatar>
+                                        <v-list-item-content>
+                                            <v-list-item-title>Event Settings</v-list-item-title>
+                                            <v-list-item-subtitle>Manange Event</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
                                     <v-list-item ripple="ripple" @click="dialog = true">
                                         <v-list-item-avatar>
                                             <v-icon class="teal lighten-2 white--text"
@@ -253,6 +279,33 @@
                 </v-card-text>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="Cover_Dialog" max-width="400px">
+            <v-card>
+                <v-card-title >
+                Edit Profile Picture
+                </v-card-title>
+                <v-card-text>
+                <v-container>
+                    <v-row wrap justify=center align=center>
+                        <v-file-input v-model="photo_name" accept="image/*" placeholder="Profile..." outlined dense prepend-icon="fa-photo" @change="file_upload"/>
+                    </v-row>
+                </v-container>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn rounded color="primary" @click="upload_Cover()">Upload Profile</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="Settings_Dialog" width="90vw" :class="{'my-5': $vuetify.breakpoint.mdAndUp}">
+            <v-card>
+                <v-toolbar color="primary" dark>
+                    <v-toolbar-title class="display-1">Event Settings</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <!-- <v-icon x-large>information</v-icon> -->
+                </v-toolbar>
+            </v-card>
+        </v-dialog>
     </v-container>
 </template>
 <script>
@@ -267,7 +320,13 @@
         communities: [{name:''}],
         location: {},
         tags: [],
+        //Dialogs
         dialog: false,
+        Cover_Dialog:false,
+        Settings_Dialog: false,
+        // Photo
+        photo_data: null,
+        photo_name: null,
         upcomming: null,
         ratings: '4',
     }),
@@ -369,7 +428,41 @@
         },
         visit_community(community_name){
           this.$router.push('/'+community_name.split(' ').join('_')+'/about')
-      },
+        },
+        file_upload() {
+            try {
+                let reader = new FileReader()
+                reader.onload = () => {
+                    this.photo_data = reader.result
+                }
+                reader.readAsDataURL(this.photo_name)
+            } catch (error) {
+                this.photo_name = null
+                this.photo_data = null
+            }
+        },
+        upload_Cover(){
+            this.$Progress.start();
+            axios.put('/api/event/upload-profile/'+this.event.id,{ 
+                photo: this.photo_data
+            }).then(response => {
+                if (response.data.success) {
+                    this.$Progress.finish();
+                    swal.fire(
+                        'Success!',
+                        'Successfully Changed Profile Photo',
+                        'success'
+                    )
+                    this.event.photo = response.data.success.photo
+                    this.Cover_Dialog = false
+                }
+                else{
+                    this.$Progress.fail();
+                }
+            }).catch(error => {
+                this.$Progress.fail();
+            })
+        },
     },
     created() {
 

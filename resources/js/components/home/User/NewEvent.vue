@@ -38,10 +38,10 @@
                                             v-on="on"
                                         ></v-text-field>
                                         </template>
-                                        <v-date-picker v-model="start.date" color="primary" scrollable>
-                                        <v-spacer></v-spacer>
-                                        <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
-                                        <v-btn text color="primary" @click="$refs.dialog.save(start.date)">OK</v-btn>
+                                        <v-date-picker :allowedDates="allowedDatesStart" v-model="start.date" @change="startChange()" color="primary" scrollable>
+                                            <v-spacer></v-spacer>
+                                            <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
+                                            <v-btn text color="primary" @click="$refs.dialog.save(start.date)">OK</v-btn>
                                         </v-date-picker>
                                     </v-dialog>
                                 </v-col>
@@ -82,7 +82,7 @@
                                         <template v-slot:activator="{ on }">
                                             <v-text-field outlined v-model="end.date" label="Event Date" prepend-inner-icon="mdi-calendar" readonly v-on="on"></v-text-field>
                                         </template>
-                                        <v-date-picker v-model="end.date" color="primary" scrollable>
+                                        <v-date-picker :allowedDates="allowedDatesEnd"  v-model="end.date" color="primary" scrollable>
                                             <v-spacer></v-spacer>
                                             <v-btn text color="primary" @click="modal3 = false">Cancel</v-btn>
                                             <v-btn text color="primary" @click="$refs.dialog3.save(end.date)">OK</v-btn>
@@ -198,9 +198,152 @@
                                     </v-autocomplete>
                                 </v-col>
                             </v-row>
-                            <p class="title teal--text text--darken-2">Optional Settings</p>
+                            <p class="headline font-weight-bold teal--text text--darken-2">Optional Settings</p>
                             <v-row>
-                                
+                                <v-expansion-panels popout>
+                                    <v-expansion-panel>
+                                        <v-expansion-panel-header><p class="teal--text text--darken-2">Co-Organizer</p></v-expansion-panel-header>
+                                        <v-expansion-panel-content>
+                                            <v-list two-line>
+                                                <v-list-item>
+                                                    <v-list-item-content>
+                                                        <form v-on:submit.prevent="">
+                                                            <v-autocomplete v-model="assigned_Member" :disabled="isUpdating" :items="members"
+                                                                filled chips color="primary" label="Add New Organizer"
+                                                                :search-input.sync="searchInput" rounded
+                                                                item-text="name" item-value="id" dense>
+                                                                <template v-slot:selection="data">
+                                                                    <v-chip
+                                                                    v-bind="data.attrs"
+                                                                    :input-value="data.selected"
+                                                                    @click="data.select"
+                                                                    >
+                                                                    <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
+                                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                                    </cld-image>
+                                                                    {{ data.item.name }}
+                                                                    </v-chip>
+                                                                </template>
+                                                                <template v-slot:item="data">
+                                                                    
+                                                                    <template v-if="typeof data.item !== 'object'">
+                                                                    <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                                    </template>
+                                                                    <template v-else>
+                                                                    <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
+                                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                                    </cld-image>
+                                                                    <v-list-item-content>
+                                                                        <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                                        <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                                                    </v-list-item-content>
+                                                                    </template>
+                                                                </template>
+                                                            </v-autocomplete>
+                                                            <button v-show="false" type="submit" @click="Assign_Role(assigned_Member,'organizer')">Submit</button>
+                                                        </form>
+                                                    </v-list-item-content>
+                                                </v-list-item>
+                                                <v-list-item v-for="member in organizers" :key="member.name">
+                                                    <cld-image :publicId="member.avatar" width="50" class="mr-2">
+                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                    </cld-image>
+                                                    <v-list-item-content>
+                                                        <v-list-item-title>{{member.name}}</v-list-item-title>
+                                                        <v-list-item-subtitle>{{member.created_at | eventDate}}</v-list-item-subtitle>
+                                                    </v-list-item-content>
+                                                    <v-list-item-action>
+                                                        <v-menu transition="slide-y-transition" offset-y nudge-width="100px" :close-on-content-click="false">
+                                                            <template v-slot:activator="{ on }" :close-on-click="false">
+                                                                <v-btn icon color="primary" v-on="on">
+                                                                <v-icon>mdi-dots-vertical</v-icon>
+                                                                </v-btn>
+                                                            </template>
+                                                            <v-list two-line>
+                                                                <v-list-item ripple="ripple" @click="RemoveRole(member.id)">
+                                                                    <v-list-item-content>
+                                                                        <v-list-item-title>Remove As Co-Organizer</v-list-item-title>
+                                                                    </v-list-item-content>
+                                                                </v-list-item>
+                                                            </v-list>
+                                                        </v-menu>
+                                                    </v-list-item-action>
+                                                </v-list-item>
+                                            </v-list>
+                                        </v-expansion-panel-content>
+                                    </v-expansion-panel>
+                                    <v-expansion-panel>
+                                        <v-expansion-panel-header class="teal--text text--darken-2">Event Organizer</v-expansion-panel-header>
+                                        <v-expansion-panel-content>
+                                            <v-list two-line>
+                                                <v-list-item>
+                                                    <v-list-item-content>
+                                                        <form v-on:submit.prevent="">
+                                                            <v-autocomplete v-model="assigned_Member" :disabled="isUpdating" :items="members"
+                                                                filled chips color="primary" label="Add New Organizer"
+                                                                :search-input.sync="searchInput" rounded
+                                                                item-text="name" item-value="id" dense>
+                                                                <template v-slot:selection="data">
+                                                                    <v-chip
+                                                                    v-bind="data.attrs"
+                                                                    :input-value="data.selected"
+                                                                    @click="data.select"
+                                                                    >
+                                                                    <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
+                                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                                    </cld-image>
+                                                                    {{ data.item.name }}
+                                                                    </v-chip>
+                                                                </template>
+                                                                <template v-slot:item="data">
+                                                                    
+                                                                    <template v-if="typeof data.item !== 'object'">
+                                                                    <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                                    </template>
+                                                                    <template v-else>
+                                                                    <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
+                                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                                    </cld-image>
+                                                                    <v-list-item-content>
+                                                                        <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                                        <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                                                    </v-list-item-content>
+                                                                    </template>
+                                                                </template>
+                                                            </v-autocomplete>
+                                                            <button v-show="false" type="submit" @click="Assign_Role(assigned_Member,'event-organizer')">Submit</button>
+                                                        </form>
+                                                    </v-list-item-content>
+                                                </v-list-item>
+                                                <v-list-item v-for="member in event_ogranizers" :key="member.name">
+                                                    <cld-image :publicId="member.avatar" width="50" class="mr-2">
+                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                    </cld-image>
+                                                    <v-list-item-content>
+                                                        <v-list-item-title>{{member.name}}</v-list-item-title>
+                                                        <v-list-item-subtitle>{{member.created_at | eventDate}}</v-list-item-subtitle>
+                                                    </v-list-item-content>
+                                                    <v-list-item-action>
+                                                        <v-menu transition="slide-y-transition" offset-y nudge-width="100px" :close-on-content-click="false">
+                                                            <template v-slot:activator="{ on }" :close-on-click="false">
+                                                                <v-btn icon color="primary" v-on="on">
+                                                                <v-icon>mdi-dots-vertical</v-icon>
+                                                                </v-btn>
+                                                            </template>
+                                                            <v-list two-line>
+                                                                <v-list-item ripple="ripple" @click="RemoveRole(member.id)">
+                                                                    <v-list-item-content>
+                                                                        <v-list-item-title>Remove As Co-Organizer</v-list-item-title>
+                                                                    </v-list-item-content>
+                                                                </v-list-item>
+                                                            </v-list>
+                                                        </v-menu>
+                                                    </v-list-item-action>
+                                                </v-list-item>
+                                            </v-list>
+                                        </v-expansion-panel-content>
+                                    </v-expansion-panel>
+                                </v-expansion-panels>
                             </v-row>
                         </v-container>
                         <v-btn color="primary" outlined rounded x-large >Cancel</v-btn>
@@ -260,8 +403,18 @@ export default {
         }
       },
     },
-
+    computed:{
+        allowedDatesStart () {
+            return (another => val => val >= another)(new Date().toISOString().substr(0, 10))
+        },
+        allowedDatesEnd () {
+            return (another => val => val >= another)(this.start.date)
+        }
+    },
     methods: {
+        startChange(){
+            this.end.date = this.start.date
+        },
         remove (item) {
             const index = this.selectedTags.indexOf(item.name)
             if (index >= 0) this.selectedTags.splice(index, 1)

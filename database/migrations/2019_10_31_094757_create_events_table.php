@@ -25,7 +25,7 @@ class CreateEventsTable extends Migration
             $table->bigInteger('fee')->default('0');
             $table->bigInteger('limit')->default('0');
             $table->string('status')->default('ACTIVE');
-            $table->string('photo')->default('https://res.cloudinary.com/mactimestwo/image/upload/v1572071482/phtechpark/community/default.jpg');
+            $table->string('photo')->default();
             $table->timestamps();
 
             $table->foreign('organizer_id')

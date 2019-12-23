@@ -158,18 +158,8 @@ class EventController extends Controller
     
     public function eventdetails(Request $request) {
         $event = Event::where('code', $request->code)->first();
-        if($event->organizer->id == $request->user()->id){
-            $settings = true;
-        }
-        else{
-            $settings = false;
-        }
-        if($event->start > date('Y-m-d H:i:s')){
-            $upcomming = true;
-        }
-        else{
-            $upcomming = false;
-        }
+        $status = $this->getStatus($request->user()->id,$event);
+        // return $status;
         $eventdetails = [
             'id' => $event->id,
             'title' => $event->title,
@@ -182,25 +172,16 @@ class EventController extends Controller
                 'name' => $event->organizer->name,  
                 'avatar' => $event->organizer->information->avatar,
             ],
-            'settings' => $settings,
-            'upcomming' => $upcomming,
+            'settings' => $status['settings'],
+            'upcomming' => $status['upcomming'],
         ];
-        $status = user_event::where([['event_id',$event->id],['user_id',$request->user()->id]])->first();
-        if($status){
-            $status = $status->position;
-        }
-        else{
-            $status = 'pending';
-        }
-
         $tags = $this->getTags($event->id);
 
         $attendees = $this->getAttendees($event->id);
 
         $communities = $this->getCommunities($event->id);
 
-
-        return response(['event' => $eventdetails,'attendees' => $attendees, 'communities' => $communities, 'tags' => $tags, 'status' => $status], 200);
+        return response(['event' => $eventdetails,'attendees' => $attendees, 'communities' => $communities, 'tags' => $tags, 'status' => $status['status']], 200);
     }
 
     public function joinevent(Request $request){
@@ -275,15 +256,50 @@ class EventController extends Controller
                 'photo' => $community->community->photo,
             ];
         }
-
         return $communities;
     }
+    
+    public function getStatus($user_id,$event){
+        $community = event_community::where('event_id', $event->id)->first();
+        $position_tmp = user_community::where([['user_id', $user_id],['community_id', $community->community->id]])->first();
+        $position = $position_tmp->position;
+        if($event->organizer->id == $user_id || $position == 'organizer' || $position == 'event-organizer'){
+            $settings = true;
+        }
+        else{
+            $settings = false;
+        }
+        $status = user_event::where([['event_id',$event->id],['user_id',$user_id]])->first();
+        if($status){
+            $status = $status->position;
+        }
+        else{
+            $status = 'pending';
+        }
+        if($event->start > date('Y-m-d H:i:s')){
+            $upcomming = true;
+        }
+        else{
+            $upcomming = false;
+        }
+        $status = [
+            'status' => $status,
+            'settings' => $settings,
+            'upcomming' => $upcomming
+        ];
+        return $status;
+    }
 
-    public function uploadprofile(request $request){
-        $user = User::findOrFail($request->id);
-        if($request['nopic']==false){
-            Cloudder::upload($request['photo'], null, ['folder'=>'phtechpark/profiles/']);
-            $request['photo'] = Cloudder::getPublicId();
+    public function upload_profile (Request $request , Event $event){
+        try {
+            Cloudder::upload($request['photo'], null, ['folder'=>'phtechpark/community/']);
+
+            $event->update(['photo' => Cloudder::getResult()['secure_url']]);
+
+            return response(['success' => ['photo' => Cloudder::getResult()['secure_url']]]);
+
+        } catch (\Throwable $th) {
+            return ['error'=>true, 'message'=>$th];
         }
     }
 }

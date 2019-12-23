@@ -4,7 +4,7 @@
             <v-card-text>
                 <v-row justify=center>
                     <v-col cols=12 md=12 lg=5>
-                        <v-row class="">
+                        <v-row>
                             <v-hover v-if="membership == 'organizer'" v-slot:default="{ hover }">
                                 <v-img :src="community.photo" max-width="100%">
                                     <v-expand-transition>
@@ -52,18 +52,18 @@
                     <v-col cols=12 md=12 lg=5>
                         <v-row class="mt-5">
                              <v-chip-group mandatory active-class="teal--text text--lighten-1">
-                                <v-chip color="primary" outlined class="" @click="visit_about(community.name)"><v-icon left>mdi-information</v-icon>About</v-chip>
-                                <v-chip color="primary" outlined class="" @click="visit_events(community.name)"><v-icon left>mdi-calendar</v-icon>Events</v-chip>
-                                <v-chip color="primary" outlined class="" @click="visit_members(community.name)"><v-icon left>mdi-account-group</v-icon>Members</v-chip>
+                                <v-chip color="primary" outlined class="" @click="visit(community.name,'/about')"><v-icon left>mdi-information</v-icon>About</v-chip>
+                                <v-chip color="primary" outlined class="" @click="visit(community.name,'/events')"><v-icon left>mdi-calendar</v-icon>Events</v-chip>
+                                <v-chip color="primary" outlined class="" @click="visit(community.name,'/members')"><v-icon left>mdi-account-group</v-icon>Members</v-chip>
                             </v-chip-group>
                         </v-row>
                     </v-col>
                     <v-col cols=12 md=12 lg=5>
                         <v-row class="mt-5" justify=center>
                             <v-col cols=6 lg=5>
-                                <v-menu v-if="membership == 'member' ||membership == 'organizer'" transition="slide-y-transition" offset-y :close-on-content-click="false">
+                                <v-menu v-if="membership == 'member' || membership == 'organizer' || membership == 'event-organizer'" transition="slide-y-transition" offset-y :close-on-content-click="false">
                                     <template v-slot:activator="{ on }" :close-on-click="false">
-                                        <v-btn class="float-right" v-if="membership == 'member'" v-on="on" block rounded large color="primary">Membership<v-icon right>mdi-chevron-down</v-icon></v-btn>
+                                        <v-btn class="float-right" v-if="membership == 'member' || membership == 'event-organizer'" v-on="on" block rounded large color="primary">Membership<v-icon right>mdi-chevron-down</v-icon></v-btn>
                                         <v-btn class="float-right" v-else-if="membership == 'organizer'" v-on="on" block rounded large color="primary">Manage Community<v-icon right>mdi-chevron-down</v-icon></v-btn>
                                     </template>
                                     <v-list two-line >
@@ -87,17 +87,7 @@
                                                 <v-list-item-subtitle></v-list-item-subtitle>
                                             </v-list-item-content>
                                         </v-list-item>
-                                        <v-list-item v-if="membership == 'organizer'" ripple="ripple" to="newevent">
-                                            <v-list-item-avatar>
-                                                <v-icon class="teal lighten-2 white--text"
-                                                >mdi-calendar-plus</v-icon>
-                                            </v-list-item-avatar>
-                                            <v-list-item-content>
-                                                <v-list-item-title>Create Event</v-list-item-title>
-                                                <v-list-item-subtitle></v-list-item-subtitle>
-                                            </v-list-item-content>
-                                        </v-list-item>
-                                        <v-list-item else ripple="ripple" @click="Leave_Community()">
+                                        <v-list-item else ripple="ripple" @click="leave_Community()">
                                             <v-list-item-avatar>
                                                 <v-icon class="teal lighten-2 white--text"
                                                 >mdi-logout-variant</v-icon>
@@ -111,10 +101,13 @@
                                 </v-menu>
                                 <v-btn v-else class="float-right" block rounded large color="primary" @click="joinCommunity()">Join This Group</v-btn>
                             </v-col>
+                            <v-col cols=6 lg=5>
+                                <v-btn v-if="membership == 'organizer' || membership == 'event-organizer'" class="float-right" block rounded large color="primary" to="newevent"><v-icon class="white--text">mdi-calendar-plus</v-icon>Create EVent</v-btn>
+                            </v-col>
                         </v-row>
                     </v-col>
                 </v-row>
-                <router-view v-bind:community="this.community" v-bind:members="this.members" v-bind:pastevents="this.pastevents"        v-bind:upcommingevents="this.upcommingevents" name="communitydetails"></router-view>
+                <router-view v-bind:community="this.community" v-bind:members="this.members" v-bind:pastevents="this.pastevents"        v-bind:upcommingevents="this.upcommingevents" name="communitydetails" v-on="updateCommunity"></router-view>
             </v-card-text>
         </v-card>
         <v-dialog v-model="Cover_Dialog" max-width="400px">
@@ -151,16 +144,12 @@
                                 <v-expansion-panel-content>
                                     <v-list two-line>
                                         <v-list-item>
-                                            <!-- <v-list-item-avatar>
-                                                <v-icon class="teal lighten-2 white--text"
-                                                >mdi-plus</v-icon>
-                                            </v-list-item-avatar> -->
                                             <v-list-item-content>
                                                 <form v-on:submit.prevent="">
                                                     <v-autocomplete v-model="assigned_Member" :disabled="isUpdating" :items="members"
                                                         filled chips color="primary" label="Add New Organizer"
                                                         :search-input.sync="searchInput" rounded
-                                                        item-text="name" item-value="name" dense>
+                                                        item-text="name" item-value="id" dense>
                                                         <template v-slot:selection="data">
                                                             <v-chip
                                                             v-bind="data.attrs"
@@ -224,7 +213,72 @@
                             <v-expansion-panel>
                                 <v-expansion-panel-header class="teal--text text--darken-2">Event Organizer</v-expansion-panel-header>
                                 <v-expansion-panel-content>
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                                    <v-list two-line>
+                                        <v-list-item>
+                                            <v-list-item-content>
+                                                <form v-on:submit.prevent="">
+                                                    <v-autocomplete v-model="assigned_Member" :disabled="isUpdating" :items="members"
+                                                        filled chips color="primary" label="Add New Organizer"
+                                                        :search-input.sync="searchInput" rounded
+                                                        item-text="name" item-value="id" dense>
+                                                        <template v-slot:selection="data">
+                                                            <v-chip
+                                                            v-bind="data.attrs"
+                                                            :input-value="data.selected"
+                                                            @click="data.select"
+                                                            >
+                                                            <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
+                                                                <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                            </cld-image>
+                                                            {{ data.item.name }}
+                                                            </v-chip>
+                                                        </template>
+                                                        <template v-slot:item="data">
+                                                            
+                                                            <template v-if="typeof data.item !== 'object'">
+                                                            <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                            </template>
+                                                            <template v-else>
+                                                            <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
+                                                                <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                            </cld-image>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                                <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                                            </v-list-item-content>
+                                                            </template>
+                                                        </template>
+                                                    </v-autocomplete>
+                                                    <button v-show="false" type="submit" @click="Assign_Role(assigned_Member,'event-organizer')">Submit</button>
+                                                </form>
+                                            </v-list-item-content>
+                                        </v-list-item>
+                                        <v-list-item v-for="member in event_ogranizers" :key="member.name">
+                                            <cld-image :publicId="member.avatar" width="50" class="mr-2">
+                                                <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                            </cld-image>
+                                            <v-list-item-content>
+                                                <v-list-item-title>{{member.name}}</v-list-item-title>
+                                                <v-list-item-subtitle>{{member.created_at | eventDate}}</v-list-item-subtitle>
+                                            </v-list-item-content>
+                                            <v-list-item-action>
+                                                <v-menu transition="slide-y-transition" offset-y nudge-width="100px" :close-on-content-click="false">
+                                                    <template v-slot:activator="{ on }" :close-on-click="false">
+                                                        <v-btn icon color="primary" v-on="on">
+                                                        <v-icon>mdi-dots-vertical</v-icon>
+                                                        </v-btn>
+                                                    </template>
+                                                    <v-list two-line>
+                                                        <v-list-item ripple="ripple" @click="RemoveRole(member.id)">
+                                                            <v-list-item-content>
+                                                                <v-list-item-title>Remove As Co-Organizer</v-list-item-title>
+                                                            </v-list-item-content>
+                                                        </v-list-item>
+                                                    </v-list>
+                                                </v-menu>
+                                            </v-list-item-action>
+                                        </v-list-item>
+                                    </v-list>
                                 </v-expansion-panel-content>
                             </v-expansion-panel>
                         </v-expansion-panels>
@@ -239,103 +293,103 @@
         </v-dialog>
         <v-dialog v-model="Settings_Dialog" width="90vw" :class="{'my-5': $vuetify.breakpoint.mdAndUp}">
             <v-card>
-                    <v-toolbar color="primary" dark>
-                        <v-toolbar-title class="display-1">Community Settings</v-toolbar-title>
-                        <v-spacer></v-spacer>
-                        <!-- <v-icon x-large>information</v-icon> -->
-                    </v-toolbar>
-                    <v-card-text>
-                        <v-container grid-list-xl v-if="true" justify=center>
-                            <p class="title teal--text text--darken-2">Community Name</p>                            
-                            <v-row>
-                                <v-col cols=12 md=12 lg=12 xl=12>
-                                    <v-text-field outlined type="text" label="Community Name" v-model="community.name" required autofocus prepend-inner-icon="mdi-account-group"/>
-                                </v-col>
-                                <!-- <v-col cols=12 md=12 lg=6 xl=6>
-                                    <v-text-field outlined name="name" label="label"/>
-                                </v-col> -->
-                            </v-row>
-                            <p class="title teal--text text--darken-2">Community About</p>                            
-                            <v-row>
-                                <v-col cols=12 md=12 lg=12 xl=12>
-                                    <v-textarea outlined type="text" label="Community Description" v-model="community.description" required autofocus prepend-inner-icon="mdi-account-group"/>
-                                </v-col>
-                            </v-row>    
-                            <p class="title teal--text text--darken-2">Community Tags</p>                            
-                            <v-row>
-                                <form v-on:submit.prevent="">
-                                    <v-autocomplete v-model="selected" :disabled="isUpdating" :items="tags"
-                                        filled chips color="primary" label="Select Technology tags"
-                                        :search-input.sync="searchInput" rounded
-                                        item-text="name" item-value="name" multiple dense>
-                                        <template v-slot:selection="data">
-                                            <v-chip
-                                            v-bind="data.attrs"
-                                            :input-value="data.selected"
-                                            close
-                                            @click="data.select"
-                                            @click:close="remove(data.item)"
-                                            >
-                                            <!-- <v-avatar left>
-                                                <v-img :src="data.item.avatar"></v-img>
-                                            </v-avatar> -->
-                                            {{ data.item.name }}
-                                            </v-chip>
+                <v-toolbar color="primary" dark>
+                    <v-toolbar-title class="display-1">Community Settings</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <!-- <v-icon x-large>information</v-icon> -->
+                </v-toolbar>
+                <v-card-text>
+                    <v-container grid-list-xl v-if="true" justify=center>
+                        <p class="title teal--text text--darken-2">Community Name</p>                            
+                        <v-row>
+                            <v-col cols=12 md=12 lg=12 xl=12>
+                                <v-text-field outlined type="text" label="Community Name" v-model="community.name" required autofocus prepend-inner-icon="mdi-account-group"/>
+                            </v-col>
+                            <!-- <v-col cols=12 md=12 lg=6 xl=6>
+                                <v-text-field outlined name="name" label="label"/>
+                            </v-col> -->
+                        </v-row>
+                        <p class="title teal--text text--darken-2">Community About</p>                            
+                        <v-row>
+                            <v-col cols=12 md=12 lg=12 xl=12>
+                                <v-textarea outlined type="text" label="Community Description" v-model="community.description" required autofocus prepend-inner-icon="mdi-account-group"/>
+                            </v-col>
+                        </v-row>    
+                        <p class="title teal--text text--darken-2">Community Tags</p>                            
+                        <v-row>
+                            <form v-on:submit.prevent="">
+                                <v-autocomplete v-model="selected" :disabled="isUpdating" :items="tags"
+                                    filled chips color="primary" label="Select Technology tags"
+                                    :search-input.sync="searchInput" rounded
+                                    item-text="name" item-value="name" multiple dense>
+                                    <template v-slot:selection="data">
+                                        <v-chip
+                                        v-bind="data.attrs"
+                                        :input-value="data.selected"
+                                        close
+                                        @click="data.select"
+                                        @click:close="remove(data.item)"
+                                        >
+                                        <!-- <v-avatar left>
+                                            <v-img :src="data.item.avatar"></v-img>
+                                        </v-avatar> -->
+                                        {{ data.item.name }}
+                                        </v-chip>
+                                    </template>
+                                    <template v-slot:item="data">
+                                        
+                                        <template v-if="typeof data.item !== 'object'">
+                                        <v-list-item-content v-text="data.item"></v-list-item-content>
                                         </template>
-                                        <template v-slot:item="data">
-                                            
-                                            <template v-if="typeof data.item !== 'object'">
-                                            <v-list-item-content v-text="data.item"></v-list-item-content>
-                                            </template>
-                                            <template v-else>
-                                            <!-- <v-list-item-avatar>
-                                                <img :src="data.item.avatar">
-                                            </v-list-item-avatar> -->
-                                            <v-list-item-content>
-                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                                <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
-                                            </v-list-item-content>
-                                            </template>
+                                        <template v-else>
+                                        <!-- <v-list-item-avatar>
+                                            <img :src="data.item.avatar">
+                                        </v-list-item-avatar> -->
+                                        <v-list-item-content>
+                                            <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                            <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                        </v-list-item-content>
                                         </template>
-                                    </v-autocomplete>
-                                    <button v-show="false" type="submit" @click="AddTag()">Submit</button>
-                                </form>
-                            </v-row>                
-                            <p class="title teal--text text--darken-2">Community Location</p>
-                            <v-row>
-                                <!-- Company -->
-                                <v-col xs=12 md=12>
-                                    <!-- <v-text-field outlined type="text" label="Company" v-model="address" required autofocus prepend-inner-icon="location_on">
-                                    </v-text-field> -->
-                                    <h2>Search and add a pin</h2>
-                                    <v-row row justify-center align-center>
-                                        <v-icon medium color="primary">mdi-map-marker</v-icon>
-                                        <h2 class="teal--text text--darken-2">
-                                            <gmap-autocomplete
-                                            @place_changed="setPlace">
-                                            </gmap-autocomplete>
-                                        </h2>
-                                    </v-row>
-                                    <v-row>
-                                        <GmapMap style="width: 100%; height: 500px;" :zoom="25" :center="center" 
-                                                    >
-                                        <GmapMarker
-                                            v-if="community.location"
-                                            label="★"
-                                            :draggable="true"
-                                            :position="center"
-                                            />
-                                        </GmapMap>
-                                    </v-row>
-                                </v-col>
-                            </v-row>
-                        </v-container>
-                    </v-card-text>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="primary" rounded x-large @click="update_Community()">Save Community</v-btn>
-                    </v-card-actions>
-                </v-card>
+                                    </template>
+                                </v-autocomplete>
+                                <button v-show="false" type="submit" @click="AddTag()">Submit</button>
+                            </form>
+                        </v-row>                
+                        <p class="title teal--text text--darken-2">Community Location</p>
+                        <v-row>
+                            <!-- Company -->
+                            <v-col xs=12 md=12>
+                                <!-- <v-text-field outlined type="text" label="Company" v-model="address" required autofocus prepend-inner-icon="location_on">
+                                </v-text-field> -->
+                                <h2>Search and add a pin</h2>
+                                <v-row row justify-center align-center>
+                                    <v-icon medium color="primary">mdi-map-marker</v-icon>
+                                    <h2 class="teal--text text--darken-2">
+                                        <gmap-autocomplete
+                                        @place_changed="setPlace">
+                                        </gmap-autocomplete>
+                                    </h2>
+                                </v-row>
+                                <v-row>
+                                    <GmapMap style="width: 100%; height: 500px;" :zoom="25" :center="center" 
+                                                >
+                                    <GmapMarker
+                                        v-if="community.location"
+                                        label="★"
+                                        :draggable="true"
+                                        :position="center"
+                                        />
+                                    </GmapMap>
+                                </v-row>
+                            </v-col>
+                        </v-row>
+                    </v-container>
+                </v-card-text>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" rounded x-large @click="update_Community()">Save Community</v-btn>
+                </v-card-actions>
+            </v-card>
         </v-dialog>
     </v-container>
 </template>
@@ -382,7 +436,7 @@
                 }
             })
         },
-        event_ogranizer: function() {
+        event_ogranizers: function() {
             return this.members.filter(function(member) {
                 if(member.position == 'event-organizer'){
                     return member
@@ -394,17 +448,8 @@
         visit_event(community_name,event_code){
             this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
         },
-        visit_about(community_name){
-            this.$router.push('/'+community_name.split(' ').join('_')+'/about')
-        },
-        visit_events(community_name){
-            this.$router.push('/'+community_name.split(' ').join('_')+'/events')
-        },
-        visit_members(community_name){
-            this.$router.push('/'+community_name.split(' ').join('_')+'/members')
-        },
-        visit_news(community_name){
-            this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
+        visit(community_name,destination){
+            this.$router.push('/'+community_name.split(' ').join('_')+destination)
         },
         retrieveCommunity(){
             {
@@ -438,8 +483,7 @@
                 id: this.community.id
             })
             .then( response => {
-                this.membership = response.data.joiner.position
-                this.members = response.data.members
+                this.retrieveCommunity()
             })
             .catch( error => { alert(error)})
         },
@@ -560,7 +604,24 @@
             .catch( error => { alert(error)})
         },
         Assign_Role(member,role){
-            console.log(member,role);
+            axios.put('/api/community/change-role/'+this.community.id, {
+                member: member,
+                role: role,
+            })
+            .then( response => {
+                this.assigned_Member = null
+                this.members = response.data.members
+            })
+            .catch( error => { alert(error)})
+        },
+        leave_Community(){
+            axios.put('/api/community/remove-member/'+this.community.id, {
+                member: 'leave',
+            })
+            .then( response => {
+                this.retrieveCommunity()
+            })
+            .catch( error => { alert(error)})
         },
     },
     created() {

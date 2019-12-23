@@ -43,6 +43,8 @@ use Illuminate\Http\Request;
         Route::get('/community/{community}', 'CommunityController@communitydetails');
         Route::get('/communityunder', 'CommunityController@communityunder');
         Route::put('/joincommunity', 'CommunityController@joincommunity');
+        Route::put('/community/change-role/{community}', 'CommunityController@changeRole');
+        Route::put('/community/remove-member/{community}', 'CommunityController@removeMember');
         Route::put('/community/upload-profile/{community}', 'CommunityController@upload_profile');
 
 
@@ -58,6 +60,7 @@ use Illuminate\Http\Request;
         Route::delete('/event/{event}', 'EventController@destroy');
         Route::get('/event/{event}', 'EventController@eventdetails');
         Route::put('/joinevent', 'EventController@joinevent');
+        Route::put('/event/upload-profile/{event}', 'EventController@upload_profile');
         // Route::get('/event/members', 'EventController@getmembers');
 
         //Event Technology

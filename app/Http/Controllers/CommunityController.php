@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
 use Hash;
 use App\Technology;
+use App\User;
 use App\Community;
 use App\community_tech;
 use App\event_tech;
@@ -15,8 +16,7 @@ use App\event_community;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
-class CommunityController extends Controller
-{
+class CommunityController extends Controller{
     public function store (Request $request) {
         $validator = Validator::make($request->all(), [ 
             'name' => 'required|string|max:255',
@@ -124,6 +124,7 @@ class CommunityController extends Controller
     }
 
     public function joincommunity(Request $request){
+        user_community::where(['user_id' => $request->user()->id, 'community_id' => $request->id])->delete();
         $joinee = user_community::create(['user_id' => $request->user()->id, 'community_id' => $request->id, 'position' => 'member']);
         $joiner = [
             'id' => $joinee->user->id,
@@ -135,6 +136,25 @@ class CommunityController extends Controller
         $members = $this->getMembers($request->id);
 
         return response(['joiner' => $joiner, 'members' => $members], 200);
+    }
+
+    public function changeRole(Request $request, Community $community){
+        user_community::where([['user_id',$request->member], ['community_id',$community->id]])->delete();
+        user_community::create(['user_id' => $request->member, 'community_id' => $community->id, 'position' => $request->role]);
+        $members = $this->getMembers($community->id);
+
+        return response(['members' => $members], 200);
+    }
+
+    public function removeMember(Request $request, Community $community){
+        if($request->member == 'leave'){
+            $request->member = $request->user()->id;
+        }
+        user_community::where([['user_id',$request->member], ['community_id',$community->id]])->delete();
+        user_community::create(['user_id' => $request->member, 'community_id' => $community->id, 'position' => 'removed']);
+        $members = $this->getMembers($community->id);
+
+        return response(['members' => $members], 200);
     }
 
     public function getEvents($events, $id){
@@ -215,7 +235,7 @@ class CommunityController extends Controller
     }
 
     public function getMembers($id){
-        $members_tmp = user_community::where('community_id', $id)->get();
+        $members_tmp = user_community::where([['community_id', $id], ['position', '<>' ,'removed']])->get();
         $members = [];
         foreach($members_tmp as $member){
             $members[] = [

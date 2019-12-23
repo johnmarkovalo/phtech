@@ -30,7 +30,7 @@
                                                 <v-list-item-title>Change Role</v-list-item-title>
                                             </v-list-item-content>
                                         </v-list-item>
-                                        <v-list-item ripple="ripple" @click="removeMember(attendee.id)">
+                                        <v-list-item ripple="ripple" @click="remove_member(attendee.id)">
                                             <v-list-item-content>
                                                 <v-list-item-title>Remove from Community</v-list-item-title>
                                             </v-list-item-content>
@@ -49,10 +49,22 @@
   export default {
     props: [
         'members',
+        'community'
     ],
     methods: {
         visit_event(community_name,event_code){
             this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
+        },
+        remove_member(member){
+            axios.put('/api/community/remove-member/'+this.community.id, {
+                member: member,
+            })
+            .then( response => {
+                // this.members = response.data.members
+                this.$emit('updateCommunity')
+                // this.$emit('update:members', response.data.members)
+            })
+            .catch( error => { alert(error)})
         },
     }
   }

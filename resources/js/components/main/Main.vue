@@ -12,6 +12,7 @@
                 <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/signin">SIGN-IN</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/signup">SIGN-up</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='isnakalogin()' to="/explore">EXPLORE</v-btn>
+                <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='isnakalogin()' to="/newcommunity"><v-icon left dark>mdi-plus</v-icon> COMMMUNITY</v-btn>
                 <!-- <v-menu open-on-hover transition="slide-y-transition" offset-y :close-on-content-click="false">
                     <template v-slot:activator="{ on }" :close-on-click="false">
                         <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' v-on="on">EXPLORE</v-btn>
@@ -39,7 +40,6 @@
                         </v-list-item>
                     </v-list>
                 </v-menu> -->
-                <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/newcommunity"><v-icon left dark>mdi-plus</v-icon> COMMMUNITY</v-btn>
                 <!-- <v-btn text class="font-weight-bold mr-10" color="primary" v-show='isnakalogin()' to="/newevent"><v-icon left dark>mdi-plus</v-icon> EVENTS</v-btn> -->
                 <!-- <v-btn text class="font-weight-bold teal--text" v-show='isLoggedIn' @click="logout">LOGOUT</v-btn> -->
             </v-toolbar-items>
