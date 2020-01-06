@@ -16,7 +16,7 @@
                             </v-img>
                             <v-card-text> 
                                 <p class="title teal--text text--darken-2">{{event.start | eventDate}}</p>
-                                <p class="headline white--text">{{event.title}}</p>
+                                <p class="headline">{{event.title}}</p>
                                 <p class="subtitle-1 teal--text text--darken-2">{{event.community_organizer}}</p>
                                 <p class="subtitle-1 text-truncate">{{event.location.formatted_address}}</p>
                                 <v-chip small v-for="item in event.tags" v-bind:key="item.id" color="primary" outlined>

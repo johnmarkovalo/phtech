@@ -108,13 +108,7 @@
                                 <v-col cols=12 md=12 lg=12 xl=12>
                                     <v-text-field outlined type="text" label="Event Description" v-model="description" required autofocus prepend-inner-icon="mdi-calendar"/>
                                 </v-col>
-                            </v-row>    
-                            <p class="title teal--text text--darken-2">Event Community</p>                            
-                            <v-row>
-                                <v-col cols=12 md=12 lg=12 xl=12>
-                                    <v-select color="primary" v-model="community" :items="communityUnder" outlined chips label="Community"  required prepend-inner-icon="mdi-account-group"/>
-                                </v-col>
-                            </v-row>                          
+                            </v-row>                   
                             <p class="title teal--text text--darken-2">Event Location</p>
                             <v-row>
                                 <v-col cols=12 md=12 lg=12 xl=12>
@@ -130,34 +124,6 @@
                                                 >
                                         <GmapMarker v-if="this.address" label="★" :draggable="true" :position="center"/>
                                     </GmapMap>
-                                </v-col>
-                            </v-row>
-                            <p class="title teal--text text--darken-2">Event Speaker</p>
-                            <v-row>
-                                <v-col cols=12 md=12 lg=12 xl=12>
-                                    <v-autocomplete v-model="selectedSpeakers" :disabled="isUpdating" :items="users"
-                                        filled chips color="primary" label="Select Speakers"
-                                        item-text="name" item-value="name" multiple outlined>
-                                        <template v-slot:selection="data">
-                                            <v-chip v-bind="data.attrs" :input-value="data.selectedSpeakers" close @click="data.select"
-                                                @click:close="remove(data.item)">
-                                                <v-avatar left>
-                                                    <v-img :src="data.item.avatar"></v-img>
-                                                </v-avatar>
-                                                {{ data.item.name }}
-                                            </v-chip>
-                                        </template>
-                                        <template v-slot:item="data">
-                                            <template v-if="typeof data.item !== 'object'">
-                                                <v-list-item-content v-text="data.item"></v-list-item-content>
-                                            </template>
-                                            <template v-else>
-                                            <v-list-item-content>
-                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                            </v-list-item-content>
-                                            </template>
-                                        </template>
-                                    </v-autocomplete>
                                 </v-col>
                             </v-row>
                             <p class="title teal--text text--darken-2">Event Topic</p>
@@ -202,145 +168,91 @@
                             <v-row>
                                 <v-expansion-panels popout>
                                     <v-expansion-panel>
-                                        <v-expansion-panel-header><p class="teal--text text--darken-2">Co-Organizer</p></v-expansion-panel-header>
+                                        <v-expansion-panel-header class="teal--text text--darken-2">Partner Community</v-expansion-panel-header>
                                         <v-expansion-panel-content>
-                                            <v-list two-line>
-                                                <v-list-item>
-                                                    <v-list-item-content>
-                                                        <form v-on:submit.prevent="">
-                                                            <v-autocomplete v-model="assigned_Member" :disabled="isUpdating" :items="members"
-                                                                filled chips color="primary" label="Add New Organizer"
-                                                                :search-input.sync="searchInput" rounded
-                                                                item-text="name" item-value="id" dense>
-                                                                <template v-slot:selection="data">
-                                                                    <v-chip
-                                                                    v-bind="data.attrs"
-                                                                    :input-value="data.selected"
-                                                                    @click="data.select"
-                                                                    >
-                                                                    <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
-                                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
-                                                                    </cld-image>
-                                                                    {{ data.item.name }}
-                                                                    </v-chip>
-                                                                </template>
-                                                                <template v-slot:item="data">
-                                                                    
-                                                                    <template v-if="typeof data.item !== 'object'">
-                                                                    <v-list-item-content v-text="data.item"></v-list-item-content>
-                                                                    </template>
-                                                                    <template v-else>
-                                                                    <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
-                                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
-                                                                    </cld-image>
-                                                                    <v-list-item-content>
-                                                                        <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                                                        <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
-                                                                    </v-list-item-content>
-                                                                    </template>
-                                                                </template>
-                                                            </v-autocomplete>
-                                                            <button v-show="false" type="submit" @click="Assign_Role(assigned_Member,'organizer')">Submit</button>
-                                                        </form>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                                <v-list-item v-for="member in organizers" :key="member.name">
-                                                    <cld-image :publicId="member.avatar" width="50" class="mr-2">
-                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
-                                                    </cld-image>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>{{member.name}}</v-list-item-title>
-                                                        <v-list-item-subtitle>{{member.created_at | eventDate}}</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                    <v-list-item-action>
-                                                        <v-menu transition="slide-y-transition" offset-y nudge-width="100px" :close-on-content-click="false">
-                                                            <template v-slot:activator="{ on }" :close-on-click="false">
-                                                                <v-btn icon color="primary" v-on="on">
-                                                                <v-icon>mdi-dots-vertical</v-icon>
-                                                                </v-btn>
-                                                            </template>
-                                                            <v-list two-line>
-                                                                <v-list-item ripple="ripple" @click="RemoveRole(member.id)">
-                                                                    <v-list-item-content>
-                                                                        <v-list-item-title>Remove As Co-Organizer</v-list-item-title>
-                                                                    </v-list-item-content>
-                                                                </v-list-item>
-                                                            </v-list>
-                                                        </v-menu>
-                                                    </v-list-item-action>
-                                                </v-list-item>
-                                            </v-list>
+                                            <p class="title teal--text text--darken-2">Partner Community</p>                            
+                                            <v-row>
+                                                <v-col cols=12 md=12 lg=12 xl=12>
+                                                    <v-select multiple color="primary" v-model="selectedPartners" :items="communityUnder" outlined chips label="Community"  prepend-inner-icon="mdi-account-group"/>
+                                                </v-col>
+                                            </v-row>   
                                         </v-expansion-panel-content>
                                     </v-expansion-panel>
                                     <v-expansion-panel>
-                                        <v-expansion-panel-header class="teal--text text--darken-2">Event Organizer</v-expansion-panel-header>
+                                        <v-expansion-panel-header class="teal--text text--darken-2">Event Speaker</v-expansion-panel-header>
                                         <v-expansion-panel-content>
-                                            <v-list two-line>
-                                                <v-list-item>
-                                                    <v-list-item-content>
-                                                        <form v-on:submit.prevent="">
-                                                            <v-autocomplete v-model="assigned_Member" :disabled="isUpdating" :items="members"
-                                                                filled chips color="primary" label="Add New Organizer"
-                                                                :search-input.sync="searchInput" rounded
-                                                                item-text="name" item-value="id" dense>
-                                                                <template v-slot:selection="data">
-                                                                    <v-chip
-                                                                    v-bind="data.attrs"
-                                                                    :input-value="data.selected"
-                                                                    @click="data.select"
-                                                                    >
-                                                                    <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
-                                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
-                                                                    </cld-image>
-                                                                    {{ data.item.name }}
-                                                                    </v-chip>
-                                                                </template>
-                                                                <template v-slot:item="data">
-                                                                    
-                                                                    <template v-if="typeof data.item !== 'object'">
-                                                                    <v-list-item-content v-text="data.item"></v-list-item-content>
-                                                                    </template>
-                                                                    <template v-else>
-                                                                    <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
-                                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
-                                                                    </cld-image>
-                                                                    <v-list-item-content>
-                                                                        <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                                                        <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
-                                                                    </v-list-item-content>
-                                                                    </template>
-                                                                </template>
-                                                            </v-autocomplete>
-                                                            <button v-show="false" type="submit" @click="Assign_Role(assigned_Member,'event-organizer')">Submit</button>
-                                                        </form>
-                                                    </v-list-item-content>
-                                                </v-list-item>
-                                                <v-list-item v-for="member in event_ogranizers" :key="member.name">
-                                                    <cld-image :publicId="member.avatar" width="50" class="mr-2">
-                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
-                                                    </cld-image>
-                                                    <v-list-item-content>
-                                                        <v-list-item-title>{{member.name}}</v-list-item-title>
-                                                        <v-list-item-subtitle>{{member.created_at | eventDate}}</v-list-item-subtitle>
-                                                    </v-list-item-content>
-                                                    <v-list-item-action>
-                                                        <v-menu transition="slide-y-transition" offset-y nudge-width="100px" :close-on-content-click="false">
-                                                            <template v-slot:activator="{ on }" :close-on-click="false">
-                                                                <v-btn icon color="primary" v-on="on">
-                                                                <v-icon>mdi-dots-vertical</v-icon>
-                                                                </v-btn>
+                                            <p class="title teal--text text--darken-2">Event Speaker</p>
+                                            <v-row>
+                                                <v-col cols=12 md=12 lg=12 xl=12>
+                                                    <v-autocomplete v-model="selectedSpeakers" :disabled="isUpdating" :items="users"
+                                                        filled chips color="primary" label="Select Speakers"
+                                                        item-text="name" item-value="name" multiple outlined>
+                                                        <template v-slot:selection="data">
+                                                            <v-chip v-bind="data.attrs" :input-value="data.selectedSpeakers" close @click="data.select"
+                                                                @click:close="remove(data.item)">
+                                                                <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
+                                                                    <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                                </cld-image>
+                                                                {{ data.item.name }}
+                                                            </v-chip>
+                                                        </template>
+                                                        <template v-slot:item="data">
+                                                            <template v-if="typeof data.item !== 'object'">
+                                                                <v-list-item-content v-text="data.item"></v-list-item-content>
                                                             </template>
-                                                            <v-list two-line>
-                                                                <v-list-item ripple="ripple" @click="RemoveRole(member.id)">
-                                                                    <v-list-item-content>
-                                                                        <v-list-item-title>Remove As Co-Organizer</v-list-item-title>
-                                                                    </v-list-item-content>
-                                                                </v-list-item>
-                                                            </v-list>
-                                                        </v-menu>
-                                                    </v-list-item-action>
-                                                </v-list-item>
-                                            </v-list>
+                                                            <template v-else>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                            </v-list-item-content>
+                                                            </template>
+                                                        </template>
+                                                    </v-autocomplete>
+                                                </v-col>
+                                            </v-row>
+                                        </v-expansion-panel-content>
+                                    </v-expansion-panel>
+                                    <v-expansion-panel>
+                                        <v-expansion-panel-header class="teal--text text--darken-2">Attendee Limit</v-expansion-panel-header>
+                                        <v-expansion-panel-content>
+                                            <p class="title teal--text text--darken-2">Attendee Limit</p>
+                                            <v-row>
+                                                <v-col cols=12 md=6 lg=4 xl=4>
+                                                    <v-text-field outlined v-model="attendeeLimit" maxlength="6" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                                                </v-col>
+                                            </v-row>
+                                        </v-expansion-panel-content>
+                                    </v-expansion-panel>
+                                    <v-expansion-panel>
+                                        <v-expansion-panel-header class="teal--text text--darken-2">Exclusive For Community</v-expansion-panel-header>
+                                        <v-expansion-panel-content>
+                                            <p class="title teal--text text--darken-2">Exclusive</p>
+                                            <v-row>
+                                                <v-col cols=12 md=6 lg=4 xl=4>
+                                                    <v-switch v-model="exclusive" class="mx-2"></v-switch>
+                                                </v-col>
+                                            </v-row>
+                                        </v-expansion-panel-content>
+                                    </v-expansion-panel>
+                                     <v-expansion-panel>
+                                        <v-expansion-panel-header class="teal--text text--darken-2">Event Fee</v-expansion-panel-header>
+                                        <v-expansion-panel-content>
+                                            <p class="title teal--text text--darken-2">Event Fee</p>
+                                            <v-row>
+                                                <v-col cols=12 md=6 lg=4 xl=4>
+                                                    <v-text-field outlined v-model="fee" maxlength="6" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                                                </v-col>
+                                            </v-row>
+                                        </v-expansion-panel-content>
+                                    </v-expansion-panel>
+                                    <v-expansion-panel>
+                                        <v-expansion-panel-header class="teal--text text--darken-2">Event Sponsors</v-expansion-panel-header>
+                                        <v-expansion-panel-content>
+                                            <p class="title teal--text text--darken-2">Event Sponsors</p>
+                                            <v-row>
+                                                <v-col cols=12 md=6 lg=4 xl=4>
+                                                    <v-text-field outlined v-model="fee"/>
+                                                </v-col>
+                                            </v-row>
                                         </v-expansion-panel-content>
                                     </v-expansion-panel>
                                 </v-expansion-panels>
@@ -386,15 +298,20 @@ export default {
             rules: [v => !!v || "The input is required"],
             autoUpdate: true,
             selectedTags: [],
-            selectedSpeakers: [],
-            selectedPartners: [],
             isUpdating: false,
+            //Optional Settings
+            selectedPartners: [],
+            selectedSpeakers: [],
+            attendeeLimit: 0,
+            exclusive: false,
+            fee: 0,
+            sponsors: [],
         }
     },
      mounted() {
         this.retrieveTags()
         this.retrieveUsers()
-        // this.retrieveCommunityUnder()
+        this.retrieveCommunityUnder()
     },
     watch: {
       isUpdating (val) {
@@ -453,7 +370,11 @@ export default {
         },
         retrieveCommunityUnder() {
             this.loading = true
-            axios.get('/api/communityunder',)
+            axios.get('/api/communityunder',{
+                params:{
+                    community: this.community
+                }
+            })
             .then( response => {
                 this.communityUnder = response.data.community
                 

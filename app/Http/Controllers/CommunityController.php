@@ -114,10 +114,10 @@ class CommunityController extends Controller{
     }
 
     public function communityunder(Request $request) {
-        $community_tmp = user_community::where('user_id', $request->user()->id)->get();
+        $community_tmp = Community::where('name', '<>' , $request->community)->get();
         $communities = [];
-        foreach($community_tmp as $community_id){
-            $communities[] = $community_id->community->name;
+        foreach($community_tmp as $community){
+            $communities[] = $community->name;
         }
 
         return response(['community' => $communities], 200);
