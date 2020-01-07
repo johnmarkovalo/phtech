@@ -186,7 +186,7 @@
                                                 <v-col cols=12 md=12 lg=12 xl=12>
                                                     <v-autocomplete v-model="selectedSpeakers" :disabled="isUpdating" :items="users"
                                                         filled chips color="primary" label="Select Speakers"
-                                                        item-text="name" item-value="name" multiple outlined>
+                                                        item-text="name" item-value="id" multiple outlined>
                                                         <template v-slot:selection="data">
                                                             <v-chip v-bind="data.attrs" :input-value="data.selectedSpeakers" close @click="data.select"
                                                                 @click:close="remove(data.item)">
@@ -249,8 +249,30 @@
                                         <v-expansion-panel-content>
                                             <p class="title teal--text text--darken-2">Event Sponsors</p>
                                             <v-row>
-                                                <v-col cols=12 md=6 lg=4 xl=4>
-                                                    <v-text-field outlined v-model="fee"/>
+                                                <v-col cols=12 md=12 lg=12 xl=12>
+                                                    <v-autocomplete v-model="selectedSponsors" :disabled="isUpdating" :items="sponsors"
+                                                        filled chips color="primary" label="Select Speakers"
+                                                        item-text="name" item-value="id" multiple outlined>
+                                                        <template v-slot:selection="data">
+                                                            <v-chip v-bind="data.attrs" :input-value="data.selectedSponsors" close @click="data.select"
+                                                                @click:close="remove(data.item)">
+                                                                <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
+                                                                    <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                                </cld-image>
+                                                                {{ data.item.name }}
+                                                            </v-chip>
+                                                        </template>
+                                                        <template v-slot:item="data">
+                                                            <template v-if="typeof data.item !== 'object'">
+                                                                <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                            </template>
+                                                            <template v-else>
+                                                            <v-list-item-content>
+                                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                            </v-list-item-content>
+                                                            </template>
+                                                        </template>
+                                                    </v-autocomplete>
                                                 </v-col>
                                             </v-row>
                                         </v-expansion-panel-content>
@@ -299,13 +321,14 @@ export default {
             autoUpdate: true,
             selectedTags: [],
             isUpdating: false,
+            sponsors: [], 
             //Optional Settings
             selectedPartners: [],
             selectedSpeakers: [],
+            selectedSponsors: [],
             attendeeLimit: 0,
             exclusive: false,
             fee: 0,
-            sponsors: [],
         }
     },
      mounted() {
@@ -370,13 +393,26 @@ export default {
         },
         retrieveCommunityUnder() {
             this.loading = true
-            axios.get('/api/communityunder',{
+            axios.get('/api/community-under',{
                 params:{
                     community: this.community
                 }
             })
             .then( response => {
                 this.communityUnder = response.data.community
+                
+            })
+            .catch( error => { alert(error)})
+            .finally( x => {this.loading = false})
+        },
+        retrieveCommunitySponsors(){
+            axios.get('/api/community-sponsor',{
+                params:{
+                    community: this.community
+                }
+            })
+            .then( response => {
+                this.sponsors = response.data.sponsors
                 
             })
             .catch( error => { alert(error)})
@@ -398,7 +434,15 @@ export default {
                 location: this.address, 
                 start: this.start.date + ' '+this.start.time, 
                 end: this.end.date + ' '+this.end.time,
-                organizer_id: sessionStorage.getItem('user-id')
+                organizer_id: sessionStorage.getItem('user-id'),
+                //Optional Settings
+                partners: this.selectedPartners,
+                // speakers: this.selectedSpeakers,
+                limit: this.attendeeLimit,
+                exclusive: this.exclusive,
+                fee: this.fee,
+                sponsors: this.sponsors,
+
             })
             .then( response => { 
                 var id = response.data.event.id
@@ -410,7 +454,9 @@ export default {
                     axios.put('/api/eventcommunity/' + id, { 
                         id: id,
                         community: this.community,
-                        partners: this.selectedPartners
+                        partners: this.selectedPartners,
+                        speakers: this.selectedSpeakers,
+                        sponsors: this.sponsors,
                     })
                     .then( response => { 
                         swal.fire({

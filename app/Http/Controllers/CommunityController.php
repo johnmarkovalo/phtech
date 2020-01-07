@@ -123,6 +123,26 @@ class CommunityController extends Controller{
         return response(['community' => $communities], 200);
     }
 
+    public function communitysponsor(Request $request) {
+        $community = EventSponsor::select('event_sponsors.sponsor_name')
+                ->join('event', 'event_sponsors.event_id', 'event.id')
+                ->join('community', 'event_community.community_id', 'community.id')
+                ->where('event_id', $event->id)->get();
+
+        // $community_tmp = Community::where('name', '<>' , $request->community)->first();
+        // $events_tmp = event_community::where('community_id',$community_tmp->id)->get();
+        // $events = [];
+        // foreach($events_tmp as $event){
+        //     $events[] = Event::where('id',$event->event_id)->get();
+        // }
+        // $sponsors = [];
+        // foreach($community_tmp as $community){
+        //     $communities[] = $community->name;
+        // }
+
+        return response(['community' => $communities], 200);
+    }
+
     public function joincommunity(Request $request){
         user_community::where(['user_id' => $request->user()->id, 'community_id' => $request->id])->delete();
         $joinee = user_community::create(['user_id' => $request->user()->id, 'community_id' => $request->id, 'position' => 'member']);
@@ -163,7 +183,9 @@ class CommunityController extends Controller{
         $newevents = [];
         $position = '';
         foreach($events as $event){
-            $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
+            $community = event_community::select('community.name')
+                ->join('community', 'event_community.community_id', 'community.id')
+                ->where('event_id', $event->id)->get();
             if($event->event->start > date('Y-m-d H:i:s')){
                 $position = user_event::where([['user_id', $id],['event_id',$event->event->id]])->first();
                 if(!$position){
@@ -182,7 +204,7 @@ class CommunityController extends Controller{
                     'photo' => $event->event->photo,
                     'position' => $position,
                     'tags' => $this->getEventTags($event->id),
-                    'community_name' => $community_tmp->community->name,
+                    'community_name' => $community,
                 ];
             }
             else{
@@ -206,7 +228,7 @@ class CommunityController extends Controller{
                     'photo' => $event->event->photo,
                     'position' => $position,
                     'tags' => $this->getEventTags($event->id),
-                    'community_name' => $community_tmp->community->name,
+                    'community_name' => $community,
                 ];
             }
             $newevents[] = [
@@ -219,7 +241,7 @@ class CommunityController extends Controller{
                 'photo' => $event->event->photo,
                 'position' => $position,
                 'tags' => $this->getEventTags($event->id),
-                'community_name' => $community_tmp->community->name,
+                'community_name' => $community,
             ];
         }
 

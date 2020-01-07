@@ -42,4 +42,17 @@ class UserController extends Controller
         // return 'fuck';
     }
 
+    public function user_notification(Request $request) {
+        $notifications = $request->user()->notifications;
+        return response(['success' => ['notifications' => $notifications]]);
+    }
+
+    public function read_user_notification(Request $request) {
+        $request->user()->unreadNotifications->markAsRead();
+        $notifications = $request->user()->notifications;
+
+        return response(['success' => ['notifications' => $notifications]]);
+        
+    }
+
 }

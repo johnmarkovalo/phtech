@@ -297,6 +297,24 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        <v-dialog v-model="Upload_Dialog" max-width="400px">
+            <v-card>
+                <v-card-title >
+                Upload Proof of Payment
+                </v-card-title>
+                <v-card-text>
+                <v-container>
+                    <v-row wrap justify=center align=center>
+                        <v-file-input v-model="photo_name" accept="image/*" placeholder="Profile..." outlined dense prepend-icon="fa-photo" @change="file_upload"/>
+                    </v-row>
+                </v-container>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn rounded color="primary" @click="upload_payment()">Upload Proof of Payment</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-dialog v-model="Settings_Dialog" width="90vw" :class="{'my-5': $vuetify.breakpoint.mdAndUp}">
             <v-card>
                 <v-toolbar color="primary" dark>
@@ -320,10 +338,12 @@
         communities: [{name:''}],
         location: {},
         tags: [],
+        payment: '',
         //Dialogs
         dialog: false,
         Cover_Dialog:false,
         Settings_Dialog: false,
+        Upload_Dialog: false,
         // Photo
         photo_data: null,
         photo_name: null,
@@ -410,7 +430,7 @@
             }
         },
         joinEvent(attendee,status){
-            {
+            if(this.event.fee == 0){
                 axios.put("/api/joinevent" ,{
                     id: this.event.id,
                     attendee_id: attendee,
@@ -424,6 +444,8 @@
                     this.attendees = response.data.attendees
                 })
                 .catch( error => { alert(error)})
+            }else{
+                this.Upload_Dialog = true
             }
         },
         visit_community(community_name){
@@ -455,6 +477,27 @@
                     )
                     this.event.photo = response.data.success.photo
                     this.Cover_Dialog = false
+                }
+                else{
+                    this.$Progress.fail();
+                }
+            }).catch(error => {
+                this.$Progress.fail();
+            })
+        },
+        upload_Cover(){
+            this.$Progress.start();
+            axios.put('/api/event/upload-payment/'+this.event.id,{ 
+                photo: this.payment
+            }).then(response => {
+                if (response.data.success) {
+                    this.$Progress.finish();
+                    swal.fire(
+                        'Success!',
+                        'Successfully Sent Proof, Please wait for organizer to approve',
+                        'success'
+                    )
+                    this.Upload_Dialog = false
                 }
                 else{
                     this.$Progress.fail();

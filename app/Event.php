@@ -25,6 +25,7 @@ class Event extends Model
         'photo',
         'fee',
         'limit',
+        'exclusive',
         'status',
     ];
 

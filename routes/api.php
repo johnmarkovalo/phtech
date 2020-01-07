@@ -14,6 +14,9 @@ use Illuminate\Http\Request;
             return $request->user();
         });
 
+        Route::get('/notifications', 'UserController@user_notification');
+        Route::post('/notifications/read', 'UserController@read_user_notification');
+
         //Get all users
         Route::get('/users', 'UserController@index');
 
@@ -41,7 +44,8 @@ use Illuminate\Http\Request;
         Route::put('/community/{community}', 'CommunityController@update');
         Route::delete('/community/{community}', 'CommunityController@destroy');
         Route::get('/community/{community}', 'CommunityController@communitydetails');
-        Route::get('/communityunder', 'CommunityController@communityunder');
+        Route::get('/community-under', 'CommunityController@communityunder');
+        Route::get('/community-under', 'CommunityController@communitysponsor');
         Route::put('/joincommunity', 'CommunityController@joincommunity');
         Route::put('/community/change-role/{community}', 'CommunityController@changeRole');
         Route::put('/community/remove-member/{community}', 'CommunityController@removeMember');
@@ -61,6 +65,7 @@ use Illuminate\Http\Request;
         Route::get('/event/{event}', 'EventController@eventdetails');
         Route::put('/joinevent', 'EventController@joinevent');
         Route::put('/event/upload-profile/{event}', 'EventController@upload_profile');
+        Route::put('/event/upload-payment/{event}', 'EventController@upload_payment');
         // Route::get('/event/members', 'EventController@getmembers');
 
         //Event Technology

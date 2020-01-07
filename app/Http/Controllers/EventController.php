@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use JD\Cloudder\Facades\Cloudder;
 use Hash;
+use App\User;
 use App\Technology;
 use App\Community;
 use App\Event;
@@ -15,8 +16,12 @@ use App\user_community;
 use App\user_event;
 use App\Point;
 use App\point_logs;
+use App\EventSponsor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\NewEvent;
+use App\Notifications\CallForSpeaker;
 
 class EventController extends Controller
 {
@@ -43,13 +48,15 @@ class EventController extends Controller
             'start' => $request->start,
             'end' => $request->end,
             'location' => $request->location,
-            // 'fee' => '',
-            // 'limit' => '',
+            'fee' => $request->fee,
+            'limit' => $request->limit,
+            'exclusive' => $request->exclusive
 
         ]);
 
         user_event::create(['user_id' => $request->user()->id, 'event_id' => $event->id, 'position' => 'organizer']); 
         return response(['event' => $event], 200);
+        // return $community_tmp;
 
     }
     
@@ -79,11 +86,20 @@ class EventController extends Controller
         }
     }
 
+    public function eventsponsor ($request) {
+        EventSponsor::where('event_id', $request->id)->delete();
+        $sponsors_tmp = $request->sponsors;
+        foreach($sponsors_tmp as $sponsor)
+        {
+            EventSponsor::create(['event_id' => $request->id, 'sponsor_name' => $sponsor]);
+        }
+    }
+
     public function eventcommunity (Request $request) {
         event_community::where('event_id', $request->id)->delete();
         //for organizer
-        $community = Community::where('name', $request->community)->first()->id;
-        $event = event_community::create(['event_id' => $request->id, 'community_id' => $community, 'position' => 'organizer']); 
+        $community = Community::where('name', $request->community)->first();
+        $event = event_community::create(['event_id' => $request->id, 'community_id' => $community->id, 'position' => 'organizer']); 
         //for partner
         $partners_tmp = $request->partners;
         foreach($partners_tmp as $partner)
@@ -91,7 +107,34 @@ class EventController extends Controller
             $community_id = Community::where('name', $partner)->first()->id;
             event_community::create(['event_id' => $request->id, 'community_id' => $community_id, 'position' => 'partner']);
         }
-        // return $event;
+
+        $message = [
+            'event_id' => $request->id,
+            'community_photo' => $community->photo,
+            'message' => 'Checkout ' . $community->name . ' Newest Event',
+        ];
+
+        $members_tmp = user_community::where([['community_id', $community->id], ['position', '<>' ,'removed']])->get();
+        $members = [];
+        foreach($members_tmp as $member){
+            $members[] = $member->user;
+        }
+
+        Notification::send($members, new NewEvent($message));
+
+        //Call for Speaker Notif
+        $speakers = [];
+        foreach($request->speakers as $speaker){
+            $speakers [] = User::where('id',$speaker)->get();
+        }
+        $message = [
+            'event_id' => $request->id,
+            'community_photo' => $community->photo,
+            'message' => $community->name . ' Requested you to be Speaker in their newest event',
+        ];
+        Notification::send($speakers, new CallForSpeaker($message));
+
+        $this->eventsponsor($request);
     }
 
     public function destroy (Event $event) {
@@ -168,6 +211,9 @@ class EventController extends Controller
             'location' => $event->location,
             'photo' => $event->photo,
             'start' => $event->start,
+            'limit' => $event->limit,
+            'fee' => $event->fee,
+            'exclusive' => $event->exclusive,
             'organizer' => [
                 'name' => $event->organizer->name,  
                 'avatar' => $event->organizer->information->avatar,
@@ -295,6 +341,21 @@ class EventController extends Controller
             Cloudder::upload($request['photo'], null, ['folder'=>'phtechpark/community/']);
 
             $event->update(['photo' => Cloudder::getResult()['secure_url']]);
+
+            return response(['success' => ['photo' => Cloudder::getResult()['secure_url']]]);
+
+        } catch (\Throwable $th) {
+            return ['error'=>true, 'message'=>$th];
+        }
+    }
+
+    public function upload_payment (Request $request , Event $event){
+        try {
+            Cloudder::upload($request['photo'], null, ['folder'=>'phtechpark/payment/']);
+
+            $photo = Cloudder::getResult()['secure_url'];
+
+
 
             return response(['success' => ['photo' => Cloudder::getResult()['secure_url']]]);
 

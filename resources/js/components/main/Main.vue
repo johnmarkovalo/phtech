@@ -109,10 +109,13 @@
             <v-menu transition="slide-x-reverse-transition" offset-y :nudge-width="200">
                 <template v-slot:activator="{ on }" :close-on-click="false">
                     <v-btn text class="font-weight-bold teal--text" v-on="on"  v-if='isnakalogin()'>
-                        <!-- <v-avatar> -->
+                        <v-badge color="red" overlap avatar bordered>
+                            <span slot="badge">{{unreadnotification}}</span>
                             <cld-image :publicId="photo" width="50">
                                 <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>  
                             </cld-image>
+                        </v-badge>
+                        <!-- <v-avatar> -->
                         <!-- </v-avatar> -->
                         <v-icon>mdi-chevron-down</v-icon>
                     </v-btn>
@@ -130,8 +133,12 @@
                     </v-list-item>
                     <v-list-item ripple="ripple" to="/notification">
                         <v-list-item-avatar>
-                            <v-icon class="teal lighten-2 white--text"
-                            >mdi-bell</v-icon>
+                            <v-badge color="red" overlap avatar bordered>
+                                <span slot="badge">{{unreadnotification}}</span>
+                                 <v-avatar size="40">
+                                    <v-icon class="teal lighten-2 white--text">mdi-bell</v-icon>
+                                </v-avatar>
+                            </v-badge>
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>Notifications</v-list-item-title>
@@ -186,6 +193,7 @@
                 ['Management', 'mdi-account-group'],
                 ['Settings', 'mdi-settings'],
             ],
+            allNotifications: [],
         }),
         methods:{
             logout() {
@@ -201,13 +209,43 @@
             },
             isnakalogin() {
                 return sessionStorage.getItem('user-id') ? true : false
-            }
+            },
+            markAsRead(){
+                axios.post('/api/notifications/read')
+                .then( response => {
+                    this.allNotifications = response.data.success.notifications
+                })
+                .catch( error => {})
+                .finally( x => {
+                })
+            },
         },
         computed: {
-
+            unreadnotification: function() {
+                var count = 0;
+                this.allNotifications.filter(function(notification) {
+                    if(notification.read_at == null){
+                        count++;
+                    }
+                })
+                return count;
+            },
+            limitedNotifications: function() {
+                var allnotif = [];
+                this.allNotifications.forEach(notification => {
+                if(this.allNotifications.indexOf(notification) <= 10){
+                    allnotif.push(notification)
+                }
+                });
+                return allnotif;
+            },
         },
         mounted(){
-            
+            axios.get('/api/notifications')
+            .then( response => {
+                this.allNotifications = response.data.success.notifications
+            })
+            .catch( error => {})
         },
         created(){
             // sessionStorage.setItem('user-token', token)
