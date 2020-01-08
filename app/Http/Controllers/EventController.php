@@ -91,7 +91,7 @@ class EventController extends Controller
         $sponsors_tmp = $request->sponsors;
         foreach($sponsors_tmp as $sponsor)
         {
-            EventSponsor::create(['event_id' => $request->id, 'sponsor_name' => $sponsor]);
+            EventSponsor::create(['event_id' => $request->id, 'sponsor_name' => $sponsor['name']]);
         }
     }
 
@@ -211,9 +211,11 @@ class EventController extends Controller
             'location' => $event->location,
             'photo' => $event->photo,
             'start' => $event->start,
+            'end' => $event->end,
             'limit' => $event->limit,
             'fee' => $event->fee,
             'exclusive' => $event->exclusive,
+            'allowed' => $status['allowed'],
             'organizer' => [
                 'name' => $event->organizer->name,  
                 'avatar' => $event->organizer->information->avatar,
@@ -224,10 +226,25 @@ class EventController extends Controller
         $tags = $this->getTags($event->id);
 
         $attendees = $this->getAttendees($event->id);
+        $speakers = [];
+        foreach($attendees as $attendee){
+            if($attendee['position'] == 'speaker'){
+                $speakers[] = $attendee;
+            }
+        }
+        // $speakers = $this->getSpeakers($attendees);
+        $sponsors_tmp = EventSponsor::select('sponsor_name')->where([['event_id', $event->id]])->get();
+        $sponsors = [];
+        foreach($sponsors_tmp as $sponsor){
+            $sponsors[] = [
+                'name' => $sponsor->sponsor_name
+            ];
+        }
+        // $sponsors = $this->getSponsors($event->id);
 
         $communities = $this->getCommunities($event->id);
 
-        return response(['event' => $eventdetails,'attendees' => $attendees, 'communities' => $communities, 'tags' => $tags, 'status' => $status['status']], 200);
+        return response(['event' => $eventdetails,'attendees' => $attendees, 'speakers' => $speakers, 'sponsors' => $sponsors, 'communities' => $communities, 'tags' => $tags, 'status' => $status['status']], 200);
     }
 
     public function joinevent(Request $request){
@@ -291,6 +308,31 @@ class EventController extends Controller
         return $attendees;
     }
 
+    public function getSpeakers($attendees){
+        $speakers = [];
+        foreach($attendees as $attendee){
+            if($attendee['position'] == 'speaker'){
+                $speakers[] = [
+                    'id' => $attende->user->id,
+                    'name' => $attende->user->name,
+                    'position' => $attende->position,
+                    'avatar' => $attende->user->information->avatar,
+                ];
+            }
+        }
+
+        return $speakers;
+    }
+
+    public function getSponsors($id){
+        $sponsors_tmp[] = EventSponsor::where([['event_id', $id]])->get();
+        $sponsors = [];
+        // foreach($sponsors_tmp as $sponsor){
+        //     $sponsors[] = $sponsor->sponsor_name;
+        // }
+        return $sponsors_tmp;
+    }
+
     public function getCommunities($id){
         $community_tmp = event_community::where('event_id', $id)->get();
         $communities = [];
@@ -306,9 +348,19 @@ class EventController extends Controller
     }
     
     public function getStatus($user_id,$event){
-        $community = event_community::where('event_id', $event->id)->first();
-        $position_tmp = user_community::where([['user_id', $user_id],['community_id', $community->community->id]])->first();
-        $position = $position_tmp->position;
+        $allowedToJoin = false;
+        $communities = event_community::where('event_id', $event->id)->get();
+        foreach($communities as $community){
+            $position_tmp = user_community::where([['user_id', $user_id],['community_id', $community->community->id]])->first();
+            if($position_tmp){
+                $position = $position_tmp->position;
+                $allowedToJoin = true;
+                break;
+            }
+            else{
+                $position = '';
+            }
+        }
         if($event->organizer->id == $user_id || $position == 'organizer' || $position == 'event-organizer'){
             $settings = true;
         }
@@ -331,7 +383,8 @@ class EventController extends Controller
         $status = [
             'status' => $status,
             'settings' => $settings,
-            'upcomming' => $upcomming
+            'upcomming' => $upcomming,
+            'allowed' => $allowedToJoin
         ];
         return $status;
     }

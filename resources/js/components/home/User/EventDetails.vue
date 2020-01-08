@@ -26,15 +26,20 @@
                     <v-col cols=12 md=12 lg=3 align=center>
                         <v-row  v-if="upcomming">
                             <p v-if="this.status == 'pending'" class="display-1 teal--text text--darken-2 font-weight-bold">Want to go?</p>
-                            <p v-if="this.status == 'going' || this.status == 'organizer'" class="display-1 teal--text text--darken-2 font-weight-bold">You're Going</p>
+                            <p v-if="this.status == 'going'" class="display-1 teal--text text--darken-2 font-weight-bold">You're Going</p>
                             <p v-if="this.status == 'notgoing'" class="display-1 teal--text text--darken-2 font-weight-bold">You're not Going</p>
+                            <p v-if="this.status == 'speaker'" class="display-1 teal--text text--darken-2 font-weight-bold">You're a Guest Speaker</p>
+                            <p v-if="this.status == 'organizer'" class="display-1 teal--text text--darken-2 font-weight-bold">You're a Organizer</p>
                         </v-row>
                         <v-row justify=center  v-if="upcomming">
-                            <v-col cols=4>
+                            <v-col v-if="event.allowed == true" cols=4>
                                 <v-btn class="white--text" color="primary" :outlined="coutlined()" large rounded block @click="joinEvent(user_id,true)"><v-icon>mdi-check</v-icon></v-btn>
                             </v-col>
-                            <v-col cols=4>
+                            <v-col v-if="event.allowed == true" cols=4>
                                 <v-btn class="white--text" color="primary" :outlined="xoutlined()" large rounded block @click="joinEvent(user_id,false)"><v-icon>mdi-close</v-icon></v-btn>
+                            </v-col>
+                            <v-col v-else cols=6>
+                                <h1>Sorry This Event Is Exclusive</h1>
                             </v-col>
                         </v-row>
                         <v-row  v-if="!upcomming">
@@ -169,7 +174,7 @@
                             <v-col>
                                 <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-tag-multiple</v-icon>Event Topics/Tags</p>
                                 <v-chip-group column>
-                                    <v-chip v-for="tag in tags"  :key="tag.name" large outlined color="primary">{{tag.name}}</v-chip>
+                                    <v-chip v-for="tag in selectedTags"  :key="tag.name" large outlined color="primary">{{tag.name}}</v-chip>
                                 </v-chip-group>
                             </v-col>
                         </v-row>
@@ -322,6 +327,301 @@
                     <v-spacer></v-spacer>
                     <!-- <v-icon x-large>information</v-icon> -->
                 </v-toolbar>
+                <v-card-text>
+                    <v-container grid-list-xl v-if="true">
+                        <p class="title teal--text text--darken-2">Event Title</p>                            
+                        <v-row>
+                            <v-col cols=12 md=12 lg=12 xl=12>
+                                <v-text-field outlined type="text" label="Event Title" v-model="event.title" required autofocus prepend-inner-icon="mdi-calendar"/>
+                            </v-col>
+                            <!-- <v-col cols=12 md=12 lg=6 xl=6>
+                                <v-text-field outlined name="name" label="label"/>
+                            </v-col> -->
+                        </v-row>
+                        <p class="title teal--text text--darken-2">Event Start</p>
+                        <v-row>
+                            <v-col cols=12 md=12 lg=6 xl=6>
+                                <v-dialog
+                                    ref="dialog"
+                                    v-model="modal"
+                                    :return-value.sync="event.start.date"
+                                    persistent
+                                    width="290px"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                    <v-text-field outlined
+                                        v-model="event.start.date"
+                                        label="Event Date"
+                                        prepend-inner-icon="mdi-calendar"
+                                        readonly
+                                        v-on="on"
+                                    ></v-text-field>
+                                    </template>
+                                    <v-date-picker :allowedDates="allowedDatesStart" v-model="event.start.date" @change="startChange()" color="primary" scrollable>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
+                                        <v-btn text color="primary" @click="$refs.dialog.save(event.start.date)">OK</v-btn>
+                                    </v-date-picker>
+                                </v-dialog>
+                            </v-col>
+                            <v-col cols=12 md=12 lg=6 xl=6>
+                                <v-dialog
+                                    ref="dialog2"
+                                    v-model="modal2"
+                                    :return-value.sync="event.start.time"
+                                    persistent
+                                    width="290px"
+                                >
+                                    <template v-slot:activator="{ on }">
+                                    <v-text-field outlined
+                                        v-model="event.start.time"
+                                        label="Event Time"
+                                        prepend-inner-icon="mdi-alarm"
+                                        readonly
+                                        v-on="on"
+                                    ></v-text-field>
+                                    </template>
+                                    <v-time-picker color="primary"
+                                    v-if="modal2"
+                                    v-model="event.start.time"
+                                    full-width
+                                    >
+                                    <v-spacer></v-spacer>
+                                    <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
+                                    <v-btn text color="primary" @click="$refs.dialog2.save(event.start.time)">OK</v-btn>
+                                    </v-time-picker>
+                                </v-dialog>
+                            </v-col>
+                        </v-row>
+                        <p class="title teal--text text--darken-2">Event End</p>
+                        <v-row>
+                            <v-col cols=12 md=12 lg=6 xl=6>
+                                <v-dialog ref="dialog3" v-model="modal3" :return-value.sync="event.end.date"
+                                            persistent width="290px">
+                                    <template v-slot:activator="{ on }">
+                                        <v-text-field outlined v-model="event.end.date" label="Event Date" prepend-inner-icon="mdi-calendar" readonly v-on="on"></v-text-field>
+                                    </template>
+                                    <v-date-picker :allowedDates="allowedDatesEnd"  v-model="event.end.date" color="primary" scrollable>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="modal3 = false">Cancel</v-btn>
+                                        <v-btn text color="primary" @click="$refs.dialog3.save(event.end.date)">OK</v-btn>
+                                    </v-date-picker>
+                                </v-dialog>
+                            </v-col>
+                            <v-col cols=12 md=12 lg=6 xl=6>
+                                <v-dialog ref="dialog4" v-model="modal4" :return-value.sync="event.end.time"
+                                    persistent width="290px">
+                                    <template v-slot:activator="{ on }">
+                                        <v-text-field outlined v-model="event.end.time" label="Event Time" prepend-inner-icon="mdi-alarm" readonly v-on="on"></v-text-field>
+                                    </template>
+                                    <v-time-picker color="primary" v-if="modal4" v-model="event.end.time" full-width>
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="modal4 = false">Cancel</v-btn>
+                                        <v-btn text color="primary" @click="$refs.dialog4.save(event.end.time)">OK</v-btn>
+                                    </v-time-picker>
+                                </v-dialog>
+                            </v-col>
+                        </v-row>
+                        <p class="title teal--text text--darken-2">Event Description</p>                            
+                        <v-row>
+                            <v-col cols=12 md=12 lg=12 xl=12>
+                                <v-text-field outlined type="text" label="Event Description" v-model="event.description" required autofocus prepend-inner-icon="mdi-calendar"/>
+                            </v-col>
+                        </v-row>                   
+                        <p class="title teal--text text--darken-2">Event Topic</p>
+                        <v-row>
+                            <v-col cols=12 md=12 lg=12 xl=12>
+                                <form v-on:submit.prevent="">
+                                    <v-autocomplete v-model="selectedTags" :disabled="isUpdating" :items="tags"
+                                        filled chips color="primary" label="Select Technology tags"
+                                        :search-input.sync="searchInput" rounded
+                                        item-text="name" item-value="name" multiple dense>
+                                        <template v-slot:selection="data">
+                                            <v-chip
+                                            v-bind="data.attrs"
+                                            :input-value="data.selected"
+                                            close
+                                            @click="data.select"
+                                            @click:close="removeTag(data.item)"
+                                            >
+                                            <!-- <v-avatar left>
+                                                <v-img :src="data.item.avatar"></v-img>
+                                            </v-avatar> -->
+                                            {{ data.item.name }}
+                                            </v-chip>
+                                        </template>
+                                        <template v-slot:item="data">
+                                            
+                                            <template v-if="typeof data.item !== 'object'">
+                                            <v-list-item-content v-text="data.item"></v-list-item-content>
+                                            </template>
+                                            <template v-else>
+                                            <!-- <v-list-item-avatar>
+                                                <img :src="data.item.avatar">
+                                            </v-list-item-avatar> -->
+                                            <v-list-item-content>
+                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                            </v-list-item-content>
+                                            </template>
+                                        </template>
+                                    </v-autocomplete>
+                                    <button v-show="false" type="submit" @click="AddTag()">Submit</button>
+                                </form>
+                            </v-col>
+                        </v-row>
+                        <p class="title teal--text text--darken-2">Event Location</p>
+                        <v-row>
+                            <v-col cols=12 md=12 lg=12 xl=12>
+                                <v-row>
+                                    <v-icon medium color="primary">mdi-map-marker</v-icon>
+                                    <h2 class="teal--text text--darken-2">
+                                        <gmap-autocomplete
+                                        @place_changed="setPlace">
+                                        </gmap-autocomplete>
+                                    </h2>
+                                </v-row>
+                                <GmapMap style="width: 100%; height: 400px;" :zoom="25" :center="center" 
+                                            >
+                                    <GmapMarker v-if="this.event.location" label="★" :draggable="true" :position="center"/>
+                                </GmapMap>
+                            </v-col>
+                        </v-row>
+                        <p class="headline font-weight-bold teal--text text--darken-2">Optional Settings</p>
+                        <v-row>
+                            <v-expansion-panels popout>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header class="teal--text text--darken-2">Partner Community</v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <p class="title teal--text text--darken-2">Partner Community</p>                            
+                                        <v-row>
+                                            <v-col cols=12 md=12 lg=12 xl=12>
+                                                <v-select multiple color="primary" v-model="selectedPartners" :items="communityUnder" outlined chips label="Community"  prepend-inner-icon="mdi-account-group"/>
+                                            </v-col>
+                                        </v-row>   
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header class="teal--text text--darken-2">Event Speaker</v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <p class="title teal--text text--darken-2">Event Speaker</p>
+                                        <v-row>
+                                            <v-col cols=12 md=12 lg=12 xl=12>
+                                                <v-autocomplete v-model="selectedSpeakers" :disabled="isUpdating" :items="users"
+                                                    filled chips color="primary" label="Select Speakers"
+                                                    item-text="name" item-value="id" multiple outlined>
+                                                    <template v-slot:selection="data">
+                                                        <v-chip v-bind="data.attrs" :input-value="data.selectedSpeakers" close @click="data.select"
+                                                            @click:close="remove(data.item)">
+                                                            <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
+                                                                <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                            </cld-image>
+                                                            {{ data.item.name }}
+                                                        </v-chip>
+                                                    </template>
+                                                    <template v-slot:item="data">
+                                                        <template v-if="typeof data.item !== 'object'">
+                                                            <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                        </template>
+                                                        <template v-else>
+                                                        <v-list-item-content>
+                                                            <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                        </v-list-item-content>
+                                                        </template>
+                                                    </template>
+                                                </v-autocomplete>
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header class="teal--text text--darken-2">Attendee Limit</v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <p class="title teal--text text--darken-2">Attendee Limit</p>
+                                        <v-row>
+                                            <v-col cols=12 md=6 lg=4 xl=4>
+                                                <v-text-field outlined v-model="event.limit" maxlength="6" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header class="teal--text text--darken-2">Exclusive For Community</v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <p class="title teal--text text--darken-2">Exclusive</p>
+                                        <v-row>
+                                            <v-col cols=12 md=6 lg=4 xl=4>
+                                                <v-switch v-model="event.exclusive" class="mx-2"></v-switch>
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header class="teal--text text--darken-2">Event Fee</v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <p class="title teal--text text--darken-2">Event Fee</p>
+                                        <v-row>
+                                            <v-col cols=12 md=6 lg=4 xl=4>
+                                                <v-text-field outlined v-model="event.fee" maxlength="6" onkeypress='return event.charCode >= 48 && event.charCode <= 57'/>
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                                <v-expansion-panel>
+                                    <v-expansion-panel-header class="teal--text text--darken-2">Event Sponsors</v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <p class="title teal--text text--darken-2">Event Sponsors</p>
+                                        <v-row>
+                                            <v-col cols=12 md=12 lg=12 xl=12>
+                                                <form v-on:submit.prevent="">
+                                                    <v-autocomplete v-model="selectedSponsors" :disabled="isUpdating" :items="sponsorsdiila"
+                                                        filled chips color="primary" label="Select Sponsors"
+                                                        :search-input.sync="searchInput" rounded
+                                                        item-text="name" item-value="name" multiple dense>
+                                                        <template v-slot:selection="data">
+                                                            <v-chip
+                                                            v-bind="data.attrs"
+                                                            :input-value="data.selected"
+                                                            close
+                                                            @click="data.select"
+                                                            @click:close="removeSponsor(data.item)"
+                                                            >
+                                                            <!-- <v-avatar left>
+                                                                <v-img :src="data.item.avatar"></v-img>
+                                                            </v-avatar> -->
+                                                            {{ data.item.name }}
+                                                            </v-chip>
+                                                        </template>
+                                                        <template v-slot:item="data">
+                                                            
+                                                            <template v-if="typeof data.item !== 'object'">
+                                                            <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                            </template>
+                                                            <template v-else>
+                                                            <!-- <v-list-item-avatar>
+                                                                <img :src="data.item.avatar">
+                                                            </v-list-item-avatar> -->
+                                                            <v-list-item-content>
+                                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                                <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                                            </v-list-item-content>
+                                                            </template>
+                                                        </template>
+                                                    </v-autocomplete>
+                                                    <button v-show="false" type="submit" @click="AddSponsor()">Submit</button>
+                                                </form>
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
+                            </v-expansion-panels>
+                        </v-row>
+                    </v-container>
+                    <v-btn color="primary" outlined rounded x-large >Cancel</v-btn>
+                    <v-btn color="primary" rounded x-large @click="SaveEvent()">Save Event</v-btn>
+                </v-card-text>
+                <v-card-actions class="text-center">
+                </v-card-actions>
             </v-card>
         </v-dialog>
     </v-container>
@@ -334,11 +634,13 @@
         attendees: [],
         status: '',
         settings: null,
-        event: {id: '', start: '', title: '', photo: '', location: '', organizer: '', description: ''},
+        event: {id: '', start: '', end: '', title: '', photo: '', location: '', organizer: '', description: '', exclusive: '', fee: '', limit: '', allowed: ''},
         communities: [{name:''}],
         location: {},
         tags: [],
+        newTags: [],
         payment: '',
+        isUpdating: false,
         //Dialogs
         dialog: false,
         Cover_Dialog:false,
@@ -348,7 +650,28 @@
         photo_data: null,
         photo_name: null,
         upcomming: null,
-        ratings: '4',
+        ratings: 4,
+        //Update Event Settings
+        modal: false,
+        modal2: false,
+        modal3: false,
+        modal4: false,
+        searchInput: '',
+        users: [],
+        sponsorsdiila: [],
+        communityUnder: [],
+        newEvent: {
+            title: '',
+            start: '',
+            end: '',
+            description: '',
+            location: '',
+            
+        },
+        selectedPartners: [],
+        selectedTags: [],
+        selectedSpeakers: [],
+        selectedSponsors: [],
     }),
     computed: {
         GoingAttendee: function() {
@@ -365,9 +688,17 @@
                 }
             })
         },
+        allowedDatesStart () {
+            return (another => val => val >= another)(new Date().toISOString().substr(0, 10))
+        },
+        allowedDatesEnd () {
+            return (another => val => val >= another)(this.event.start.date)
+        }
     },
     mounted () {
         this.retrieveEvent()
+        this.retrieveTags()
+        this.retrieveUsers()
     },
     methods: {
         retrieveEvent(){
@@ -384,26 +715,48 @@
                         title: response.data.event.title,
                         photo: response.data.event.photo,
                         start: response.data.event.start,
+                        end: response.data.event.end,
                         description: response.data.event.description,
                         organizer: response.data.event.organizer,
+                        exclusive: response.data.event.exclusive,
+                        allowed: response.data.event.allowed,
+                        limit: response.data.event.limit,
+                        fee: response.data.event.fee,
                         location: response.data.event.location.formatted_address,
                     }
                     this.location = { lat: response.data.event.location.lat, lng: response.data.event.location.lng }
                     this.attendees = response.data.attendees
+                    this.selectedSpeakers = response.data.speakers
+                    this.selectedSponsors = response.data.sponsors
                     this.communities = response.data.communities
-                    this.tags = response.data.tags
+                    this.selectedTags = response.data.tags
                     this.status = response.data.status
                     this.settings = response.data.event.settings
                     this.upcomming = response.data.event.upcomming
+                    this.communities.forEach(community => {
+                        if(community.position == 'partner'){
+                            this.selectedPartners.push(community);
+                        }
+                    });
+                    console.log(this.selectedSponsors);
+                    console.log(this.selectedPartners);
+                    console.log(this.selectedSpeakers);
+                    console.log(this.selectedTags);
+                    
                 })
                 .catch( error => { alert(error)})
+                .finally( x => { 
+                    this.loading = false
+                    this.retrieveCommunityUnder()
+                    this.retrieveCommunitySponsors()
+                })
             }
         },
         coutlined(){
             if(this.status == 'pending') {
                 return false
             }
-            else if(this.status == 'going' || this.status == 'organizer'){
+            else if(this.status == 'going' || this.status == 'organizer' || this.status == 'speaker'){
                 return false
             }
             else{
@@ -414,7 +767,7 @@
             if(this.status == 'pending') {
                 return false
             }
-            else if(this.status == 'going' || this.status == 'organizer'){
+            else if(this.status == 'going' || this.status == 'organizer' || this.status == 'speaker'){
                 return true
             }
             else{
@@ -438,9 +791,9 @@
                     upcomming: this.upcomming,
                 })
                 .then(response => {
-                    if(!this.settings){
+                    // if(!this.settings){
                         this.status = response.data.attendee.position
-                    }
+                    // }
                     this.attendees = response.data.attendees
                 })
                 .catch( error => { alert(error)})
@@ -504,6 +857,160 @@
                 }
             }).catch(error => {
                 this.$Progress.fail();
+            })
+        },
+        //Optional
+        removeTag (item) {
+            const index = this.selectedTags.indexOf(item.name)
+            if (index >= 0) this.selectedTags.splice(index, 1)
+        },
+        AddTag(item){
+
+            let newItem = { name: this.searchInput };
+            this.tags.push(newItem);
+            this.selectedTags.push(newItem);
+            this.newTags.push(newItem);
+            
+        },
+        removeSponsor (item) {
+            const index = this.selectedSponsors.indexOf(item.name)
+            if (index >= 0) this.selectedSponsors.splice(index, 1)
+        },
+        AddSponsor(item){
+            let newItem = { name: this.searchInput };
+            this.sponsorsdiila.push(newItem);
+            this.selectedSponsors.push(newItem);
+        },
+        startChange(){
+            this.end.date = this.start.date
+        },
+        setPlace(place) {
+            this.event.location = place;
+            this.center = {
+                lat: this.event.location.geometry.location.lat(),
+                lng: this.event.location.geometry.location.lng()
+            };
+            this.event.location = {
+                lat: this.event.location.geometry.location.lat(),
+                lng: this.event.location.geometry.location.lng(),
+                name: this.event.location.name,
+                formatted_address: this.event.location.formatted_address,
+            }
+            // console.log(this.address);
+        },
+        retrieveTags() {
+            this.loading = true
+            axios.get('/api/technology')
+            .then( response => {
+                this.tags = response.data.tags
+            })
+            .catch( error => { alert(error)})
+            .finally( x => {this.loading = false})
+        },
+        retrieveUsers() {
+            this.loading = true
+            axios.get('/api/users')
+            .then( response => {
+                this.users = response.data.users
+            })
+            .catch( error => { alert(error)})
+            .finally( x => {this.loading = false})
+        },
+        retrieveCommunityUnder() {
+            this.loading = true
+            axios.get('/api/community-under',{
+                params:{
+                    community: this.communities[0].name
+                }
+            })
+            .then( response => {
+                this.communityUnder = response.data.community
+                
+            })
+            .catch( error => { alert(error)})
+            .finally( x => {this.loading = false})
+        },
+        retrieveCommunitySponsors(){
+            axios.get('/api/community-sponsor',{
+                params:{
+                    community: this.communities[0].name
+                }
+            })
+            .then( response => {
+                this.sponsorsdiila = response.data.sponsors
+            })
+            .catch( error => { alert(error)})
+            .finally( x => {this.loading = false})
+        },
+        SaveNewTechnology(){
+            axios.put('/api/newtechnology', { 
+                    newTags: this.newTags
+                })   
+                .then( response => { 
+                })
+                .catch( error => { alert(error)})
+        },
+        SaveEvent() {
+            this.loading = true
+            if(this.newTags != null){
+                this.SaveNewTechnology()
+            }
+            let keychars = "1234567890" //allowed characters for key
+            let code = ''
+            for(let i=0; i < 11; i++ )
+            {
+                code += keychars.charAt(Math.floor(Math.random() * keychars.length))
+            }
+            // Create Event
+            axios.post('/api/create_event' , { 
+                code: code, 
+                title: this.title, 
+                description: this.description, 
+                location: this.address, 
+                start: this.start.date + ' '+this.start.time, 
+                end: this.end.date + ' '+this.end.time,
+                organizer_id: sessionStorage.getItem('user-id'),
+                //Optional Settings
+                partners: this.selectedPartners,
+                // speakers: this.selectedSpeakers,
+                limit: this.attendeeLimit,
+                exclusive: this.exclusive,
+                fee: this.fee,
+                sponsors: this.sponsors,
+
+            })
+            .then( response => { 
+                var id = response.data.event.id
+                axios.put('/api/eventtech/' + id, { 
+                    id: id,
+                    tags: this.selectedTags
+                })
+                .then( response => {
+                    axios.put('/api/eventcommunity/' + id, { 
+                        id: id,
+                        community: this.community,
+                        partners: this.selectedPartners,
+                        speakers: this.selectedSpeakers,
+                        sponsors: this.sponsorsdiila,
+                    })
+                    .then( response => { 
+                        swal.fire({
+                            position: 'top-end',
+                            toast: true,
+                            type: 'success',
+                            title: 'Successfully Registered',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        this.$router.push('/'+this.community.split(' ').join('_')+'/'+'events/'+code)
+                    })
+                    .catch( error => { alert(error)})
+                })
+                .catch( error => { alert(error)})
+            })
+            .catch( error => { alert(error)})
+            .finally( x => { 
+                this.loading = false
             })
         },
     },

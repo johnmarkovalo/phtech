@@ -109,6 +109,48 @@
                                     <v-text-field outlined type="text" label="Event Description" v-model="description" required autofocus prepend-inner-icon="mdi-calendar"/>
                                 </v-col>
                             </v-row>                   
+                            <p class="title teal--text text--darken-2">Event Topic</p>
+                            <v-row>
+                                <v-col cols=12 md=12 lg=12 xl=12>
+                                    <form v-on:submit.prevent="">
+                                        <v-autocomplete v-model="selectedTags" :disabled="isUpdating" :items="tags"
+                                            filled chips color="primary" label="Select Technology tags"
+                                            :search-input.sync="searchInput" rounded
+                                            item-text="name" item-value="name" multiple dense>
+                                            <template v-slot:selection="data">
+                                                <v-chip
+                                                v-bind="data.attrs"
+                                                :input-value="data.selected"
+                                                close
+                                                @click="data.select"
+                                                @click:close="removeTag(data.item)"
+                                                >
+                                                <!-- <v-avatar left>
+                                                    <v-img :src="data.item.avatar"></v-img>
+                                                </v-avatar> -->
+                                                {{ data.item.name }}
+                                                </v-chip>
+                                            </template>
+                                            <template v-slot:item="data">
+                                                
+                                                <template v-if="typeof data.item !== 'object'">
+                                                <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                </template>
+                                                <template v-else>
+                                                <!-- <v-list-item-avatar>
+                                                    <img :src="data.item.avatar">
+                                                </v-list-item-avatar> -->
+                                                <v-list-item-content>
+                                                    <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                    <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                                </v-list-item-content>
+                                                </template>
+                                            </template>
+                                        </v-autocomplete>
+                                        <button v-show="false" type="submit" @click="AddTag()">Submit</button>
+                                    </form>
+                                </v-col>
+                            </v-row>
                             <p class="title teal--text text--darken-2">Event Location</p>
                             <v-row>
                                 <v-col cols=12 md=12 lg=12 xl=12>
@@ -124,44 +166,6 @@
                                                 >
                                         <GmapMarker v-if="this.address" label="★" :draggable="true" :position="center"/>
                                     </GmapMap>
-                                </v-col>
-                            </v-row>
-                            <p class="title teal--text text--darken-2">Event Topic</p>
-                            <v-row>
-                                <v-col cols=12 md=12 lg=12 xl=12>
-                                    <v-autocomplete v-model="selectedTags" :disabled="isUpdating" :items="tags"
-                                        filled chips color="primary" label="Select Technology tags"
-                                        item-text="name" item-value="name" multiple outlined>
-                                        <template v-slot:selection="data">
-                                            <v-chip
-                                            v-bind="data.attrs"
-                                            :input-value="data.selectedTags"
-                                            close
-                                            @click="data.select"
-                                            @click:close="remove(data.item)"
-                                            >
-                                            <!-- <v-avatar left>
-                                                <v-img :src="data.item.avatar"></v-img>
-                                            </v-avatar> -->
-                                            {{ data.item.name }}
-                                            </v-chip>
-                                        </template>
-                                        <template v-slot:item="data">
-                                            
-                                            <template v-if="typeof data.item !== 'object'">
-                                            <v-list-item-content v-text="data.item"></v-list-item-content>
-                                            </template>
-                                            <template v-else>
-                                            <!-- <v-list-item-avatar>
-                                                <img :src="data.item.avatar">
-                                            </v-list-item-avatar> -->
-                                            <v-list-item-content>
-                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                                <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
-                                            </v-list-item-content>
-                                            </template>
-                                        </template>
-                                    </v-autocomplete>
                                 </v-col>
                             </v-row>
                             <p class="headline font-weight-bold teal--text text--darken-2">Optional Settings</p>
@@ -250,29 +254,43 @@
                                             <p class="title teal--text text--darken-2">Event Sponsors</p>
                                             <v-row>
                                                 <v-col cols=12 md=12 lg=12 xl=12>
-                                                    <v-autocomplete v-model="selectedSponsors" :disabled="isUpdating" :items="sponsors"
-                                                        filled chips color="primary" label="Select Speakers"
-                                                        item-text="name" item-value="id" multiple outlined>
-                                                        <template v-slot:selection="data">
-                                                            <v-chip v-bind="data.attrs" :input-value="data.selectedSponsors" close @click="data.select"
-                                                                @click:close="remove(data.item)">
-                                                                <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
-                                                                    <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
-                                                                </cld-image>
+                                                    <form v-on:submit.prevent="">
+                                                        <v-autocomplete v-model="selectedSponsors" :disabled="isUpdating" :items="sponsorsdiila"
+                                                            filled chips color="primary" label="Select Sponsors"
+                                                            :search-input.sync="searchInput" rounded
+                                                            item-text="name" item-value="name" multiple dense>
+                                                            <template v-slot:selection="data">
+                                                                <v-chip
+                                                                v-bind="data.attrs"
+                                                                :input-value="data.selected"
+                                                                close
+                                                                @click="data.select"
+                                                                @click:close="removeSponsor(data.item)"
+                                                                >
+                                                                <!-- <v-avatar left>
+                                                                    <v-img :src="data.item.avatar"></v-img>
+                                                                </v-avatar> -->
                                                                 {{ data.item.name }}
-                                                            </v-chip>
-                                                        </template>
-                                                        <template v-slot:item="data">
-                                                            <template v-if="typeof data.item !== 'object'">
+                                                                </v-chip>
+                                                            </template>
+                                                            <template v-slot:item="data">
+                                                                
+                                                                <template v-if="typeof data.item !== 'object'">
                                                                 <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                                </template>
+                                                                <template v-else>
+                                                                <!-- <v-list-item-avatar>
+                                                                    <img :src="data.item.avatar">
+                                                                </v-list-item-avatar> -->
+                                                                <v-list-item-content>
+                                                                    <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                                    <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                                                </v-list-item-content>
+                                                                </template>
                                                             </template>
-                                                            <template v-else>
-                                                            <v-list-item-content>
-                                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                                            </v-list-item-content>
-                                                            </template>
-                                                        </template>
-                                                    </v-autocomplete>
+                                                        </v-autocomplete>
+                                                        <button v-show="false" type="submit" @click="AddSponsor()">Submit</button>
+                                                    </form>
                                                 </v-col>
                                             </v-row>
                                         </v-expansion-panel-content>
@@ -317,11 +335,13 @@ export default {
             description: '',
             center: { lat: 6.903975099999999 , lng: 122.07619890000001 },
             tags: [],
+            newTags: [],
             rules: [v => !!v || "The input is required"],
             autoUpdate: true,
             selectedTags: [],
             isUpdating: false,
-            sponsors: [], 
+            searchInput: '',
+            sponsorsdiila: [], 
             //Optional Settings
             selectedPartners: [],
             selectedSpeakers: [],
@@ -335,6 +355,7 @@ export default {
         this.retrieveTags()
         this.retrieveUsers()
         this.retrieveCommunityUnder()
+        this.retrieveCommunitySponsors()
     },
     watch: {
       isUpdating (val) {
@@ -352,12 +373,29 @@ export default {
         }
     },
     methods: {
-        startChange(){
-            this.end.date = this.start.date
-        },
-        remove (item) {
+        removeTag (item) {
             const index = this.selectedTags.indexOf(item.name)
             if (index >= 0) this.selectedTags.splice(index, 1)
+        },
+        AddTag(item){
+
+            let newItem = { name: this.searchInput };
+            this.tags.push(newItem);
+            this.selectedTags.push(newItem);
+            this.newTags.push(newItem);
+            
+        },
+        removeSponsor (item) {
+            const index = this.selectedSponsors.indexOf(item.name)
+            if (index >= 0) this.selectedSponsors.splice(index, 1)
+        },
+        AddSponsor(item){
+            let newItem = { name: this.searchInput };
+            this.sponsorsdiila.push(newItem);
+            this.selectedSponsors.push(newItem);
+        },
+        startChange(){
+            this.end.date = this.start.date
         },
         setPlace(place) {
             this.address = place;
@@ -412,14 +450,24 @@ export default {
                 }
             })
             .then( response => {
-                this.sponsors = response.data.sponsors
-                
+                this.sponsorsdiila = response.data.sponsors
             })
             .catch( error => { alert(error)})
             .finally( x => {this.loading = false})
         },
+        SaveNewTechnology(){
+            axios.put('/api/newtechnology', { 
+                    newTags: this.newTags
+                })   
+                .then( response => { 
+                })
+                .catch( error => { alert(error)})
+        },
         SaveEvent() {
             this.loading = true
+            if(this.newTags != null){
+                this.SaveNewTechnology()
+            }
             let keychars = "1234567890" //allowed characters for key
             let code = ''
             for(let i=0; i < 11; i++ )
@@ -456,7 +504,7 @@ export default {
                         community: this.community,
                         partners: this.selectedPartners,
                         speakers: this.selectedSpeakers,
-                        sponsors: this.sponsors,
+                        sponsors: this.sponsorsdiila,
                     })
                     .then( response => { 
                         swal.fire({

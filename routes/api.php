@@ -45,7 +45,7 @@ use Illuminate\Http\Request;
         Route::delete('/community/{community}', 'CommunityController@destroy');
         Route::get('/community/{community}', 'CommunityController@communitydetails');
         Route::get('/community-under', 'CommunityController@communityunder');
-        Route::get('/community-under', 'CommunityController@communitysponsor');
+        Route::get('/community-sponsor', 'CommunityController@communitysponsor');
         Route::put('/joincommunity', 'CommunityController@joincommunity');
         Route::put('/community/change-role/{community}', 'CommunityController@changeRole');
         Route::put('/community/remove-member/{community}', 'CommunityController@removeMember');

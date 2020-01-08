@@ -15,7 +15,7 @@ class EventSponsor extends Model
         'sponsor_name',
     ];
 
-    public function information() {
-        return $this->belongsTo('App\Event', 'evenvt_id', 'id');
+    public function event() {
+        return $this->belongsTo('App\Event', 'event_id', 'id');
     }
 }

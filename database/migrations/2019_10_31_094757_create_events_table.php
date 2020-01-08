@@ -26,7 +26,7 @@ class CreateEventsTable extends Migration
             $table->bigInteger('limit')->default('0');
             $table->boolean('exclusive')->default('0');
             $table->string('status')->default('ACTIVE');
-            $table->string('photo')->default();
+            $table->string('photo')->default('');
             $table->timestamps();
 
             $table->foreign('organizer_id')

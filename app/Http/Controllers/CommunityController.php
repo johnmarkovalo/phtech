@@ -13,6 +13,7 @@ use App\event_tech;
 use App\user_community;
 use App\user_event;
 use App\event_community;
+use App\EventSponsor;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -124,10 +125,20 @@ class CommunityController extends Controller{
     }
 
     public function communitysponsor(Request $request) {
-        $community = EventSponsor::select('event_sponsors.sponsor_name')
-                ->join('event', 'event_sponsors.event_id', 'event.id')
-                ->join('community', 'event_community.community_id', 'community.id')
-                ->where('event_id', $event->id)->get();
+        $community = Community::where('name', $request->community)->get();
+        $sponsors = [];
+        $sponsors_tmp = [];
+        if($community){
+            $sponsors_tmp = EventSponsor::select('event_sponsors.sponsor_name')
+                    ->join('event', 'event_sponsors.event_id', 'event.id')
+                    ->join('event_community', 'event_community.event_id', 'event.id')
+                    ->groupBy('event_sponsors.sponsor_name')
+                    ->where('event_community.community_id', $community['0']['id'])->get();
+
+            foreach($sponsors_tmp as $sponsor){
+                $sponsors[] = $sponsor['sponsor_name'];
+            }
+        }
 
         // $community_tmp = Community::where('name', '<>' , $request->community)->first();
         // $events_tmp = event_community::where('community_id',$community_tmp->id)->get();
@@ -140,7 +151,7 @@ class CommunityController extends Controller{
         //     $communities[] = $community->name;
         // }
 
-        return response(['community' => $communities], 200);
+        return response(['sponsors' => $sponsors], 200);
     }
 
     public function joincommunity(Request $request){

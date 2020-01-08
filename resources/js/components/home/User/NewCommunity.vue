@@ -210,7 +210,7 @@ export default {
         }
       },
     },
-
+    
     methods: {
         remove (item) {
             const index = this.selected.indexOf(item.name)

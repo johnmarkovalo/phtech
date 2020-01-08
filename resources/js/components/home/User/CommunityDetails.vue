@@ -6,7 +6,16 @@
                     <v-col cols=12 md=12 lg=5>
                         <v-row>
                             <v-hover v-if="membership == 'organizer'" v-slot:default="{ hover }">
-                                <v-img :src="community.photo" max-width="100%">
+                                <v-img v-if="community.photo == ''" src="https://res.cloudinary.com/mactimestwo/image/upload/v1576912557/phtechpark/community/Upload_Photo.png" max-width="100%">
+                                    <v-expand-transition>
+                                        <div v-if="hover"
+                                        :class="hover ? 'd-flex transition-fast-in-fast-out grey lighten-2 v-card--reveal headline teal--text' : ''"
+                                        style="height: 100%;" >
+                                        <v-btn class="float-right" icon @click="Cover_Dialog = true"><v-icon color="primary">mdi-pen</v-icon></v-btn>
+                                        </div>
+                                    </v-expand-transition>
+                                </v-img>
+                                <v-img v-else :src="community.photo" max-width="100%">
                                     <v-expand-transition>
                                         <div v-if="hover"
                                         :class="hover ? 'd-flex transition-fast-in-fast-out grey lighten-2 v-card--reveal headline teal--text' : ''"

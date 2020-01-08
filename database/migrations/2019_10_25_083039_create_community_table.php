@@ -20,7 +20,7 @@ class CreateCommunityTable extends Migration
             $table->longText('description')->nullable();
             $table->json('location')->nullable();
             $table->string('status')->default('ACTIVE');
-            $table->string('photo')->default('https://res.cloudinary.com/mactimestwo/image/upload/v1572071482/phtechpark/community/default.jpg');
+            $table->string('photo')->default('');
             $table->timestamps();
 
             $table->foreign('organizer_id')
