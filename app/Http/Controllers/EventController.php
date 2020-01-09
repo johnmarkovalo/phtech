@@ -19,7 +19,10 @@ use JD\Cloudder\Facades\Cloudder;
 use Hash;
 use App\Notifications\NewEvent;
 use App\Notifications\CallForSpeaker;
+use App\Notifications\CallForSpeakerReply;
 use App\Notifications\NewAttendee;
+use App\Notifications\ProofOfPayment;
+use App\Notifications\ProofOfPaymentReply;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
@@ -310,16 +313,69 @@ class EventController extends Controller
 
     //Pending
     public function replyrequest(Request $request){
-        $notification = json_decode($request->notification['data']['status']);
-        // if($request->status){
-        //     $notification['data']['status'] = 'accepted';
-        // }
-        // else{
-        //     $notification['data']['status'] = 'declined';
-        // }
-        return $notification->status;
-        $notif = DB::table('notifications')->where('id', $request->notification['id'])->update(['data' => $notification['data']]);
-        return $notif;
+        $notification = $request->notification;
+        $status = '';
+        if($request->status){
+            $notification['data']['status'] = 'accepted';
+            $status = 'accepted';
+        }
+        else{
+            $notification['data']['status'] = 'declined';
+            $status = 'declined';
+
+        }
+        DB::table('notifications')->where('id', $request->notification['id'])->update(['data' => $notification['data']]);
+
+        if($notification['type'] == 'App\Notifications\CallForSpeaker'){
+            $event = Event::where('id', $notification['data']['event_id']);
+            user_event::where([['user_id',$request->user()->id], ['event_id',$event->id]])->delete();
+            user_event::create(['user_id' => $request->user()->id, 'event_id' => $event->id, 'position' => 'speaker', 'qrcode' => $request->code]);
+            $organizer = $event->organizer;
+
+            if($status == 'accepted'){
+                $message = [
+                    'user_photo' => $request->user()->information->avatar,
+                    'status' => 'approved',
+                    'message' => $request->user()->name . ' Accepted to become a speaker in ' . $event->title,
+                ];
+            }
+            else{
+                $message = [
+                    'user_photo' => $request->user()->information->avatar,
+                    'status' => 'disapproved',
+                    'message' => $request->user()->name . ' Declined to become a speaker in ' . $event->title,
+                ];
+            }
+            Notification::send($organizer, new CallForSpeakerReply ($message));
+        }
+        elseif($notification['type'] == 'App\Notifications\ProofOfPayment'){
+            $event = Event::where('id', $notification['data']['event_id'])->first();
+            $community_tmp = event_community::where('event_id',$event->id)->first();
+            $user = User::where('id', $notification['data']['user_id'])->first();
+            user_event::where([['user_id',$user->id], ['event_id',$event->id]])->delete();
+            user_event::create(['user_id' => $user->id, 'event_id' => $event->id, 'position' => 'going']);
+            if($status == 'accepted'){
+                $message = [
+                    'event_id' => $event->id,
+                    'community_photo' => $community_tmp->community->photo,
+                    'status' => 'approved',
+                    'message' => $request->user()->name . ' The Organizer approved your proof of payment for ' . $event->title,
+                ];
+            }
+            else{
+                $message = [
+                    'event_id' => $event->id,
+                    'community_photo' => $community_tmp->community->photo,
+                    'status' => 'disapproved',
+                    'message' => $request->user()->name . ' The Organizer disapproved your proof of payment for ' . $event->title,
+                ];
+            }
+            Notification::send($user, new ProofOfPaymentReply ($message));
+
+        }
+
+        $notifications = $request->user()->notifications;
+        return response(['success' => ['notifications' => $notifications]]);
     }
 
     public function getTags($id){
@@ -444,17 +500,23 @@ class EventController extends Controller
     }
 
     public function upload_payment (Request $request , Event $event){
-        try {
             Cloudder::upload($request['photo'], null, ['folder'=>'phtechpark/payment/']);
 
             $photo = Cloudder::getResult()['secure_url'];
 
+            $organizers = $event->organizer;
+            $message = [
+                'event_id' => $event->id,
+                'user_id' => $request->user()->id,
+                'user_photo' => $request->user()->information->avatar,
+                'proof' => $photo,
+                'status' => 'pending',
+                'message' => $request->user()->name . ' Sent a proof of payment for the event ' . $event->title,
+            ];
+            
 
+            Notification::send($organizers, new ProofOfPayment($message));
 
-            return response(['success' => ['photo' => Cloudder::getResult()['secure_url']]]);
-
-        } catch (\Throwable $th) {
-            return ['error'=>true, 'message'=>$th];
-        }
+            return response(['success' => ['photo' => $photo]]);    
     }
 }

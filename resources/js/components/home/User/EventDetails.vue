@@ -355,13 +355,13 @@
                 <v-card-text>
                 <v-container>
                     <v-row wrap justify=center align=center>
-                        <v-file-input v-model="photo_name" accept="image/*" placeholder="Profile..." outlined dense prepend-icon="fa-photo" @change="file_upload"/>
+                        <v-file-input v-model="photo_name" accept="image/*" placeholder="Proof..." outlined dense prepend-icon="fa-photo" @change="file_upload"/>
                     </v-row>
                 </v-container>
                 </v-card-text>
                 <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn rounded color="primary" @click="upload_payment()">Upload Proof of Payment</v-btn>
+                <v-btn rounded color="primary" @click="upload_Payment()">Upload Proof of Payment</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -836,7 +836,7 @@
         joinEvent(attendee,status){
             let keychars = "1234567890" //allowed characters for key
             let code = ''
-            for(let i=0; i < 6; i++ )
+            for(let i=0; i < 8; i++ )
             {
                 code += keychars.charAt(Math.floor(Math.random() * keychars.length))
             }
@@ -899,7 +899,7 @@
         upload_Payment(){
             this.$Progress.start();
             axios.put('/api/event/upload-payment/'+this.event.id,{ 
-                photo: this.payment
+                photo: this.photo_data
             }).then(response => {
                 if (response.data.success) {
                     this.$Progress.finish();

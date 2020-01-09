@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewAttendee extends Notification
+class ProofOfPayment extends Notification
 {
     use Queueable;
 
@@ -19,6 +19,7 @@ class NewAttendee extends Notification
     public function __construct($message)
     {
         $this->message = $message;
+
     }
 
     /**
@@ -55,8 +56,10 @@ class NewAttendee extends Notification
     public function toArray($notifiable)
     {
         return [
+            'event_id' => $this->message['event_id'],
             'user_id' => $this->message['user_id'],
             'user_photo' => $this->message['user_photo'],
+            'status' => $this->message['status'],
             'message' => $this->message['message'],
         ];
     }

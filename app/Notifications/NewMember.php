@@ -55,7 +55,9 @@ class NewMember extends Notification
     public function toArray($notifiable)
     {
         return [
-            'member' => $this->message,
+            'user_id' => $this->message['user_id'],
+            'user_photo' => $this->message['user_photo'],
+            'message' => $this->message['message'],
         ];
     }
 }

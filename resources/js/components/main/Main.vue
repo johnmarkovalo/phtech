@@ -193,15 +193,13 @@
                         <template v-for="(notification,index) in allNotifications" >
                         <v-list-item :key="index">
                             <!-- For Icon -->
-                            <v-list-item-avatar size="50" v-if="notification.type != 'App\\Notifications\\NewMember' && notification.type != 'App\\Notifications\\NewAttendee'">
+                            <v-list-item-avatar size="50" v-if="notification.type == 'App\\Notifications\\NewEvent' || notification.type == 'App\\Notifications\\CallForSpeaker' || notification.type == 'App\\Notifications\\ProofOfPaymentReply'">
                                 <!-- New Event -->
                                 <!-- <v-icon size="40px" color="success" v-if="notification.type == 'App\\Notifications\\NewEvent'">mdi-calendar-plus</v-icon>
                                 <v-icon size="40px" color="success" v-if="notification.type == 'App\\Notifications\\CallForSpeaker'">mdi-microphone-plus</v-icon> -->
-                                <v-img v-if="notification.type == 'App\\Notifications\\NewEvent'" :src="notification.data.event.community_photo"></v-img>
-                                <v-img v-if="notification.type == 'App\\Notifications\\CallForSpeaker'" :src="notification.data.call.community_photo"></v-img>
-                                <v-img v-if="notification.type == 'App\\Notifications\\NewMember'" :src="notification.data.member.user_photo"></v-img>
+                                <v-img :src="notification.data.community_photo"></v-img>
                             </v-list-item-avatar>
-                            <cld-image v-else :publicId="notification.data.member.user_photo" width="50" class="mr-6">
+                            <cld-image v-else :publicId="notification.data.user_photo" width="50" class="mr-6">
                                 <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
                             </cld-image>
                             <!-- Message -->
@@ -212,13 +210,12 @@
                                 <v-list-item-title v-if="notification.type == 'App\\Notifications\\CallForSpeaker'">Request for Speaker</v-list-item-title>
                                 <v-list-item-title v-if="notification.type == 'App\\Notifications\\NewMember'">New Member</v-list-item-title>
                                 <v-list-item-title v-if="notification.type == 'App\\Notifications\\NewAttendee'">New Attendee</v-list-item-title>
+                                <v-list-item-title v-if="notification.type == 'App\\Notifications\\ProofOfPayment'">Proof Of Payment</v-list-item-title>
+                                <v-list-item-title v-if="notification.type == 'App\\Notifications\\ProofOfPaymentReply'">Proof Accepted</v-list-item-title>
                                 <!-- Message Content -->
                             <!-- Subtitle -->
                                 <!-- New Event -->
-                                <v-list-item-subtitle v-if="notification.type == 'App\\Notifications\\NewEvent'">{{ notification.data.event.message }}</v-list-item-subtitle>
-                                <v-list-item-subtitle v-if="notification.type == 'App\\Notifications\\CallForSpeaker'">{{ notification.data.call.message }}</v-list-item-subtitle>
-                                <v-list-item-subtitle v-if="notification.type == 'App\\Notifications\\NewMember'">{{ notification.data.member.message }}</v-list-item-subtitle>
-                                <v-list-item-subtitle v-if="notification.type == 'App\\Notifications\\NewAttendee'">{{ notification.data.member.message }}</v-list-item-subtitle>
+                                <v-list-item-subtitle>{{ notification.data.message }}</v-list-item-subtitle>
 
                             </v-list-item-content>
                             <v-spacer/>
@@ -227,7 +224,18 @@
                                 <!-- Date -->
                                 <v-list-item-action-text>{{ notification.created_at | eventDate}}</v-list-item-action-text>
                                 <v-layout v-if="notification.type == 'App\\Notifications\\CallForSpeaker'">
-                                    <v-chip v-if="notification.data.call.status == 'pending'" @click="openRequest(notification)" :class="{'mb-2': $vuetify.breakpoint.smAndDown, 'mb-4': $vuetify.breakpoint.mdAndUp}" 
+                                    <v-chip v-if="notification.data.status == 'pending'" @click="openRequest(notification)" :class="{'mb-2': $vuetify.breakpoint.smAndDown, 'mb-4': $vuetify.breakpoint.mdAndUp}" 
+                                        bottom center round 
+                                        :small="$vuetify.breakpoint.smAndDown"
+                                        outlined fab color="primary">
+                                        <v-avatar>
+                                            <v-icon>mdi-timer-sand</v-icon>
+                                        </v-avatar>
+                                        <span>Pending</span>
+                                    </v-chip>
+                                </v-layout>
+                                <v-layout v-if="notification.type == 'App\\Notifications\\ProofOfPayment'">
+                                    <v-chip v-if="notification.data.status == 'pending'" @click="openRequest(notification)" :class="{'mb-2': $vuetify.breakpoint.smAndDown, 'mb-4': $vuetify.breakpoint.mdAndUp}" 
                                         bottom center round 
                                         :small="$vuetify.breakpoint.smAndDown"
                                         outlined fab color="primary">
@@ -250,7 +258,7 @@
         <v-dialog v-model="Request_Dialog" width="400px" :class="{'my-5': $vuetify.breakpoint.mdAndUp}">
             <v-card>
                 <v-toolbar color="primary" dark>
-                    <v-toolbar-title class="display-1">Request for Speaker</v-toolbar-title>
+                    <v-toolbar-title class="display-1">Request</v-toolbar-title>
                     <v-spacer></v-spacer>
                     <!-- <v-icon x-large>information</v-icon> -->
                 </v-toolbar>
@@ -318,15 +326,24 @@
                 this.notification = notif
             },
             Request(status){
+                let keychars = "1234567890" //allowed characters for key
+                let code = ''
+                for(let i=0; i < 8; i++ )
+                {
+                    code += keychars.charAt(Math.floor(Math.random() * keychars.length))
+                }
                 axios.post('/api/reply-request/',{
                     notification: this.notification,
-                    status: status
+                    status: status,
+                    code: code
                 })
                 .then( response => {
                     this.allNotifications = response.data.success.notifications
                 })
                 .catch( error => {})
                 .finally( x => {
+                    this.Request_Dialog = false
+                    this.Notif_Dialog = false
                 })
             }
         },

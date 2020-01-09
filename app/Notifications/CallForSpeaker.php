@@ -55,7 +55,10 @@ class CallForSpeaker extends Notification
     public function toArray($notifiable)
     {
         return [
-            'call' => $this->message,
+            'event_id' => $this->message['event_id'],
+            'community_photo' => $this->message['community_photo'],
+            'status' => $this->message['status'],
+            'message' => $this->message['message'],
         ];
     }
 }

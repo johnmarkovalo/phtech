@@ -55,7 +55,9 @@ class NewEvent extends Notification
     public function toArray($notifiable)
     {
         return [
-            'event' => $this->message,
+            'event_id' => $this->message['event_id'],
+            'community_photo' => $this->message['community_photo'],
+            'message' => $this->message['message'],
         ];
     }
 }
