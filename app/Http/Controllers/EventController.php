@@ -353,7 +353,7 @@ class EventController extends Controller
             $community_tmp = event_community::where('event_id',$event->id)->first();
             $user = User::where('id', $notification['data']['user_id'])->first();
             user_event::where([['user_id',$user->id], ['event_id',$event->id]])->delete();
-            user_event::create(['user_id' => $user->id, 'event_id' => $event->id, 'position' => 'going']);
+            user_event::create(['user_id' => $user->id, 'event_id' => $event->id, 'position' => 'going', 'qrcode' => $request->code]);
             if($status == 'accepted'){
                 $message = [
                     'event_id' => $event->id,
