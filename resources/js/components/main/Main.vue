@@ -345,7 +345,24 @@
                     this.Request_Dialog = false
                     this.Notif_Dialog = false
                 })
-            }
+            },
+            getLogisticGeolocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(this.setLogisticGeolocation);
+                } else {
+                    window.clearInterval(window.locationInterval);
+                    alert("Geolocation is not supported by this browser.");
+                }
+            },
+            setLogisticGeolocation(position) {
+                var logisticGeolocationLatitude = position.coords.latitude
+                var logisticGeolocationLongitude = position.coords.longitude
+                console.log(logisticGeolocationLatitude, logisticGeolocationLongitude)
+                // axios.put('api/logistic/' + sessionStorage.getItem('user-id') + '/update-location', {
+                //     latitude: logisticGeolocationLatitude, longitude: logisticGeolocationLongitude,
+                // })
+                .then( response => { /** console.log(response.data) **/}).catch( error => { toastr.error("An Error Occurred")})
+            },
         },
         computed: {
             unreadnotification: function() {
@@ -368,6 +385,7 @@
             },
         },
         mounted(){
+            this.getLogisticGeolocation()
             axios.get('/api/notifications')
             .then( response => {
                 this.allNotifications = response.data.success.notifications

@@ -714,6 +714,9 @@
         selectedPartners: [],
         selectedTags: [],
         selectedSpeakers: [],
+        OrginalSpeakers: [],
+        NewSpeakers: [],
+        RemovedSpeakers: [],
         selectedSponsors: [],
     }),
     computed: {
@@ -782,7 +785,8 @@
                 }
                 this.center = { lat: response.data.event.location.lat, lng: response.data.event.location.lng }
                 this.attendees = response.data.attendees
-                this.selectedSpeakers = response.data.speakers
+                this.OrginalSpeakers = response.data.speakers
+                // this.selectedSpeakers = response.data.speakers
                 this.selectedSponsors = response.data.sponsors
                 this.communities = response.data.communities
                 this.selectedTags = response.data.tags
@@ -795,6 +799,11 @@
                         this.selectedPartners.push(community['name']);
                     }
                 });
+                this.OrginalSpeakers.forEach(Origspeaker => {
+                    this.selectedSpeakers.push(Origspeaker.id)
+                });
+                this.NewSpeakers = [];
+                this.RemovedSpeakers = [];
             })
             .catch( error => { alert(error)})
             .finally( x => { 
@@ -1032,12 +1041,35 @@
                     tags: this.selectedTags
                 })
                 .then( response => {
+                    this.selectedSpeakers.forEach(speaker => {
+                        var count = 0;
+                        this.OrginalSpeakers.forEach(Origspeaker => {
+                            if(speaker == Origspeaker.id){
+                                count++;
+                            }
+                        });
+                        if(count == 0){
+                            this.NewSpeakers.push(speaker);
+                        }
+                    });
+                    this.OrginalSpeakers.forEach(Origspeaker => {
+                        var count = 0;
+                        this.selectedSpeakers.forEach(speaker => {
+                            if(speaker == Origspeaker.id){
+                                count++;
+                            }
+                        });
+                        if(count == 0){
+                            this.RemovedSpeakers.push(Origspeaker.id);
+                        }
+                    });
                     axios.put('/api/eventcommunity/' + this.event.id, { 
                         id: this.event.id,
                         status: 'Update',
                         community: this.communities[0].name,
                         partners: this.selectedPartners,
-                        speakers: this.selectedSpeakers,
+                        speakers: this.NewSpeakers,
+                        removedSpeakers: this.RemovedSpeakers,
                         sponsors: this.selectedSponsors,
                     })
                     .then( response => { 

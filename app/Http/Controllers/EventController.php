@@ -143,6 +143,24 @@ class EventController extends Controller
             ];
             // return $speakers;
             Notification::send($speakers, new CallForSpeaker($message));
+        }else{
+            foreach($request->removedSpeakers as $speaker){
+                $user_event = user_event::where([['user_id',$speaker], ['event_id',$request->id]])->first();
+                $user_event->update(['position' => 'going']);
+            }
+            //Call for Speaker Notif
+            $speakers = [];
+            foreach($request->speakers as $speaker){
+                $speakers[] = User::where('id',$speaker)->first();
+            }
+            $message = [
+                'event_id' => $request->id,
+                'community_photo' => $community->photo,
+                'status' => 'pending',
+                'message' => $community->name . ' Requested you to be Speaker in their newest event',
+            ];
+            // return $speakers;
+            Notification::send($speakers, new CallForSpeaker($message));
         }
         
 
@@ -327,13 +345,14 @@ class EventController extends Controller
         DB::table('notifications')->where('id', $request->notification['id'])->update(['data' => $notification['data']]);
 
         if($notification['type'] == 'App\Notifications\CallForSpeaker'){
-            $event = Event::where('id', $notification['data']['event_id']);
+            $event = Event::where('id', $notification['data']['event_id'])->first();
             user_event::where([['user_id',$request->user()->id], ['event_id',$event->id]])->delete();
             user_event::create(['user_id' => $request->user()->id, 'event_id' => $event->id, 'position' => 'speaker', 'qrcode' => $request->code]);
             $organizer = $event->organizer;
 
             if($status == 'accepted'){
                 $message = [
+                    'event_id' => $event->id,
                     'user_photo' => $request->user()->information->avatar,
                     'status' => 'approved',
                     'message' => $request->user()->name . ' Accepted to become a speaker in ' . $event->title,
@@ -341,6 +360,7 @@ class EventController extends Controller
             }
             else{
                 $message = [
+                    'event_id' => $event->id,
                     'user_photo' => $request->user()->information->avatar,
                     'status' => 'disapproved',
                     'message' => $request->user()->name . ' Declined to become a speaker in ' . $event->title,
