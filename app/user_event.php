@@ -14,6 +14,7 @@ class user_event extends Model
         'user_id',
         'event_id',
         'position',
+        'qrcode',
     ];
 
     public function user() {

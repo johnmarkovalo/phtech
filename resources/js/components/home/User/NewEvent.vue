@@ -501,6 +501,7 @@ export default {
                 .then( response => {
                     axios.put('/api/eventcommunity/' + id, { 
                         id: id,
+                        status: 'New',
                         community: this.community,
                         partners: this.selectedPartners,
                         speakers: this.selectedSpeakers,

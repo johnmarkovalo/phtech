@@ -14,8 +14,10 @@ use App\user_community;
 use App\user_event;
 use App\event_community;
 use App\EventSponsor;
+use App\Notifications\NewMember;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Notification;
 
 class CommunityController extends Controller{
     public function store (Request $request) {
@@ -129,14 +131,14 @@ class CommunityController extends Controller{
         $sponsors = [];
         $sponsors_tmp = [];
         if($community){
-            $sponsors_tmp = EventSponsor::select('event_sponsors.sponsor_name')
+            $sponsors_tmp = EventSponsor::select('event_sponsors.name')
                     ->join('event', 'event_sponsors.event_id', 'event.id')
                     ->join('event_community', 'event_community.event_id', 'event.id')
-                    ->groupBy('event_sponsors.sponsor_name')
+                    ->groupBy('event_sponsors.name')
                     ->where('event_community.community_id', $community['0']['id'])->get();
 
             foreach($sponsors_tmp as $sponsor){
-                $sponsors[] = $sponsor['sponsor_name'];
+                $sponsors[] = $sponsor;
             }
         }
 
@@ -163,6 +165,23 @@ class CommunityController extends Controller{
             'position' => $joinee->position,
             'avatar' => $joinee->user->information->avatar,
         ];
+
+        $organizers_tmp = user_community::where(['position' => 'organizer', 'community_id' => $request->id])->get();
+        $organizers = [];
+        $community = '';
+        foreach($organizers_tmp as $organizer){
+            $organizers[] = $organizer->user;
+            $community = $organizer->community;
+        }
+        // return $organizers;
+
+        $message = [
+            'user_id' => $joiner['id'],
+            'user_photo' => $joiner['avatar'],
+            'message' => $joiner['name'] . ' Joined ' . $community->name,
+        ];
+
+        Notification::send($organizers, new NewMember($message));
 
         $members = $this->getMembers($request->id);
 

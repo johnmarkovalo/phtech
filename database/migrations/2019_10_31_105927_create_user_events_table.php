@@ -18,6 +18,7 @@ class CreateUserEventsTable extends Migration
             $table->bigInteger('user_id')->unsigned();
             $table->bigInteger('event_id')->unsigned();
             $table->string('position')->nullable();
+            $table->string('qrcode')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')

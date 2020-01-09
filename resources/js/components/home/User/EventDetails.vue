@@ -63,6 +63,22 @@
                                     <v-icon>mdi-linkedin</v-icon>
                             </v-btn>
                         </v-row>
+                        <!-- Qr Code -->
+                        <v-row justify=center  v-if="status == 'organizer' || status == 'speaker' || status == 'going'">
+                            <v-col justify=center cols=10>
+                                <!-- <p>To view you QR Code Click</p> -->
+                                <v-dialog v-model="QrCode_Dialog" width="500">
+                                    <template v-slot:activator="{ on }">
+                                        <v-btn outlined large rounded v-on="on">Click Me for QR
+                                            <v-icon color="primary">fa-qrcode</v-icon>
+                                        </v-btn>
+                                    </template>
+                                    <v-card-text>
+                                        <v-img v-bind:src="qrcode"></v-img>
+                                    </v-card-text>
+                                </v-dialog>
+                            </v-col>
+                        </v-row>
                     </v-col>
                 </v-row>
                 <v-divider></v-divider>
@@ -101,6 +117,26 @@
                         <v-row>
                             <p class="title">{{event.description}}</p>
                         </v-row>
+                        <!-- Speakers -->
+                        <v-row v-if="Speakers != ''">
+                            <p class="display-1 teal--text text--darken-2 font-weight-bold">Guest Speakers</p>
+                        </v-row>
+                        <v-row v-if="Speakers != ''">
+                            <v-tooltip top v-for="attendee in Speakers" :key="attendee.name">
+                                <template v-slot:activator="{ on }">
+                                    <div v-on="on" :class="{'': $vuetify.breakpoint.smAndDown, 'ml-2':$vuetify.breakpoint.mdAndUp}">
+                                        <cld-image :publicId="attendee.avatar" width="50">
+                                            <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>  
+                                        </cld-image>
+                                    </div>
+                                </template>
+                                <span>{{attendee.name}}</span>
+                            </v-tooltip>
+                        </v-row>
+                        <v-row v-if="Speakers == '' && upcomming == true">
+                            <p class="display-1 teal--text text--darken-2 font-weight-bold">We Are Calling For Speaker</p>
+                            <p class="title">If interested please contact the organizers</p>
+                        </v-row>
                         <!-- Attendees -->
                         <v-row>
                             <p class="display-1 teal--text text--darken-2 font-weight-bold">Attendees</p>
@@ -116,6 +152,15 @@
                                 </template>
                                 <span>{{attendee.name}}</span>
                             </v-tooltip>
+                        </v-row>
+                        <!-- Sponsors -->
+                        <v-row v-if="selectedSponsors != ''">
+                            <p class="display-1 teal--text text--darken-2 font-weight-bold">Event Sponsors</p>
+                        </v-row>
+                        <v-row v-if="selectedSponsors != ''">
+                            <div top v-for="sponsor in selectedSponsors" :key="sponsor.name">
+                                <span class="title font-weight-bold">{{sponsor.name}} ,</span>
+                            </div>
                         </v-row>
                     </v-col>
                     <v-col cols=12 md=12 lg=3 :class="{'': $vuetify.breakpoint.smAndDown, 'ml-3':$vuetify.breakpoint.mdAndUp}">
@@ -152,20 +197,20 @@
                             </v-menu>
                         </v-row>
                         <v-row>
-                            <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-alarm</v-icon>{{event.start | eventDate}}</p>
+                            <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-alarm</v-icon>{{event.start.full | eventDate}}</p>
                         </v-row>
                          <v-row>
-                            <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-map-marker</v-icon>{{event.location}}</p>
+                            <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-map-marker</v-icon>{{event.location.formatted_address}}</p>
                         </v-row>
                         <!-- Maps -->
                         <v-row>
-                            <GmapMap style="width: 100%; height: 300px;" :zoom="25" :center="location" 
+                            <GmapMap style="width: 100%; height: 300px;" :zoom="25" :center="center" 
                                         >
                                 <GmapMarker 
-                                    v-if="this.location"
+                                    v-if="this.center"
                                     label="★"
                                     :draggable="true"
-                                    :position="location"
+                                    :position="center"
                                     />
                             </GmapMap>
                         </v-row>
@@ -512,7 +557,7 @@
                                                     item-text="name" item-value="id" multiple outlined>
                                                     <template v-slot:selection="data">
                                                         <v-chip v-bind="data.attrs" :input-value="data.selectedSpeakers" close @click="data.select"
-                                                            @click:close="remove(data.item)">
+                                                            @click:close="removeTag(data.item)">
                                                             <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
                                                                 <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
                                                             </cld-image>
@@ -617,20 +662,23 @@
                             </v-expansion-panels>
                         </v-row>
                     </v-container>
-                    <v-btn color="primary" outlined rounded x-large >Cancel</v-btn>
-                    <v-btn color="primary" rounded x-large @click="SaveEvent()">Save Event</v-btn>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" outlined rounded x-large @click="Settings_Dialog == false">Cancel</v-btn>
+                    <v-btn color="primary" rounded x-large @click="updateEvent()">Update Event</v-btn>
                 </v-card-text>
                 <v-card-actions class="text-center">
                 </v-card-actions>
             </v-card>
         </v-dialog>
+        
     </v-container>
 </template>
 <script>
+    import moment from 'moment';
   export default {
     data: () => ({
         user_id: sessionStorage.getItem('user-id'),
-        center: { lat: 6.903975099999999 , lng: 122.07619890000001 },
+        center: { lat: '' , lng: '' },
         attendees: [],
         status: '',
         settings: null,
@@ -641,11 +689,13 @@
         newTags: [],
         payment: '',
         isUpdating: false,
+        qrcode: '',
         //Dialogs
         dialog: false,
         Cover_Dialog:false,
         Settings_Dialog: false,
         Upload_Dialog: false,
+        QrCode_Dialog: false,
         // Photo
         photo_data: null,
         photo_name: null,
@@ -660,14 +710,7 @@
         users: [],
         sponsorsdiila: [],
         communityUnder: [],
-        newEvent: {
-            title: '',
-            start: '',
-            end: '',
-            description: '',
-            location: '',
-            
-        },
+        //Optionals
         selectedPartners: [],
         selectedTags: [],
         selectedSpeakers: [],
@@ -676,7 +719,14 @@
     computed: {
         GoingAttendee: function() {
             return this.attendees.filter(function(attendee) {
-                if(attendee.position == 'going' || attendee.position == 'organizer' || attendee.position == 'went'){
+                if(attendee.position == 'going' || attendee.position == 'organizer' || attendee.position == 'went' || attendee.position == 'speaker'){
+                    return attendee
+                }
+            })
+        },
+        Speakers: function() {
+            return this.attendees.filter(function(attendee) {
+                if(attendee.position == 'speaker'){
                     return attendee
                 }
             })
@@ -702,55 +752,56 @@
     },
     methods: {
         retrieveEvent(){
+            axios.get("/api/event/"+this.$route.params.event_code ,
             {
-                axios.get("/api/event/"+this.$route.params.event_code ,
-                {
-                    params:{
-                        code: this.$route.params.event_code
+                params:{
+                    code: this.$route.params.event_code
+                }
+            })
+            .then(response => {
+                this.event = {
+                    id: response.data.event.id,
+                    title: response.data.event.title,
+                    photo: response.data.event.photo,
+                    start: {
+                        date: moment(response.data.event.start).format("YYYY-MM-DD"),
+                        time: moment(response.data.event.start).format("kk:mm"),
+                        full: response.data.event.start,
+                    },
+                    end: {
+                        date: moment(response.data.event.end).format("YYYY-MM-DD"),
+                        time: moment(response.data.event.end).format("kk:mm"),
+                    },
+                    description: response.data.event.description,
+                    organizer: response.data.event.organizer,
+                    exclusive: response.data.event.exclusive,
+                    allowed: response.data.event.allowed,
+                    limit: response.data.event.limit,
+                    fee: response.data.event.fee,
+                    location: response.data.event.location,
+                }
+                this.center = { lat: response.data.event.location.lat, lng: response.data.event.location.lng }
+                this.attendees = response.data.attendees
+                this.selectedSpeakers = response.data.speakers
+                this.selectedSponsors = response.data.sponsors
+                this.communities = response.data.communities
+                this.selectedTags = response.data.tags
+                this.status = response.data.status
+                this.settings = response.data.event.settings
+                this.qrcode = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=" + response.data.event.qrcode
+                this.upcomming = response.data.event.upcomming
+                this.communities.forEach(community => {
+                    if(community.position == 'partner'){
+                        this.selectedPartners.push(community['name']);
                     }
-                })
-                .then(response => {
-                    this.event = {
-                        id: response.data.event.id,
-                        title: response.data.event.title,
-                        photo: response.data.event.photo,
-                        start: response.data.event.start,
-                        end: response.data.event.end,
-                        description: response.data.event.description,
-                        organizer: response.data.event.organizer,
-                        exclusive: response.data.event.exclusive,
-                        allowed: response.data.event.allowed,
-                        limit: response.data.event.limit,
-                        fee: response.data.event.fee,
-                        location: response.data.event.location.formatted_address,
-                    }
-                    this.location = { lat: response.data.event.location.lat, lng: response.data.event.location.lng }
-                    this.attendees = response.data.attendees
-                    this.selectedSpeakers = response.data.speakers
-                    this.selectedSponsors = response.data.sponsors
-                    this.communities = response.data.communities
-                    this.selectedTags = response.data.tags
-                    this.status = response.data.status
-                    this.settings = response.data.event.settings
-                    this.upcomming = response.data.event.upcomming
-                    this.communities.forEach(community => {
-                        if(community.position == 'partner'){
-                            this.selectedPartners.push(community);
-                        }
-                    });
-                    console.log(this.selectedSponsors);
-                    console.log(this.selectedPartners);
-                    console.log(this.selectedSpeakers);
-                    console.log(this.selectedTags);
-                    
-                })
-                .catch( error => { alert(error)})
-                .finally( x => { 
-                    this.loading = false
-                    this.retrieveCommunityUnder()
-                    this.retrieveCommunitySponsors()
-                })
-            }
+                });
+            })
+            .catch( error => { alert(error)})
+            .finally( x => { 
+                this.loading = false
+                this.retrieveCommunityUnder()
+                this.retrieveCommunitySponsors()
+            })
         },
         coutlined(){
             if(this.status == 'pending') {
@@ -783,12 +834,19 @@
             }
         },
         joinEvent(attendee,status){
+            let keychars = "1234567890" //allowed characters for key
+            let code = ''
+            for(let i=0; i < 6; i++ )
+            {
+                code += keychars.charAt(Math.floor(Math.random() * keychars.length))
+            }
             if(this.event.fee == 0){
                 axios.put("/api/joinevent" ,{
                     id: this.event.id,
                     attendee_id: attendee,
                     status: status,
                     upcomming: this.upcomming,
+                    qrcode: code
                 })
                 .then(response => {
                     // if(!this.settings){
@@ -838,7 +896,7 @@
                 this.$Progress.fail();
             })
         },
-        upload_Cover(){
+        upload_Payment(){
             this.$Progress.start();
             axios.put('/api/event/upload-payment/'+this.event.id,{ 
                 photo: this.payment
@@ -882,7 +940,7 @@
             this.selectedSponsors.push(newItem);
         },
         startChange(){
-            this.end.date = this.start.date
+            this.event.end.date = this.event.start.date
         },
         setPlace(place) {
             this.event.location = place;
@@ -950,48 +1008,37 @@
                 })
                 .catch( error => { alert(error)})
         },
-        SaveEvent() {
+        updateEvent() {
             this.loading = true
             if(this.newTags != null){
                 this.SaveNewTechnology()
             }
-            let keychars = "1234567890" //allowed characters for key
-            let code = ''
-            for(let i=0; i < 11; i++ )
-            {
-                code += keychars.charAt(Math.floor(Math.random() * keychars.length))
-            }
-            // Create Event
-            axios.post('/api/create_event' , { 
-                code: code, 
-                title: this.title, 
-                description: this.description, 
-                location: this.address, 
-                start: this.start.date + ' '+this.start.time, 
-                end: this.end.date + ' '+this.end.time,
-                organizer_id: sessionStorage.getItem('user-id'),
+            // Update Event
+            axios.put('/api/update_event/'+this.event.id , { 
+                title: this.event.title, 
+                description: this.event.description, 
+                location: this.event.location, 
+                start: this.event.start.date + ' '+this.event.start.time, 
+                end: this.event.end.date + ' '+this.event.end.time,
                 //Optional Settings
-                partners: this.selectedPartners,
-                // speakers: this.selectedSpeakers,
-                limit: this.attendeeLimit,
-                exclusive: this.exclusive,
-                fee: this.fee,
-                sponsors: this.sponsors,
+                limit: this.event.limit,
+                exclusive: this.event.exclusive,
+                fee: this.event.fee,
 
             })
             .then( response => { 
-                var id = response.data.event.id
-                axios.put('/api/eventtech/' + id, { 
-                    id: id,
+                axios.put('/api/eventtech/' + this.event.id, { 
+                    id: this.event.id,
                     tags: this.selectedTags
                 })
                 .then( response => {
-                    axios.put('/api/eventcommunity/' + id, { 
-                        id: id,
-                        community: this.community,
+                    axios.put('/api/eventcommunity/' + this.event.id, { 
+                        id: this.event.id,
+                        status: 'Update',
+                        community: this.communities[0].name,
                         partners: this.selectedPartners,
                         speakers: this.selectedSpeakers,
-                        sponsors: this.sponsorsdiila,
+                        sponsors: this.selectedSponsors,
                     })
                     .then( response => { 
                         swal.fire({
@@ -1002,7 +1049,9 @@
                             showConfirmButton: false,
                             timer: 1500
                         })
-                        this.$router.push('/'+this.community.split(' ').join('_')+'/'+'events/'+code)
+                        this.retrieveEvent()
+                        this.retrieveTags()
+                        this.retrieveUsers()
                     })
                     .catch( error => { alert(error)})
                 })
@@ -1011,6 +1060,7 @@
             .catch( error => { alert(error)})
             .finally( x => { 
                 this.loading = false
+                this.Settings_Dialog = false
             })
         },
     },

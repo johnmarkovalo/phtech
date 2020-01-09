@@ -60,7 +60,7 @@ use Illuminate\Http\Request;
 
         // Event
         Route::post('/create_event', 'EventController@store');
-        Route::put('/event/{event}', 'EventController@update');
+        Route::put('/update_event/{event}', 'EventController@update');
         Route::delete('/event/{event}', 'EventController@destroy');
         Route::get('/event/{event}', 'EventController@eventdetails');
         Route::put('/joinevent', 'EventController@joinevent');
@@ -73,5 +73,8 @@ use Illuminate\Http\Request;
 
         //Event Community
         Route::put('/eventcommunity/{community}', 'EventController@eventcommunity');
+
+        // Notification
+        Route::post('/reply-request', 'EventController@replyrequest');
     });
 

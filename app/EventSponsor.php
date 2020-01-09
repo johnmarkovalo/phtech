@@ -12,7 +12,7 @@ class EventSponsor extends Model
 
     protected $fillable = [
         'event_id',
-        'sponsor_name',
+        'name',
     ];
 
     public function event() {

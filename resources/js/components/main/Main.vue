@@ -131,7 +131,7 @@
                             <v-list-item-subtitle>Edit Profile</v-list-item-subtitle>
                         </v-list-item-content>
                     </v-list-item>
-                    <v-list-item ripple="ripple" to="/notification">
+                    <v-list-item ripple="ripple" @click="openNotif()">
                         <v-list-item-avatar>
                             <v-badge color="red" overlap avatar bordered>
                                 <span slot="badge">{{unreadnotification}}</span>
@@ -181,6 +181,93 @@
         <main >
            <router-view class="mt-12" name="main"></router-view>
         </main>
+        <v-dialog v-model="Notif_Dialog" width="90vw" :class="{'my-5': $vuetify.breakpoint.mdAndUp}">
+            <v-card>
+                <v-toolbar color="primary" dark>
+                    <v-toolbar-title class="display-1">Notifications</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <!-- <v-icon x-large>information</v-icon> -->
+                </v-toolbar>
+                <v-card-text>
+                    <v-list dense two-line>
+                        <template v-for="(notification,index) in allNotifications" >
+                        <v-list-item :key="index">
+                            <!-- For Icon -->
+                            <v-list-item-avatar size="50" v-if="notification.type != 'App\\Notifications\\NewMember' && notification.type != 'App\\Notifications\\NewAttendee'">
+                                <!-- New Event -->
+                                <!-- <v-icon size="40px" color="success" v-if="notification.type == 'App\\Notifications\\NewEvent'">mdi-calendar-plus</v-icon>
+                                <v-icon size="40px" color="success" v-if="notification.type == 'App\\Notifications\\CallForSpeaker'">mdi-microphone-plus</v-icon> -->
+                                <v-img v-if="notification.type == 'App\\Notifications\\NewEvent'" :src="notification.data.event.community_photo"></v-img>
+                                <v-img v-if="notification.type == 'App\\Notifications\\CallForSpeaker'" :src="notification.data.call.community_photo"></v-img>
+                                <v-img v-if="notification.type == 'App\\Notifications\\NewMember'" :src="notification.data.member.user_photo"></v-img>
+                            </v-list-item-avatar>
+                            <cld-image v-else :publicId="notification.data.member.user_photo" width="50" class="mr-6">
+                                <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                            </cld-image>
+                            <!-- Message -->
+                            <v-list-item-content>
+                            <!-- Message Title -->
+                                <!-- New Event -->
+                                <v-list-item-title v-if="notification.type == 'App\\Notifications\\NewEvent'">New Event</v-list-item-title>
+                                <v-list-item-title v-if="notification.type == 'App\\Notifications\\CallForSpeaker'">Request for Speaker</v-list-item-title>
+                                <v-list-item-title v-if="notification.type == 'App\\Notifications\\NewMember'">New Member</v-list-item-title>
+                                <v-list-item-title v-if="notification.type == 'App\\Notifications\\NewAttendee'">New Attendee</v-list-item-title>
+                                <!-- Message Content -->
+                            <!-- Subtitle -->
+                                <!-- New Event -->
+                                <v-list-item-subtitle v-if="notification.type == 'App\\Notifications\\NewEvent'">{{ notification.data.event.message }}</v-list-item-subtitle>
+                                <v-list-item-subtitle v-if="notification.type == 'App\\Notifications\\CallForSpeaker'">{{ notification.data.call.message }}</v-list-item-subtitle>
+                                <v-list-item-subtitle v-if="notification.type == 'App\\Notifications\\NewMember'">{{ notification.data.member.message }}</v-list-item-subtitle>
+                                <v-list-item-subtitle v-if="notification.type == 'App\\Notifications\\NewAttendee'">{{ notification.data.member.message }}</v-list-item-subtitle>
+
+                            </v-list-item-content>
+                            <v-spacer/>
+                            <!-- Action/Button -->
+                            <v-list-item-action>
+                                <!-- Date -->
+                                <v-list-item-action-text>{{ notification.created_at | eventDate}}</v-list-item-action-text>
+                                <v-layout v-if="notification.type == 'App\\Notifications\\CallForSpeaker'">
+                                    <v-chip v-if="notification.data.call.status == 'pending'" @click="openRequest(notification)" :class="{'mb-2': $vuetify.breakpoint.smAndDown, 'mb-4': $vuetify.breakpoint.mdAndUp}" 
+                                        bottom center round 
+                                        :small="$vuetify.breakpoint.smAndDown"
+                                        outlined fab color="primary">
+                                        <v-avatar>
+                                            <v-icon>mdi-timer-sand</v-icon>
+                                        </v-avatar>
+                                        <span>Pending</span>
+                                    </v-chip>
+                                </v-layout>
+                            </v-list-item-action>
+                        </v-list-item>
+                        <v-divider :key="notification.id" inset/>
+                        </template>
+                    </v-list>
+                </v-card-text>
+                <v-card-actions class="text-center">
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="Request_Dialog" width="400px" :class="{'my-5': $vuetify.breakpoint.mdAndUp}">
+            <v-card>
+                <v-toolbar color="primary" dark>
+                    <v-toolbar-title class="display-1">Request for Speaker</v-toolbar-title>
+                    <v-spacer></v-spacer>
+                    <!-- <v-icon x-large>information</v-icon> -->
+                </v-toolbar>
+                <v-card-text>
+                    <v-row>
+                        <v-col justify=center cols="6">
+                            <v-btn rounded outlined color="success" @click="Request(true)">Accept</v-btn>
+                        </v-col>
+                        <v-col justify=center cols="6">
+                            <v-btn rounded outlined color="error" @click="Request(false)">Decline</v-btn>
+                        </v-col>
+                    </v-row>
+                </v-card-text>
+                <v-card-actions class="text-center">
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <script>
@@ -194,6 +281,9 @@
                 ['Settings', 'mdi-settings'],
             ],
             allNotifications: [],
+            Notif_Dialog: false,
+            Request_Dialog: false,
+            notification: '',
         }),
         methods:{
             logout() {
@@ -219,6 +309,26 @@
                 .finally( x => {
                 })
             },
+            openNotif(){
+                this.Notif_Dialog = true
+                this.markAsRead()
+            },
+            openRequest(notif){
+                this.Request_Dialog = true
+                this.notification = notif
+            },
+            Request(status){
+                axios.post('/api/reply-request/',{
+                    notification: this.notification,
+                    status: status
+                })
+                .then( response => {
+                    this.allNotifications = response.data.success.notifications
+                })
+                .catch( error => {})
+                .finally( x => {
+                })
+            }
         },
         computed: {
             unreadnotification: function() {

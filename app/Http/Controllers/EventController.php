@@ -2,9 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use JD\Cloudder\Facades\Cloudder;
-use Hash;
 use App\User;
 use App\Technology;
 use App\Community;
@@ -17,11 +14,17 @@ use App\user_event;
 use App\Point;
 use App\point_logs;
 use App\EventSponsor;
+use Illuminate\Http\Request;
+use JD\Cloudder\Facades\Cloudder;
+use Hash;
+use App\Notifications\NewEvent;
+use App\Notifications\CallForSpeaker;
+use App\Notifications\NewAttendee;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
-use App\Notifications\NewEvent;
-use App\Notifications\CallForSpeaker;
+use Illuminate\Support\Facades\DB;
+
 
 class EventController extends Controller
 {
@@ -60,20 +63,20 @@ class EventController extends Controller
 
     }
     
-    public function update (Request $request) {
+    public function update (Request $request, Event $event) {
         $validator = Validator::make($request->all(), [ 
-            'name' => 'required|string|max:255',
-            'organizer' => 'required|string|max:255',
-            'description' => 'required|string|max:255',
-            'location' => 'required|string|max:255',
+            'title' => 'required|string|max:255',
+            'description' => 'required|string',
+            'start' => 'required',
+            'end' => 'required',
         ]);
         if ($validator->fails()){
             return response(['errors'=>$validator->errors()->all()], 422);
         }
 
-        $community = Community::where('user_id', $request->user_id)->first()->update($request->toArray());
+        $event->update($request->toArray());
 
-        return response(['community' => $community], 200);
+        return response(['event' => $event], 200);
     }
 
     public function eventtech (Request $request) {
@@ -89,9 +92,12 @@ class EventController extends Controller
     public function eventsponsor ($request) {
         EventSponsor::where('event_id', $request->id)->delete();
         $sponsors_tmp = $request->sponsors;
-        foreach($sponsors_tmp as $sponsor)
-        {
-            EventSponsor::create(['event_id' => $request->id, 'sponsor_name' => $sponsor['name']]);
+        if($sponsors_tmp){
+            foreach($sponsors_tmp as $sponsor_tmp){
+                // echo $sponsor();
+                $sponsor = $sponsor_tmp['name'];
+                EventSponsor::create(['event_id' => $request->id, 'name' => $sponsor]);
+            }
         }
     }
 
@@ -107,32 +113,35 @@ class EventController extends Controller
             $community_id = Community::where('name', $partner)->first()->id;
             event_community::create(['event_id' => $request->id, 'community_id' => $community_id, 'position' => 'partner']);
         }
+        //Notif of New Event
+        if($request->status == 'New'){
+            $message = [
+                'event_id' => $request->id,
+                'community_photo' => $community->photo,
+                'message' => 'Checkout ' . $community->name . ' Newest Event',
+            ];
+            $members_tmp = user_community::where([['community_id', $community->id], ['position', '<>' ,'removed']])->get();
+            $members = [];
+            foreach($members_tmp as $member){
+                $members[] = $member->user;
+            }
+            Notification::send($members, new NewEvent($message));
 
-        $message = [
-            'event_id' => $request->id,
-            'community_photo' => $community->photo,
-            'message' => 'Checkout ' . $community->name . ' Newest Event',
-        ];
-
-        $members_tmp = user_community::where([['community_id', $community->id], ['position', '<>' ,'removed']])->get();
-        $members = [];
-        foreach($members_tmp as $member){
-            $members[] = $member->user;
+            //Call for Speaker Notif
+            $speakers = [];
+            foreach($request->speakers as $speaker){
+                $speakers[] = User::where('id',$speaker)->first();
+            }
+            $message = [
+                'event_id' => $request->id,
+                'community_photo' => $community->photo,
+                'status' => 'pending',
+                'message' => $community->name . ' Requested you to be Speaker in their newest event',
+            ];
+            // return $speakers;
+            Notification::send($speakers, new CallForSpeaker($message));
         }
-
-        Notification::send($members, new NewEvent($message));
-
-        //Call for Speaker Notif
-        $speakers = [];
-        foreach($request->speakers as $speaker){
-            $speakers [] = User::where('id',$speaker)->get();
-        }
-        $message = [
-            'event_id' => $request->id,
-            'community_photo' => $community->photo,
-            'message' => $community->name . ' Requested you to be Speaker in their newest event',
-        ];
-        Notification::send($speakers, new CallForSpeaker($message));
+        
 
         $this->eventsponsor($request);
     }
@@ -185,7 +194,8 @@ class EventController extends Controller
         //                     })->whereHas('runtimes.users', function($q) use ($userId){
         //                         $q->where('users.id', $userId);
         //                     })->get();
-   
+                            
+        //                     DB::table('notifications')->where('id', $request->notification['id'])->update(['data' => $notification['data']]);
 
         // $recommended = Event::join('technology', 'info_tech.tech_id', 'technology.id')->
         //                 whereHas('genres.users', function($q) use ($userId){
@@ -222,6 +232,7 @@ class EventController extends Controller
             ],
             'settings' => $status['settings'],
             'upcomming' => $status['upcomming'],
+            'qrcode' => $status['qrcode'],
         ];
         $tags = $this->getTags($event->id);
 
@@ -233,11 +244,11 @@ class EventController extends Controller
             }
         }
         // $speakers = $this->getSpeakers($attendees);
-        $sponsors_tmp = EventSponsor::select('sponsor_name')->where([['event_id', $event->id]])->get();
+        $sponsors_tmp = EventSponsor::select('name')->where([['event_id', $event->id]])->get();
         $sponsors = [];
         foreach($sponsors_tmp as $sponsor){
             $sponsors[] = [
-                'name' => $sponsor->sponsor_name
+                'name' => $sponsor->name
             ];
         }
         // $sponsors = $this->getSponsors($event->id);
@@ -251,7 +262,18 @@ class EventController extends Controller
         user_event::where([['user_id',$request->attendee_id], ['event_id',$request->id]])->delete();
         if($request->upcomming){
             if($request->status == true){
-                $attendee = user_event::create(['user_id' => $request->attendee_id, 'event_id' => $request->id, 'position' => 'going']);
+                $attendee = user_event::create(['user_id' => $request->attendee_id, 'event_id' => $request->id, 'position' => 'going', 'qrcode' => $request->qrcode]);
+
+                $organizer_tmp = user_event::where(['position' => 'organizer', 'event_id' => $request->id])->first();
+                $organizer = $organizer_tmp->user;
+                $event = $organizer_tmp->event;
+                $message = [
+                    'user_id' => $attendee->user->id,
+                    'user_photo' => $attendee->user->information->avatar,
+                    'message' => $attendee->user->name . ' Joined ' . $event->title,
+                ];
+
+                Notification::send($organizer, new NewAttendee($message));
             }
             elseif($request->status == false){
                 $attendee = user_event::create(['user_id' => $request->attendee_id, 'event_id' => $request->id, 'position' => 'notgoing']);
@@ -281,8 +303,23 @@ class EventController extends Controller
             ];
         }
 
+
         return response(['attendee' => $attendee, 'attendees' => $attendees], 200);
         // return ($request->status);
+    }
+
+    //Pending
+    public function replyrequest(Request $request){
+        $notification = json_decode($request->notification['data']['status']);
+        // if($request->status){
+        //     $notification['data']['status'] = 'accepted';
+        // }
+        // else{
+        //     $notification['data']['status'] = 'declined';
+        // }
+        return $notification->status;
+        $notif = DB::table('notifications')->where('id', $request->notification['id'])->update(['data' => $notification['data']]);
+        return $notif;
     }
 
     public function getTags($id){
@@ -367,8 +404,11 @@ class EventController extends Controller
         else{
             $settings = false;
         }
+        $qrcode = '';
         $status = user_event::where([['event_id',$event->id],['user_id',$user_id]])->first();
+        // echo($status);
         if($status){
+            $qrcode = $status->qrcode;
             $status = $status->position;
         }
         else{
@@ -384,7 +424,8 @@ class EventController extends Controller
             'status' => $status,
             'settings' => $settings,
             'upcomming' => $upcomming,
-            'allowed' => $allowedToJoin
+            'allowed' => $allowedToJoin,
+            'qrcode' => $qrcode
         ];
         return $status;
     }

@@ -16,7 +16,7 @@ class CreateEventSponsorsTable extends Migration
         Schema::create('event_sponsors', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->bigInteger('event_id')->unsigned();
-            $table->string('sponsor_name')->nullable();
+            $table->string('name')->nullable();
             $table->timestamps();
 
             $table->foreign('event_id')
