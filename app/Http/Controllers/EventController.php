@@ -216,7 +216,11 @@ class EventController extends Controller
         //                         $q->where('users.id', $userId);
         //                     })->get();
                             
-        //                     DB::table('notifications')->where('id', $request->notification['id'])->update(['data' => $notification['data']]);
+        // $recommended = DB::table('event')
+        //                 ->join('contacts', 'users.id', '=', 'contacts.user_id')
+        //                 ->join('orders', 'users.id', '=', 'orders.user_id')
+        //                 ->select('users.*', 'contacts.phone', 'orders.price')
+        //                 ->get();
 
         // $recommended = Event::join('technology', 'info_tech.tech_id', 'technology.id')->
         //                 whereHas('genres.users', function($q) use ($userId){

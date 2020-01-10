@@ -44,4 +44,8 @@ class Event extends Model
     public function event_tech() {
         return $this->hasMany('App\event_tech', 'event_id', 'id');
     }
+
+    public function technologies() {
+        return $this->belongsToMany('App\Technology', 'event_tech', 'event_id', 'tech_id');
+    }
 }

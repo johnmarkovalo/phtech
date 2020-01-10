@@ -13,6 +13,7 @@ import Home from './components/main/Home.vue'
 import Information from './components/home/User/Information.vue'
 import NewEvent from './components/home/User/NewEvent.vue'
 import EventDetails from './components/home/User/EventDetails.vue'
+import QRScanner from './components/home/User/QRScanner.vue'
 import NewComm from './components/home/User/NewCommunity.vue'
 import CommunityAbout from './components/home/User/CommunityAbout.vue'
 import CommunityDetails from './components/home/User/CommunityDetails.vue'
@@ -51,6 +52,7 @@ export const routes = [
                     { path: '/newcommunity', name: 'newcommunity', components: {home: NewComm}},
                     { path: '/:community_name/newevent', name: 'newevent', components: {home: NewEvent}},
                     { path: '/:community_name/events/:event_code', name: 'eventdetails', components: {home: EventDetails}},
+                    { path: '/:community_name/events/qrscan/:event_code', name: 'qrcodescanner', components: {home: QRScanner}},
                     { path: '/:community_name', name: 'communitydetails', components: {home: CommunityDetails},
                         children: [
                             { path: '/:community_name/about', name: 'communityabout', components: {communitydetails: CommunityAbout}},

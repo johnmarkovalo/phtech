@@ -193,6 +193,16 @@
                                             <v-list-item-subtitle>Manange Attendees</v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
+                                    <v-list-item ripple="ripple" @click="QRScanner()">
+                                        <v-list-item-avatar>
+                                            <v-icon class="teal lighten-2 white--text"
+                                            >mdi-qrcode-scan</v-icon>
+                                        </v-list-item-avatar>
+                                        <v-list-item-content>
+                                            <v-list-item-title>Scan QR Code</v-list-item-title>
+                                            <v-list-item-subtitle>Scan QR for Attendance</v-list-item-subtitle>
+                                        </v-list-item-content>
+                                    </v-list-item>
                                 </v-list>
                             </v-menu>
                         </v-row>
@@ -332,12 +342,12 @@
         <v-dialog v-model="Cover_Dialog" max-width="400px">
             <v-card>
                 <v-card-title >
-                Edit Profile Picture
+                Edit Cover Picture
                 </v-card-title>
                 <v-card-text>
                 <v-container>
                     <v-row wrap justify=center align=center>
-                        <v-file-input v-model="photo_name" accept="image/*" placeholder="Profile..." outlined dense prepend-icon="fa-photo" @change="file_upload"/>
+                        <v-file-input v-model="photo_name" accept="image/*" placeholder="Cover..." outlined dense prepend-icon="fa-photo" @change="file_upload"/>
                     </v-row>
                 </v-container>
                 </v-card-text>
@@ -1094,6 +1104,9 @@
                 this.loading = false
                 this.Settings_Dialog = false
             })
+        },
+        QRScanner(){
+            this.$router.push('/'+this.communities[0]['name'].split(' ').join('_')+'/events'+'/qrscan/'+this.$route.params.event_code)
         },
     },
     created() {

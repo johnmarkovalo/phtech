@@ -30,6 +30,9 @@ Vue.use(VueGoogleMaps, {
   }
 });
 
+import VueQrcodeReader from "vue-qrcode-reader";
+Vue.use(VueQrcodeReader);
+
 const opts = {
   theme: {
     dark: false,
