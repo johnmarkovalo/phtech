@@ -295,6 +295,7 @@ class CommunityController extends Controller{
                 'name' => $member->user->name,
                 'position' => $member->position,
                 'avatar' => $member->user->information->avatar,
+                'points' => $member->user->point->points
             ];
         }
 

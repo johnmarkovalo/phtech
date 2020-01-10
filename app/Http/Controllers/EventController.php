@@ -201,6 +201,24 @@ class EventController extends Controller
                 ];
             }
         }
+        $recommended = [];
+        $user = User::where('id',$request->id)->first();
+        $user_tags = $user->information->technologies;
+        foreach($user_tags as $tag){
+            $recommended[] = Event::whereHas('technologies', function($q) use ($tag){
+                $q->where('technology.id', $tag->id);
+            })->get();
+            // $recommended[] = $tag->id;
+        }
+        return $recommended;
+        // return $user_tags;
+        // $events_technologies = [];
+        // foreach($event_tmp as $event){
+        //     $events_technologies[] = $event->technologies;
+        // }
+        // return $events_technologies;
+
+
 
         // $tags = info_tech::select('technology.id')
         //                    ->join('technology', 'info_tech.tech_id', 'technology.id')
@@ -333,6 +351,19 @@ class EventController extends Controller
         // return ($request->status);
     }
 
+    public function checkAttendance(Request $request){
+        $event = Event::where('code',$request->code)->first();
+        $code = $request->qrcode;   
+        $user_event = user_event::where([['qrcode',$code],['event_id',$event->id]])->first();
+        if($user_event){
+            $user_event->update(['position' => 'went']);
+            point_logs::create(['point_id' => $request->user()->point->id, 'event_id' => $event->id, 'position' => 'attendee', 'point' => '5']);
+            Point::where('id', $request->user()->point->id)->increment('points', 5);
+        }
+        else{
+            return response(['errors' => ['QR Code Not Found']], 422);
+        }
+    }
     //Pending
     public function replyrequest(Request $request){
         $notification = $request->notification;
@@ -419,6 +450,7 @@ class EventController extends Controller
                 'name' => $attende->user->name,
                 'position' => $attende->position,
                 'avatar' => $attende->user->information->avatar,
+                'points' => $attende->user->point->points
             ];
         }
 
@@ -434,6 +466,7 @@ class EventController extends Controller
                     'name' => $attende->user->name,
                     'position' => $attende->position,
                     'avatar' => $attende->user->information->avatar,
+                    'points' => $attende->user->point->points
                 ];
             }
         }

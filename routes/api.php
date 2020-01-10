@@ -63,6 +63,7 @@ use Illuminate\Http\Request;
         Route::put('/update_event/{event}', 'EventController@update');
         Route::delete('/event/{event}', 'EventController@destroy');
         Route::get('/event/{event}', 'EventController@eventdetails');
+        Route::put('/event/check-attendance/{event}', 'EventController@checkAttendance');
         Route::put('/joinevent', 'EventController@joinevent');
         Route::put('/event/upload-profile/{event}', 'EventController@upload_profile');
         Route::put('/event/upload-payment/{event}', 'EventController@upload_payment');

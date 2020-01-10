@@ -130,7 +130,7 @@
                                         </cld-image>
                                     </div>
                                 </template>
-                                <span>{{attendee.name}}</span>
+                                <span>{{attendee.name}}({{attendee.points}})</span>
                             </v-tooltip>
                         </v-row>
                         <v-row v-if="Speakers == '' && upcomming == true">
@@ -150,7 +150,7 @@
                                         </cld-image>
                                     </div>
                                 </template>
-                                <span>{{attendee.name}}</span>
+                                <span>{{attendee.name}}({{attendee.points}})</span>
                             </v-tooltip>
                         </v-row>
                         <!-- Sponsors -->
@@ -531,14 +531,30 @@
                                 <v-row>
                                     <v-icon medium color="primary">mdi-map-marker</v-icon>
                                     <h2 class="teal--text text--darken-2">
+                                         <!-- <gmap-autocomplete class="introInput" @place_changed="setPlace">
+                                                    <template v-slot:input="slotProps">
+                                                        <v-text-field outlined 
+                                                                    prepend-inner-icon="place" 
+                                                                    placeholder="Location Of Event" 
+                                                                    ref="input" 
+                                                                    v-on:listeners="slotProps.listeners" 
+                                                                    v-on:attrs="slotProps.attrs">
+                                                        </v-text-field>
+                                                    </template>
+                                        </gmap-autocomplete> -->
                                         <gmap-autocomplete
                                         @place_changed="setPlace">
                                         </gmap-autocomplete>
                                     </h2>
                                 </v-row>
-                                <GmapMap style="width: 100%; height: 400px;" :zoom="25" :center="center" 
-                                            >
+                                <GmapMap style="width: 100%; height: 400px;" :zoom="25" :center="center">
                                     <GmapMarker v-if="this.event.location" label="★" :draggable="true" :position="center"/>
+                                    <GmapCircle
+                                        :center="center"
+                                        :radius="100000"
+                                        :visible="true"
+                                        :options="{fillColor:'red',fillOpacity:1.0}"
+                                    ></GmapCircle>
                                 </GmapMap>
                             </v-col>
                         </v-row>

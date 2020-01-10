@@ -28,4 +28,8 @@ class Information extends Model
     public function info_tech() {
         return $this->hasMany('App\info_tech', 'info_id', 'id');
     }
+
+    public function technologies() {
+        return $this->belongsToMany('App\Technology', 'info_tech', 'info_id', 'tech_id');
+    }
 }

@@ -25,6 +25,7 @@
     methods: {
         onDecode (result) {
             this.result = result
+            this.check()
         },
 
         async onInit (promise) {
@@ -45,6 +46,22 @@
                 this.error = "ERROR: Stream API is not supported in this browser"
                 }
             }
+        },
+        check(){
+            axios.put('/api/event/check-attendance/'+this.$route.params.event_code, { 
+                qrcode: this.result,
+                code: this.$route.params.event_code
+            })   
+            .then( response => { 
+            })
+            .catch(error => {
+                this.$Progress.fail();
+                swal.fire(
+                    'Error!',
+                    error.response.data.errors[0],
+                    'error'
+                )
+            })
         }
     },
     created() {

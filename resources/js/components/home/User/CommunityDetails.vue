@@ -44,7 +44,7 @@
                                         </cld-image>
                                     </div>
                                 </template>
-                                <span>{{member.name}}</span>
+                                <span>{{member.name}}({{member.points}})</span>
                             </v-tooltip>
                         </v-row>
                     </v-col>
@@ -111,7 +111,7 @@
                                 <v-btn v-else class="float-right" block rounded large color="primary" @click="joinCommunity()">Join This Group</v-btn>
                             </v-col>
                             <v-col cols=6 lg=5>
-                                <v-btn v-if="membership == 'organizer' || membership == 'event-organizer'" class="float-right" block rounded large color="primary" to="newevent"><v-icon class="white--text">mdi-calendar-plus</v-icon>Create EVent</v-btn>
+                                <v-btn v-if="membership == 'organizer' || membership == 'event-organizer'" class="float-right" block rounded large color="primary" to="newevent"><v-icon class="white--text">mdi-calendar-plus</v-icon>Create Event</v-btn>
                             </v-col>
                         </v-row>
                     </v-col>
