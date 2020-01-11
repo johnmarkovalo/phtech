@@ -328,6 +328,7 @@ class EventController extends Controller
             'upcomming' => $status['upcomming'],
             'qrcode' => $status['qrcode'],
             'ratings' => $status['ratings'],
+            'submitted' => $status['submitted'],
         ];
         $tags = $this->getTags($event->id);
 
@@ -628,13 +629,19 @@ class EventController extends Controller
             $settings = false;
         }
         $qrcode = '';
+        $submitted = false;
         $ratings = '';
         $status = user_event::where([['event_id',$event->id],['user_id',$user_id]])->first();
         // echo($status);
         if($status){
             $qrcode = $status->qrcode;
             $status = $status->position;
-            $ratings = $status->ratings;
+            $ratings_tmp = user_event::select('ratings')->where([['event_id',$event->id],['user_id',$user_id]])->first();
+            $ratings = $ratings_tmp->ratings;
+            if($ratings){
+                $submitted = true;
+            }
+            // echo($ratings);
         }
         else{
             $status = 'pending';
@@ -645,6 +652,9 @@ class EventController extends Controller
         }
         else{
             $upcomming = false;
+            if(!$ratings && $submitted == false){
+               $ratings = user_event::where('event_id',$event->id)->avg('ratings');
+            }
         }
         $status = [
             'status' => $status,
@@ -652,7 +662,8 @@ class EventController extends Controller
             'upcomming' => $upcomming,
             'allowed' => $allowedToJoin,
             'qrcode' => $qrcode,
-            'ratings' => $ratings
+            'ratings' => $ratings,
+            'submitted' => $submitted
         ];
         return $status;
     }

@@ -49,7 +49,7 @@
                         <v-row justify=center  v-if="!upcomming">
                             <v-rating size="50" v-model="ratings" :readonly="submitted" background-color="teal lighten-3"  color="teal"></v-rating>
                         </v-row>
-                        <v-row justify=center  v-if="!upcomming">
+                        <v-row justify=center  v-if="(!upcomming && showSubmit == true)">
                             <v-btn outlined large rounded :disabled="submitted" @click="submitRatings()">Submit Ratings
                                 <v-icon color="primary">mdi-send-circle-outline</v-icon>
                             </v-btn>
@@ -723,6 +723,7 @@
         //ratings
         ratings: 0,
         submitted: false,
+        showSubmit: true,
         //Dialogs
         dialog: false,
         Cover_Dialog:false,
@@ -831,11 +832,9 @@
                 this.qrcode = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=" + response.data.event.qrcode
                 this.upcomming = response.data.event.upcomming
                 this.ratings = response.data.event.ratings
-                if(this.ratings == null){
-                    this.submitted == false;
-                }
-                else{
-                    this.submitted == true;
+                this.submitted = response.data.event.submitted
+                if(this.submitted == false && this.status == 'pending' && this.upcomming == false){
+                    this.showSubmit = false
                 }
                 this.communities.forEach(community => {
                     if(community.position == 'partner'){
