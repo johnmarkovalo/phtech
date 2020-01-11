@@ -175,6 +175,7 @@ class EventController extends Controller
         $allevents = Event::all();
         $eventlist = [];
         $community_tmp = '';
+        $recommended_events = [];
         if($request->id){
             foreach($allevents as $event){
                 if($event->start > date('Y-m-d H:i:s')){
@@ -248,7 +249,6 @@ class EventController extends Controller
                 $recommended_events_tmp[] = $event['event'];
             }
 
-            $recommended_events = [];
             $community_tmp = '';
             foreach($recommended_events_tmp as $event){
                 if($event->start > date('Y-m-d H:i:s')){
