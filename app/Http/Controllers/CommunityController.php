@@ -25,7 +25,7 @@ class CommunityController extends Controller{
             'name' => 'required|string|max:255',
             'organizer_id' => 'required|string|max:255',
             'description' => 'required|string',
-            'location' => 'required',
+            // 'location' => 'required',
         ]);
 
         if ($validator->fails()){

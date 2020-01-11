@@ -42,7 +42,7 @@
                                 <h1>Sorry This Event Is Exclusive</h1>
                             </v-col>
                         </v-row>
-                        <v-row  v-if="!upcomming">
+                        <v-row v-if="!upcomming">
                             <p class="display-1 teal--text text--darken-2 font-weight-bold">Event Rating</p>
                         </v-row>
                         <v-row justify=center  v-if="!upcomming">
@@ -384,180 +384,178 @@
                 </v-toolbar>
                 <v-card-text>
                     <v-container grid-list-xl v-if="true">
-                        <p class="title teal--text text--darken-2">Event Title</p>                            
-                        <v-row>
-                            <v-col cols=12 md=12 lg=12 xl=12>
-                                <v-text-field outlined type="text" label="Event Title" v-model="event.title" required autofocus prepend-inner-icon="mdi-calendar"/>
-                            </v-col>
-                            <!-- <v-col cols=12 md=12 lg=6 xl=6>
-                                <v-text-field outlined name="name" label="label"/>
-                            </v-col> -->
-                        </v-row>
-                        <p class="title teal--text text--darken-2">Event Start</p>
-                        <v-row>
-                            <v-col cols=12 md=12 lg=6 xl=6>
-                                <v-dialog
-                                    ref="dialog"
-                                    v-model="modal"
-                                    :return-value.sync="event.start.date"
-                                    persistent
-                                    width="290px"
-                                >
-                                    <template v-slot:activator="{ on }">
-                                    <v-text-field outlined
-                                        v-model="event.start.date"
-                                        label="Event Date"
-                                        prepend-inner-icon="mdi-calendar"
-                                        readonly
-                                        v-on="on"
-                                    ></v-text-field>
-                                    </template>
-                                    <v-date-picker :allowedDates="allowedDatesStart" v-model="event.start.date" @change="startChange()" color="primary" scrollable>
-                                        <v-spacer></v-spacer>
-                                        <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
-                                        <v-btn text color="primary" @click="$refs.dialog.save(event.start.date)">OK</v-btn>
-                                    </v-date-picker>
-                                </v-dialog>
-                            </v-col>
-                            <v-col cols=12 md=12 lg=6 xl=6>
-                                <v-dialog
-                                    ref="dialog2"
-                                    v-model="modal2"
-                                    :return-value.sync="event.start.time"
-                                    persistent
-                                    width="290px"
-                                >
-                                    <template v-slot:activator="{ on }">
-                                    <v-text-field outlined
-                                        v-model="event.start.time"
-                                        label="Event Time"
-                                        prepend-inner-icon="mdi-alarm"
-                                        readonly
-                                        v-on="on"
-                                    ></v-text-field>
-                                    </template>
-                                    <v-time-picker color="primary"
-                                    v-if="modal2"
-                                    v-model="event.start.time"
-                                    full-width
+                        <v-form ref="form1" lazy-validation>
+                            <p class="title teal--text text--darken-2">Event Title</p>                            
+                            <v-row>
+                                <v-col cols=12 md=12 lg=12 xl=12>
+                                    <v-text-field outlined type="text" label="Event Title" v-model="event.title" :rules="Required" prepend-inner-icon="mdi-calendar"/>
+                                </v-col>
+                                <!-- <v-col cols=12 md=12 lg=6 xl=6>
+                                    <v-text-field outlined name="name" label="label"/>
+                                </v-col> -->
+                            </v-row>
+                            <p class="title teal--text text--darken-2">Event Start</p>
+                            <v-row>
+                                <v-col cols=12 md=12 lg=6 xl=6>
+                                    <v-dialog
+                                        ref="dialog"
+                                        v-model="modal"
+                                        :return-value.sync="event.start.date"
+                                        persistent
+                                        width="290px"
                                     >
-                                    <v-spacer></v-spacer>
-                                    <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
-                                    <v-btn text color="primary" @click="$refs.dialog2.save(event.start.time)">OK</v-btn>
-                                    </v-time-picker>
-                                </v-dialog>
-                            </v-col>
-                        </v-row>
-                        <p class="title teal--text text--darken-2">Event End</p>
-                        <v-row>
-                            <v-col cols=12 md=12 lg=6 xl=6>
-                                <v-dialog ref="dialog3" v-model="modal3" :return-value.sync="event.end.date"
-                                            persistent width="290px">
-                                    <template v-slot:activator="{ on }">
-                                        <v-text-field outlined v-model="event.end.date" label="Event Date" prepend-inner-icon="mdi-calendar" readonly v-on="on"></v-text-field>
-                                    </template>
-                                    <v-date-picker :allowedDates="allowedDatesEnd"  v-model="event.end.date" color="primary" scrollable>
-                                        <v-spacer></v-spacer>
-                                        <v-btn text color="primary" @click="modal3 = false">Cancel</v-btn>
-                                        <v-btn text color="primary" @click="$refs.dialog3.save(event.end.date)">OK</v-btn>
-                                    </v-date-picker>
-                                </v-dialog>
-                            </v-col>
-                            <v-col cols=12 md=12 lg=6 xl=6>
-                                <v-dialog ref="dialog4" v-model="modal4" :return-value.sync="event.end.time"
-                                    persistent width="290px">
-                                    <template v-slot:activator="{ on }">
-                                        <v-text-field outlined v-model="event.end.time" label="Event Time" prepend-inner-icon="mdi-alarm" readonly v-on="on"></v-text-field>
-                                    </template>
-                                    <v-time-picker color="primary" v-if="modal4" v-model="event.end.time" full-width>
-                                        <v-spacer></v-spacer>
-                                        <v-btn text color="primary" @click="modal4 = false">Cancel</v-btn>
-                                        <v-btn text color="primary" @click="$refs.dialog4.save(event.end.time)">OK</v-btn>
-                                    </v-time-picker>
-                                </v-dialog>
-                            </v-col>
-                        </v-row>
-                        <p class="title teal--text text--darken-2">Event Description</p>                            
-                        <v-row>
-                            <v-col cols=12 md=12 lg=12 xl=12>
-                                <v-text-field outlined type="text" label="Event Description" v-model="event.description" required autofocus prepend-inner-icon="mdi-calendar"/>
-                            </v-col>
-                        </v-row>                   
-                        <p class="title teal--text text--darken-2">Event Topic</p>
-                        <v-row>
-                            <v-col cols=12 md=12 lg=12 xl=12>
-                                <form v-on:submit.prevent="">
-                                    <v-autocomplete v-model="selectedTags" :disabled="isUpdating" :items="tags"
-                                        filled chips color="primary" label="Select Technology tags"
-                                        :search-input.sync="searchInput" rounded
-                                        item-text="name" item-value="name" multiple dense>
-                                        <template v-slot:selection="data">
-                                            <v-chip
-                                            v-bind="data.attrs"
-                                            :input-value="data.selected"
-                                            close
-                                            @click="data.select"
-                                            @click:close="removeTag(data.item)"
-                                            >
-                                            <!-- <v-avatar left>
-                                                <v-img :src="data.item.avatar"></v-img>
-                                            </v-avatar> -->
-                                            {{ data.item.name }}
-                                            </v-chip>
+                                        <template v-slot:activator="{ on }">
+                                        <v-text-field outlined
+                                            v-model="event.start.date"
+                                            label="Event Date"
+                                            prepend-inner-icon="mdi-calendar"
+                                            readonly
+                                            v-on="on"
+                                            :rules="Required"
+                                        ></v-text-field>
                                         </template>
-                                        <template v-slot:item="data">
-                                            
-                                            <template v-if="typeof data.item !== 'object'">
-                                            <v-list-item-content v-text="data.item"></v-list-item-content>
-                                            </template>
-                                            <template v-else>
-                                            <!-- <v-list-item-avatar>
-                                                <img :src="data.item.avatar">
-                                            </v-list-item-avatar> -->
-                                            <v-list-item-content>
-                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                                <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
-                                            </v-list-item-content>
-                                            </template>
+                                        <v-date-picker :allowedDates="allowedDatesStart" v-model="event.start.date" @change="startChange()" color="primary" scrollable>
+                                            <v-spacer></v-spacer>
+                                            <v-btn text color="primary" @click="modal = false">Cancel</v-btn>
+                                            <v-btn text color="primary" @click="$refs.dialog.save(event.start.date)">OK</v-btn>
+                                        </v-date-picker>
+                                    </v-dialog>
+                                </v-col>
+                                <v-col cols=12 md=12 lg=6 xl=6>
+                                    <v-dialog
+                                        ref="dialog2"
+                                        v-model="modal2"
+                                        :return-value.sync="event.start.time"
+                                        persistent
+                                        width="290px"
+                                    >
+                                        <template v-slot:activator="{ on }">
+                                        <v-text-field outlined
+                                            v-model="event.start.time"
+                                            label="Event Time"
+                                            prepend-inner-icon="mdi-alarm"
+                                            readonly
+                                            v-on="on"
+                                            :rules="Required"
+                                        ></v-text-field>
                                         </template>
-                                    </v-autocomplete>
-                                    <button v-show="false" type="submit" @click="AddTag()">Submit</button>
-                                </form>
-                            </v-col>
-                        </v-row>
-                        <p class="title teal--text text--darken-2">Event Location</p>
-                        <v-row>
-                            <v-col cols=12 md=12 lg=12 xl=12>
-                                <v-row>
-                                    <v-icon medium color="primary">mdi-map-marker</v-icon>
-                                    <h2 class="teal--text text--darken-2">
-                                         <!-- <gmap-autocomplete class="introInput" @place_changed="setPlace">
-                                                    <template v-slot:input="slotProps">
-                                                        <v-text-field outlined 
-                                                                    prepend-inner-icon="place" 
-                                                                    placeholder="Location Of Event" 
-                                                                    ref="input" 
-                                                                    v-on:listeners="slotProps.listeners" 
-                                                                    v-on:attrs="slotProps.attrs">
-                                                        </v-text-field>
-                                                    </template>
-                                        </gmap-autocomplete> -->
-                                        <gmap-autocomplete
-                                        @place_changed="setPlace">
-                                        </gmap-autocomplete>
-                                    </h2>
-                                </v-row>
-                                <GmapMap style="width: 100%; height: 400px;" :zoom="25" :center="center">
-                                    <GmapMarker v-if="this.event.location" label="★" :draggable="true" :position="center"/>
-                                    <GmapCircle
-                                        :center="center"
-                                        :radius="100000"
-                                        :visible="true"
-                                        :options="{fillColor:'red',fillOpacity:1.0}"
-                                    ></GmapCircle>
-                                </GmapMap>
-                            </v-col>
-                        </v-row>
+                                        <v-time-picker color="primary"
+                                        v-if="modal2"
+                                        v-model="event.start.time"
+                                        full-width
+                                        >
+                                        <v-spacer></v-spacer>
+                                        <v-btn text color="primary" @click="modal2 = false">Cancel</v-btn>
+                                        <v-btn text color="primary" @click="$refs.dialog2.save(event.start.time)">OK</v-btn>
+                                        </v-time-picker>
+                                    </v-dialog>
+                                </v-col>
+                            </v-row>
+                            <p class="title teal--text text--darken-2">Event End</p>
+                            <v-row>
+                                <v-col cols=12 md=12 lg=6 xl=6>
+                                    <v-dialog ref="dialog3" v-model="modal3" :return-value.sync="event.end.date"
+                                                persistent width="290px">
+                                        <template v-slot:activator="{ on }">
+                                            <v-text-field outlined v-model="event.end.date" label="Event Date" prepend-inner-icon="mdi-calendar" readonly v-on="on" :rules="Required"></v-text-field>
+                                        </template>
+                                        <v-date-picker :allowedDates="allowedDatesEnd"  v-model="event.end.date" color="primary" scrollable>
+                                            <v-spacer></v-spacer>
+                                            <v-btn text color="primary" @click="modal3 = false">Cancel</v-btn>
+                                            <v-btn text color="primary" @click="$refs.dialog3.save(event.end.date)">OK</v-btn>
+                                        </v-date-picker>
+                                    </v-dialog>
+                                </v-col>
+                                <v-col cols=12 md=12 lg=6 xl=6>
+                                    <v-dialog ref="dialog4" v-model="modal4" :return-value.sync="event.end.time"
+                                        persistent width="290px">
+                                        <template v-slot:activator="{ on }">
+                                            <v-text-field outlined v-model="event.end.time" label="Event Time" prepend-inner-icon="mdi-alarm" readonly v-on="on" :rules="Required"></v-text-field>
+                                        </template>
+                                        <v-time-picker color="primary" v-if="modal4" v-model="event.end.time" full-width>
+                                            <v-spacer></v-spacer>
+                                            <v-btn text color="primary" @click="modal4 = false">Cancel</v-btn>
+                                            <v-btn text color="primary" @click="$refs.dialog4.save(event.end.time)">OK</v-btn>
+                                        </v-time-picker>
+                                    </v-dialog>
+                                </v-col>
+                            </v-row>
+                            <p class="title teal--text text--darken-2">Event Description</p>                            
+                            <v-row>
+                                <v-col cols=12 md=12 lg=12 xl=12>
+                                    <v-text-field outlined type="text" label="Event Description" v-model="event.description" :rules="Required" prepend-inner-icon="mdi-calendar"/>
+                                </v-col>
+                            </v-row>                   
+                            <p class="title teal--text text--darken-2">Event Topic</p>
+                            <v-row>
+                                <v-col cols=12 md=12 lg=12 xl=12>
+                                    <form v-on:submit.prevent="">
+                                        <v-autocomplete v-model="selectedTags" :disabled="isUpdating" :items="tags"
+                                            filled chips color="primary" label="Select Technology tags"
+                                            :search-input.sync="searchInput" rounded
+                                            item-text="name" item-value="name" multiple dense>
+                                            <template v-slot:selection="data">
+                                                <v-chip
+                                                v-bind="data.attrs"
+                                                :input-value="data.selected"
+                                                close
+                                                @click="data.select"
+                                                @click:close="removeTag(data.item)"
+                                                >
+                                                <!-- <v-avatar left>
+                                                    <v-img :src="data.item.avatar"></v-img>
+                                                </v-avatar> -->
+                                                {{ data.item.name }}
+                                                </v-chip>
+                                            </template>
+                                            <template v-slot:item="data">
+                                                
+                                                <template v-if="typeof data.item !== 'object'">
+                                                <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                </template>
+                                                <template v-else>
+                                                <!-- <v-list-item-avatar>
+                                                    <img :src="data.item.avatar">
+                                                </v-list-item-avatar> -->
+                                                <v-list-item-content>
+                                                    <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                    <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
+                                                </v-list-item-content>
+                                                </template>
+                                            </template>
+                                        </v-autocomplete>
+                                        <button v-show="false" type="submit" @click="AddTag()">Submit</button>
+                                    </form>
+                                </v-col>
+                            </v-row>
+                            <p class="title teal--text text--darken-2">Event Location</p>
+                            <v-row>
+                                <v-col cols=12 md=12 lg=12 xl=12>
+                                    <v-row>
+                                        <v-icon medium color="primary">mdi-map-marker</v-icon>
+                                        <h2 class="teal--text text--darken-2">
+                                            <!-- <gmap-autocomplete class="introInput" @place_changed="setPlace">
+                                                        <template v-slot:input="slotProps">
+                                                            <v-text-field outlined 
+                                                                        prepend-inner-icon="place" 
+                                                                        placeholder="Location Of Event" 
+                                                                        ref="input" 
+                                                                        v-on:listeners="slotProps.listeners" 
+                                                                        v-on:attrs="slotProps.attrs">
+                                                            </v-text-field>
+                                                        </template>
+                                            </gmap-autocomplete> -->
+                                            <gmap-autocomplete
+                                            @place_changed="setPlace">
+                                            </gmap-autocomplete>
+                                        </h2>
+                                    </v-row>
+                                    <GmapMap style="width: 100%; height: 400px;" :zoom="25" :center="center">
+                                        <GmapMarker v-if="this.event.location" label="★" :draggable="true" :position="center"/>
+                                    </GmapMap>
+                                </v-col>
+                            </v-row>
+                        </v-form>
                         <p class="headline font-weight-bold teal--text text--darken-2">Optional Settings</p>
                         <v-row>
                             <v-expansion-panels popout>
@@ -736,6 +734,10 @@
         users: [],
         sponsorsdiila: [],
         communityUnder: [],
+        Required: [
+            (v) => !!v || 'Field is required',
+            (v) => !!v && v.length <= 255 || 'Field must be more than 255 characters',
+        ],
         //Optionals
         selectedPartners: [],
         selectedTags: [],
@@ -1044,82 +1046,91 @@
                 .catch( error => { alert(error)})
         },
         updateEvent() {
-            this.loading = true
-            if(this.newTags != null){
-                this.SaveNewTechnology()
-            }
-            // Update Event
-            axios.put('/api/update_event/'+this.event.id , { 
-                title: this.event.title, 
-                description: this.event.description, 
-                location: this.event.location, 
-                start: this.event.start.date + ' '+this.event.start.time, 
-                end: this.event.end.date + ' '+this.event.end.time,
-                //Optional Settings
-                limit: this.event.limit,
-                exclusive: this.event.exclusive,
-                fee: this.event.fee,
-
-            })
-            .then( response => { 
-                axios.put('/api/eventtech/' + this.event.id, { 
-                    id: this.event.id,
-                    tags: this.selectedTags
+            if(this.$refs.form1.validate() && this.event.location != null && this.selectedTags != ''){
+                this.loading = true
+                if(this.newTags != null){
+                    this.SaveNewTechnology()
+                }
+                // Update Event
+                axios.put('/api/update_event/'+this.event.id , { 
+                    title: this.event.title, 
+                    description: this.event.description, 
+                    location: this.event.location, 
+                    start: this.event.start.date + ' '+this.event.start.time, 
+                    end: this.event.end.date + ' '+this.event.end.time,
+                    //Optional Settings
+                    limit: this.event.limit,
+                    exclusive: this.event.exclusive,
+                    fee: this.event.fee,
+    
                 })
-                .then( response => {
-                    this.selectedSpeakers.forEach(speaker => {
-                        var count = 0;
-                        this.OrginalSpeakers.forEach(Origspeaker => {
-                            if(speaker == Origspeaker.id){
-                                count++;
-                            }
-                        });
-                        if(count == 0){
-                            this.NewSpeakers.push(speaker);
-                        }
-                    });
-                    this.OrginalSpeakers.forEach(Origspeaker => {
-                        var count = 0;
-                        this.selectedSpeakers.forEach(speaker => {
-                            if(speaker == Origspeaker.id){
-                                count++;
-                            }
-                        });
-                        if(count == 0){
-                            this.RemovedSpeakers.push(Origspeaker.id);
-                        }
-                    });
-                    axios.put('/api/eventcommunity/' + this.event.id, { 
+                .then( response => { 
+                    axios.put('/api/eventtech/' + this.event.id, { 
                         id: this.event.id,
-                        status: 'Update',
-                        community: this.communities[0].name,
-                        partners: this.selectedPartners,
-                        speakers: this.NewSpeakers,
-                        removedSpeakers: this.RemovedSpeakers,
-                        sponsors: this.selectedSponsors,
+                        tags: this.selectedTags
                     })
-                    .then( response => { 
-                        swal.fire({
-                            position: 'top-end',
-                            toast: true,
-                            type: 'success',
-                            title: 'Successfully Registered',
-                            showConfirmButton: false,
-                            timer: 1500
+                    .then( response => {
+                        this.selectedSpeakers.forEach(speaker => {
+                            var count = 0;
+                            this.OrginalSpeakers.forEach(Origspeaker => {
+                                if(speaker == Origspeaker.id){
+                                    count++;
+                                }
+                            });
+                            if(count == 0){
+                                this.NewSpeakers.push(speaker);
+                            }
+                        });
+                        this.OrginalSpeakers.forEach(Origspeaker => {
+                            var count = 0;
+                            this.selectedSpeakers.forEach(speaker => {
+                                if(speaker == Origspeaker.id){
+                                    count++;
+                                }
+                            });
+                            if(count == 0){
+                                this.RemovedSpeakers.push(Origspeaker.id);
+                            }
+                        });
+                        axios.put('/api/eventcommunity/' + this.event.id, { 
+                            id: this.event.id,
+                            status: 'Update',
+                            community: this.communities[0].name,
+                            partners: this.selectedPartners,
+                            speakers: this.NewSpeakers,
+                            removedSpeakers: this.RemovedSpeakers,
+                            sponsors: this.selectedSponsors,
                         })
-                        this.retrieveEvent()
-                        this.retrieveTags()
-                        this.retrieveUsers()
+                        .then( response => { 
+                            swal.fire({
+                                position: 'top-end',
+                                toast: true,
+                                type: 'success',
+                                title: 'Successfully Registered',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            this.retrieveEvent()
+                            this.retrieveTags()
+                            this.retrieveUsers()
+                        })
+                        .catch( error => { alert(error)})
                     })
                     .catch( error => { alert(error)})
                 })
                 .catch( error => { alert(error)})
-            })
-            .catch( error => { alert(error)})
-            .finally( x => { 
-                this.loading = false
-                this.Settings_Dialog = false
-            })
+                .finally( x => { 
+                    this.loading = false
+                    this.Settings_Dialog = false
+                })
+            }
+            else{
+                swal.fire(
+                'Error!',
+                'Please Fill-up all the required field',
+                'error'
+                )
+            }
         },
         QRScanner(){
             this.$router.push('/'+this.communities[0]['name'].split(' ').join('_')+'/events'+'/qrscan/'+this.$route.params.event_code)

@@ -45,7 +45,7 @@
                                             <v-icon medium color="primary">mdi-map-marker</v-icon>
                                             <h2 class="teal--text text--darken-2">
                                                 <gmap-autocomplete
-                                                @place_changed="setPlace">
+                                                @place_changed="setPlace" :rules="Required">
                                                 </gmap-autocomplete>
                                             </h2>
                                         </v-layout>
@@ -123,16 +123,18 @@
                             <v-container>
                                 <p class="display-2 teal--text text--darken-2">What is the name of your Community?</p>
                                 <p class="title">Be creative! Name your community that will stand out from the others.</p>
-                                <v-layout row wrap>
-                                    <!-- Company -->
-                                    <v-flex xs12 md12>
-                                        <v-text-field outlined type="text" label="Community Name" v-model="name" required autofocus prepend-inner-icon="mdi-account-group"/>
-                                    </v-flex>
-                                </v-layout>
+                                <v-form ref="form1" lazy-validation>
+                                    <v-layout row wrap>
+                                        <!-- Company -->
+                                        <v-flex xs12 md12>
+                                            <v-text-field outlined type="text" label="Community Name" v-model="name" :rules="Required" prepend-inner-icon="mdi-account-group"/>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-form>
                             </v-container>
 
                             <v-btn text @click="e1 = 3">Cancel</v-btn>
-                            <v-btn x-large rounded color="primary" @click="e1 = 4">
+                            <v-btn x-large rounded color="primary" @click="Validate(1)">
                                 Continue
                             </v-btn>
                           </v-stepper-content>
@@ -145,16 +147,18 @@
                                                     2.Who should join?<br>
                                                     3.What will you do at your events? <br>  
                                                     </p>
-                                <v-layout row wrap>
-                                    <!-- Company -->
-                                    <v-flex xs12 md12>
-                                        <v-textarea outlined type="text" label="Community Name" v-model="description" required autofocus/>
-                                    </v-flex>
-                                </v-layout>
+                                <v-form ref="form2" lazy-validation>
+                                    <v-layout row wrap>
+                                        <!-- Company -->
+                                        <v-flex xs12 md12>
+                                            <v-textarea outlined type="text" label="Community Name" v-model="description" :rules="Required"/>
+                                        </v-flex>
+                                    </v-layout>
+                                </v-form>
                             </v-container>
                             <v-btn text @click="e1 = 4">Cancel</v-btn>
 
-                            <v-btn x-large rounded color="primary" @click="e1 = 5">
+                            <v-btn x-large rounded color="primary" @click="Validate(2)">
                                 Continue
                             </v-btn>
 
@@ -198,6 +202,10 @@ export default {
             isUpdating: false,
             searchInput: null,
             newTags: [],
+            Required: [
+                (v) => !!v || 'Field is required',
+                (v) => !!v && v.length <= 255 || 'Field must be more than 255 characters',
+            ],
         }
     },
      mounted() {
@@ -291,6 +299,18 @@ export default {
                 .then( response => { 
                 })
                 .catch( error => { alert(error)})
+        },
+        Validate(number){
+            if(number == 1){
+                 if (this.$refs.form1.validate()) {
+                    this.e1 = 4;
+                 }
+            }
+            else if(number == 2){
+                if (this.$refs.form2.validate()) {
+                    this.e1 = 5;
+                }
+            }
         },
     },
 }

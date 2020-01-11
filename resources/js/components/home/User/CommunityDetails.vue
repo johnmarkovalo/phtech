@@ -31,7 +31,7 @@
                     </v-col>
                     <v-col cols=12 md=12 lg=3>
                         <p class="display-1 teal--text text--darken-2 font-weight-bold">{{community.name}}</p>
-                        <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-map-marker</v-icon>{{community.location.formatted_address}}</p>
+                        <p v-if="community.location" class="title teal--text text--darken-2"><v-icon color="primary">mdi-map-marker</v-icon>{{community.location.formatted_address}}</p>
                         <p class="title teal--text text--darken-2"><v-icon color="primary">fas fa-user</v-icon>Organizers</p>
                         <p class="title ml-5" >{{community.organizer}} and <strong>7 others</strong></p>
                         <p class="title teal--text text--darken-2"><v-icon color="primary">mdi-account-group</v-icon> Members</p>
