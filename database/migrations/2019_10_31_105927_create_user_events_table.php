@@ -19,6 +19,7 @@ class CreateUserEventsTable extends Migration
             $table->bigInteger('event_id')->unsigned();
             $table->string('position')->nullable();
             $table->string('qrcode')->nullable();
+            $table->smallInteger('ratings')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')

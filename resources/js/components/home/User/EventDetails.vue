@@ -45,8 +45,14 @@
                         <v-row v-if="!upcomming">
                             <p class="display-1 teal--text text--darken-2 font-weight-bold">Event Rating</p>
                         </v-row>
+                        <!-- Ratings -->
                         <v-row justify=center  v-if="!upcomming">
-                            <v-rating size="50" v-model="ratings" background-color="teal lighten-3"  color="teal"></v-rating>
+                            <v-rating size="50" v-model="ratings" :readonly="submitted" background-color="teal lighten-3"  color="teal"></v-rating>
+                        </v-row>
+                        <v-row justify=center  v-if="!upcomming">
+                            <v-btn outlined large rounded :disabled="submitted" @click="submitRatings()">Submit Ratings
+                                <v-icon color="primary">mdi-send-circle-outline</v-icon>
+                            </v-btn>
                         </v-row>
                         <!-- Icons -->
                         <v-row justify=center  v-if="upcomming">
@@ -64,7 +70,7 @@
                             </v-btn>
                         </v-row>
                         <!-- Qr Code -->
-                        <v-row justify=center  v-if="status == 'organizer' || status == 'speaker' || status == 'going'">
+                        <v-row justify=center  v-if="(status == 'organizer' || status == 'speaker' || status == 'going') && upcomming == true">
                             <v-col justify=center cols=10>
                                 <!-- <p>To view you QR Code Click</p> -->
                                 <v-dialog v-model="QrCode_Dialog" width="500">
@@ -714,6 +720,9 @@
         payment: '',
         isUpdating: false,
         qrcode: '',
+        //ratings
+        ratings: 0,
+        submitted: false,
         //Dialogs
         dialog: false,
         Cover_Dialog:false,
@@ -724,7 +733,6 @@
         photo_data: null,
         photo_name: null,
         upcomming: null,
-        ratings: 4,
         //Update Event Settings
         modal: false,
         modal2: false,
@@ -822,6 +830,13 @@
                 this.settings = response.data.event.settings
                 this.qrcode = "https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=" + response.data.event.qrcode
                 this.upcomming = response.data.event.upcomming
+                this.ratings = response.data.event.ratings
+                if(this.ratings == null){
+                    this.submitted == false;
+                }
+                else{
+                    this.submitted == true;
+                }
                 this.communities.forEach(community => {
                     if(community.position == 'partner'){
                         this.selectedPartners.push(community['name']);
@@ -1134,6 +1149,15 @@
         },
         QRScanner(){
             this.$router.push('/'+this.communities[0]['name'].split(' ').join('_')+'/events'+'/qrscan/'+this.$route.params.event_code)
+        },
+        submitRatings(){
+        //    axios.put('/api/submit-ratings/'+this.event.id, { 
+        //             ratings: this.ratings
+        //         })   
+        //         .then( response => { 
+        //         })
+        //         .catch( error => { alert(error)}) 
+            this.submitted = true;
         },
     },
     created() {

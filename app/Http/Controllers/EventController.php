@@ -327,6 +327,7 @@ class EventController extends Controller
             'settings' => $status['settings'],
             'upcomming' => $status['upcomming'],
             'qrcode' => $status['qrcode'],
+            'ratings' => $status['ratings'],
         ];
         $tags = $this->getTags($event->id);
 
@@ -627,14 +628,17 @@ class EventController extends Controller
             $settings = false;
         }
         $qrcode = '';
+        $ratings = '';
         $status = user_event::where([['event_id',$event->id],['user_id',$user_id]])->first();
         // echo($status);
         if($status){
             $qrcode = $status->qrcode;
             $status = $status->position;
+            $ratings = $status->ratings;
         }
         else{
             $status = 'pending';
+            $ratings = null;
         }
         if($event->start > date('Y-m-d H:i:s')){
             $upcomming = true;
@@ -647,7 +651,8 @@ class EventController extends Controller
             'settings' => $settings,
             'upcomming' => $upcomming,
             'allowed' => $allowedToJoin,
-            'qrcode' => $qrcode
+            'qrcode' => $qrcode,
+            'ratings' => $ratings
         ];
         return $status;
     }
