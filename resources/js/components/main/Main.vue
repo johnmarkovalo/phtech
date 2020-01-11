@@ -44,7 +44,7 @@
             </v-toolbar-items>
             <v-menu transition="slide-x-reverse-transition" offset-y>
                 <template v-slot:activator="{ on }" :close-on-click="false">
-                    <v-btn class="hidden-md-and-up" icon v-on="on" v-if='!isnakalogin()'>
+                    <v-btn class="hidden-md-and-up" color="white" icon v-on="on" v-if='!isnakalogin()'>
                         <v-icon>mdi-menu</v-icon>
                     </v-btn>
                 </template>

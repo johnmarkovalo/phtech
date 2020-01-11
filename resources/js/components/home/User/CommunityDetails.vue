@@ -73,7 +73,7 @@
                                 <v-menu v-if="membership == 'member' || membership == 'organizer' || membership == 'event-organizer'" transition="slide-y-transition" offset-y :close-on-content-click="false">
                                     <template v-slot:activator="{ on }" :close-on-click="false">
                                         <v-btn class="float-right" v-if="membership == 'member' || membership == 'event-organizer'" v-on="on" block rounded large color="primary">Membership<v-icon right>mdi-chevron-down</v-icon></v-btn>
-                                        <v-btn class="float-right" v-else-if="membership == 'organizer'" v-on="on" block rounded large color="primary">Manage Community<v-icon right>mdi-chevron-down</v-icon></v-btn>
+                                        <v-btn :class="{'float-right caption': $vuetify.breakpoint.smAndDown, 'float-right': $vuetify.breakpoint.mdAndUp}" v-else-if="membership == 'organizer'" v-on="on" block rounded large color="primary">Manage Community<v-icon right>mdi-chevron-down</v-icon></v-btn>
                                     </template>
                                     <v-list two-line >
                                         <v-list-item v-if="membership == 'organizer'" ripple="ripple" @click="Roles_Dialog = true">
@@ -111,7 +111,7 @@
                                 <v-btn v-else class="float-right" block rounded large color="primary" @click="joinCommunity()">Join This Group</v-btn>
                             </v-col>
                             <v-col cols=6 lg=5>
-                                <v-btn v-if="membership == 'organizer' || membership == 'event-organizer'" class="float-right" block rounded large color="primary" to="newevent"><v-icon class="white--text">mdi-calendar-plus</v-icon>Create Event</v-btn>
+                                <v-btn v-if="membership == 'organizer' || membership == 'event-organizer'" :class="{'float-right caption': $vuetify.breakpoint.smAndDown, 'float-right': $vuetify.breakpoint.mdAndUp}" block rounded large color="primary" to="newevent"><v-icon class="white--text">mdi-calendar-plus</v-icon>Create Event</v-btn>
                             </v-col>
                         </v-row>
                     </v-col>
