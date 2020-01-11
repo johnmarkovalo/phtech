@@ -103,7 +103,7 @@
             }
           })
           .then( response => {
-              this.events = response.data.event
+              this.events = response.data.events
           })
           .catch( error => { alert(error)})
       },
@@ -136,15 +136,6 @@
             lat: UserGeolocationLatitude,
             lng: UserGeolocationLongitude
           }
-          console.log(this.UserLocation);
-          this.events.forEach(event => {
-              var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
-              if(km <= 5){
-                this.events = [];
-                this.events.push(event);
-              }
-          });
-
       },
       radians(degrees) {
         return degrees * Math.PI / 180;
@@ -175,6 +166,16 @@
 
         console.log(km);
         return km;
+      },
+      FilterByDistance(){
+        console.log(this.UserLocation);
+        this.events.forEach(event => {
+          var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
+          if(km <= 50){
+            this.events = [];
+            this.events.push(event);
+          }
+        });
       }
 
     },

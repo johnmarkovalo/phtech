@@ -56,7 +56,7 @@
                 this.$Progress.finish();
                 swal.fire(
                     'Success!',
-                    'Successfully check attendance of' + response.data.success.user.name,
+                    'Successfully check attendance of ' + response.data.success.user.name,
                     'success'
                 )
             })

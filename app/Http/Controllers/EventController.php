@@ -172,11 +172,11 @@ class EventController extends Controller
     }
 
     public function index (Request $request) {
-        $event_tmp = Event::all();
+        $allevents = Event::all();
         $eventlist = [];
         $community_tmp = '';
         if($request->id){
-            foreach($event_tmp as $event){
+            foreach($allevents as $event){
                 if($event->start > date('Y-m-d H:i:s')){
                     $position = user_event::where([['user_id', $request->id],['event_id',$event->id]])->first();
                     $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
@@ -203,8 +203,83 @@ class EventController extends Controller
                     ];
                 }
             }
+
+            $recommended = [];
+            $user = User::where('id',$request->id)->first();
+            $user_tags = $user->information->technologies;
+            foreach($user_tags as $tag){
+                $recommended[] = Event::whereHas('technologies', function($q) use ($tag){
+                    $q->where('technology.id', $tag->id);
+                })->get();
+                // $recommended[] = $tag->id;
+            }
+
+            $events = [];
+            foreach($recommended as $tag){
+                foreach($tag as $eventwaiting){
+                    $count = 0; 
+                    if($events != null){
+                        foreach($events as $eventinlist){
+                            if($eventinlist['event']['id'] == $eventwaiting['id']){
+                                $eventinlist['count'] = $eventinlist['count'] + 1; 
+                                $count++; 
+                                // return $eventinlist;
+                            }
+                        }
+                        if($count == 0){
+                            $events[] = [
+                                'event' => $eventwaiting,
+                                'count' => 0
+                            ];
+                        }
+                    }
+                    else{
+                        $events[] = [
+                            'event' => $eventwaiting,
+                            'count' => 0
+                        ];
+                    }
+                    // return $eventwaiting['id'];
+                }
+            }
+
+            $recommended_events_tmp = [];
+            foreach($events as $event){
+                $recommended_events_tmp[] = $event['event'];
+            }
+
+            $recommended_events = [];
+            $community_tmp = '';
+            foreach($recommended_events_tmp as $event){
+                if($event->start > date('Y-m-d H:i:s')){
+                    $position = user_event::where([['user_id', $request->id],['event_id',$event->id]])->first();
+                    $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
+                    if(!$position){
+                        $position = 'pending';
+                    }
+                    else{
+                        $position = $position->position;
+                    }
+                    $recommended_events[] = [
+                        'id' => $event->id,
+                        'name' => $event->title,
+                        'code' => $event->code,
+                        'details' => $event->description,
+                        'photo' => $event->photo,
+                        'location' => $event->location,
+                        'start' => $event->start,
+                        'end' => $event->end,
+                        'color' => 'teal',
+                        'community_organizer' => $community_tmp->community->name,
+                        'community' => $this->getCommunities($event->id),
+                        'tags' => $this->getTags($event->id),
+                        'position' =>  $position,
+                    ];
+                }
+            }
+
         }else{
-            foreach($event_tmp as $event){
+            foreach($allevents as $event){
                 if($event->start > date('Y-m-d H:i:s')){
                     $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
                     $eventlist[] = [
@@ -225,84 +300,7 @@ class EventController extends Controller
                 }
             }
         }
-        // $recommended = [];
-        // $user = User::where('id',$request->id)->first();
-        // $user_tags = $user->information->technologies;
-        // foreach($user_tags as $tag){
-        //     $recommended[] = Event::whereHas('technologies', function($q) use ($tag){
-        //         $q->where('technology.id', $tag->id);
-        //     })->get();
-        //     // $recommended[] = $tag->id;
-        // }
-        // return $recommended;
-        // $events = [];
-        // foreach($recommended as $tag){
-        //     foreach($tag as $eventwaiting){
-        //         $count = 0; 
-        //         if($events != null){
-        //             foreach($events as $eventinlist){
-        //                 if($eventinlist['event']['id'] == $eventwaiting['id']){
-        //                     $eventinlist['count'] = $eventinlist['count'] + 1; 
-        //                     $count++; 
-        //                     // return $eventinlist;
-        //                 }
-        //             }
-        //             if($count == 0){
-        //                 $events[] = [
-        //                     'event' => $eventwaiting,
-        //                     'count' => 0
-        //                 ];
-        //             }
-        //         }
-        //         else{
-        //             $events[] = [
-        //                 'event' => $eventwaiting,
-        //                 'count' => 0
-        //             ];
-        //         }
-        //         // return $eventwaiting['id'];
-        //     }
-        // }
-        // return $events;
-        // return $user_tags;
-        // $events_technologies = [];
-        // foreach($event_tmp as $event){
-        //     $events_technologies[] = $event->technologies;
-        // }
-        // return $events_technologies;
-
-
-
-        // $tags = info_tech::select('technology.id')
-        //                    ->join('technology', 'info_tech.tech_id', 'technology.id')
-        //                    ->where('info_id', $request->user()->information->id)->get();
-
-        // $recommended = Event::join('event_tech', 'event_tech.event_id', 'event.id')->
-        //                     join('technology', 'event_tech.tech_id', 'technology.id')->
-        //                     whereHas('genres.users', function($q) use ($userId){
-        //                         $q->where('users.id', $userId);
-        //                     })->whereHas('years.users', function($q) use ($userId){
-        //                         $q->where('users.id', $userId);
-        //                     })->whereHas('runtimes.users', function($q) use ($userId){
-        //                         $q->where('users.id', $userId);
-        //                     })->get();
-                            
-        // $recommended = DB::table('event')
-        //                 ->join('contacts', 'users.id', '=', 'contacts.user_id')
-        //                 ->join('orders', 'users.id', '=', 'orders.user_id')
-        //                 ->select('users.*', 'contacts.phone', 'orders.price')
-        //                 ->get();
-
-        // $recommended = Event::join('technology', 'info_tech.tech_id', 'technology.id')->
-        //                 whereHas('genres.users', function($q) use ($userId){
-        //                     $q->where('users.id', $userId);
-        //                 })->whereHas('years.users', function($q) use ($userId){
-        //                     $q->where('users.id', $userId);
-        //                 })->whereHas('runtimes.users', function($q) use ($userId){
-        //                     $q->where('users.id', $userId);
-        //                 })->get();
-
-        return response(['event' => $eventlist], 200);
+        return response(['events' => $eventlist, 'recommended_events' => $recommended_events], 200);
     }
     
     public function eventdetails(Request $request) {
@@ -408,14 +406,71 @@ class EventController extends Controller
         $event = Event::where('code',$request->code)->first();
         $code = $request->qrcode;   
         $user_event = user_event::where([['qrcode',$code],['event_id',$event->id]])->first();
+        $user = $user_event->user;
         if($user_event){
             $user_event->update(['position' => 'went']);
-            point_logs::create(['point_id' => $request->user()->point->id, 'event_id' => $event->id, 'position' => 'attendee', 'point' => '5']);
-            Point::where('id', $request->user()->point->id)->increment('points', 5);
-            return response(['success' => ['user' => $request->user()]]);
+            // point_logs::create(['point_id' => $user->point->id, 'event_id' => $event->id, 'position' => 'attendee', 'point' => '5']);
+            // Point::where('id', $user->point->id)->increment('points', 5);
+            return response(['success' => ['user' => $user]]);
         }
         else{
             return response(['errors' => ['QR Code Not Found']], 422);
+        }
+    }
+
+    public function GiveRewardPoints($event){
+        $reviews_count = user_event::where([['event', $event->id],['rate', null]])-get()->count();
+        $attendees_count = count($attendees_tmp);
+
+        $attendeereviewpercentage = ($reviews_count / $attendees_count);
+        $attendees_tmp = user_event::where([['event', $event->id],['position', 'went']])-get();
+        $speakers_tmp = user_event::where([['event', $event->id],['position', 'speaker']])-get();
+        $organizers_tmp = user_event::where([['event', $event->id],['position', 'organizer']])-get();
+
+        $attendees = [];
+        foreach($attendees_tmp as $attendee){
+            $attendees[] = $attendee->user;
+        }
+
+        $speakers = [];
+        foreach($speakers_tmp as $speaker){
+            $speakers[] = $speaker->user;
+        }
+
+        $organizers = [];
+        foreach($organizers_tmp as $organizer){
+            $organizers[] = $organizer->user;
+        }
+
+        $pointsforattendees = 0;
+        if($attendees_count <= 50){
+            $pointsforattendees = 5;
+        }elseif($attendees_count <= 100 && $attendees_count > 50){
+            $pointsforattendees = 10;
+        }elseif($attendees_count <= 200 && $attendees_count > 100){
+            $pointsforattendees = 15;
+        }elseif($attendees_count <= 400 && $attendees_count > 200){
+            $pointsforattendees = 20;
+        }elseif($attendees_count <= 600 && $attendees_count > 400){
+            $pointsforattendees = 25;
+        }elseif($attendees_count > 600){
+            $pointsforattendees = 30;
+        }
+
+        $pointsforspeakers = ($pointsforattendees * 0.20) + $pointsforattendees;
+        $pointsfororganizer = ($pointsforattendees * 0.20) + ($pointsforattendees * 0.20+$pointsforattendees)($attendeereviewpercentage);
+
+        foreach($attendees as $attendee){
+            point_logs::create(['point_id' => $attendee->point->id, 'event_id' => $event->id, 'position' => 'attendee', 'point' => $pointsforattendees]);
+            Point::where('id', $attendee->point->id)->increment('points', $pointsforattendees);
+        }
+        foreach($speakers as $speaker){
+            point_logs::create(['point_id' => $speaker->point->id, 'event_id' => $event->id, 'position' => 'attendee', 'point' => $pointsforspeakers]);
+            Point::where('id', $speaker->point->id)->increment('points', $pointsforspeakers);
+        }
+        foreach($organizers as $organizer){
+            point_logs::create(['point_id' => $organizer->point->id, 'event_id' => $event->id, 'position' => 'attendee', 'point' => $pointsfororganizer]);
+            Point::where('id', $organizer->point->id)->increment('points', $pointsfororganizer);
         }
     }
     //Pending
