@@ -25,7 +25,8 @@
     methods: {
         onDecode (result) {
             this.result = result
-            this.check()
+            // this.check()
+            alert('fck')
         },
 
         async onInit (promise) {

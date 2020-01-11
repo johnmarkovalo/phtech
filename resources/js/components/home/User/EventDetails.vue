@@ -7,7 +7,7 @@
                     <v-col cols=12 md=12 lg=4>
                         <v-row>
                             <v-col cols="12">
-                                <p class="subtitle-1 teal--text text--darken-2 font-weight-bold">{{event.start | eventDate}}</p>
+                                <p class="subtitle-1 teal--text text--darken-2 font-weight-bold">{{event.start.full | eventDate}}</p>
                                 <p class="display-2 teal--text text--darken-2 font-weight-bold">{{event.title}}</p>
                             </v-col>
                         </v-row>
