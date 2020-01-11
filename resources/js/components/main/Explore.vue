@@ -65,6 +65,10 @@
       selectedEvent: {},
       selectedElement: null,
       selectedOpen: false,
+      UserLocation: {
+        lat:'',
+        lng:''
+      },
     }),
     computed: {
       eventRecommended: function() {
@@ -128,12 +132,51 @@
       setUserGeolocation(position) {
           var UserGeolocationLatitude = position.coords.latitude
           var UserGeolocationLongitude = position.coords.longitude
-          console.log(UserGeolocationLatitude, UserGeolocationLongitude)
-          // axios.put('api/User/' + sessionStorage.getItem('user-id') + '/update-location', {
-          //     latitude: UserGeolocationLatitude, longitude: UserGeolocationLongitude,
-          // })
-          .then( response => { /** console.log(response.data) **/}).catch( error => { toastr.error("An Error Occurred")})
+          this.UserLocation = {
+            lat: UserGeolocationLatitude,
+            lng: UserGeolocationLongitude
+          }
+          console.log(this.UserLocation);
+          this.events.forEach(event => {
+              var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
+              if(km <= 5){
+                this.events = [];
+                this.events.push(event);
+              }
+          });
+
       },
+      radians(degrees) {
+        return degrees * Math.PI / 180;
+      },
+      calculate_distance(user_lat, user_lng, event_lat, event_lng){
+        // A FUNCTION THAT COMPUTES THE DISTANCE BETWEEN THE user AND event
+
+        var R = 6371000.0 //approximate radius of earth in meters
+
+        // user Latitude and Longitude
+        var lat_1 = this.radians(user_lat)
+        var lon_1 = this.radians(user_lng)
+        // event Latitude and Longitude
+        var lat_2 = this.radians(event_lat)
+        var lon_2 = this.radians(event_lng)
+
+        // user and event difference
+        var d_lon = lon_2 - lon_1
+        var d_lat = lat_2 - lat_1
+
+        // This is where the magic happens!
+        var a = Math.sin(d_lat / 2)**2 + Math.cos(lat_1) * Math.cos(lat_2) * Math.sin(d_lon / 2)**2
+        var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
+
+        var distance = R * c // Distance between user and event
+
+        var km = Math.round(distance/1000, 1)
+
+        console.log(km);
+        return km;
+      }
+
     },
     created() {
       this.getUserGeolocation()

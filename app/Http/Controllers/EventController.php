@@ -235,6 +235,35 @@ class EventController extends Controller
         //     // $recommended[] = $tag->id;
         // }
         // return $recommended;
+        // $events = [];
+        // foreach($recommended as $tag){
+        //     foreach($tag as $eventwaiting){
+        //         $count = 0; 
+        //         if($events != null){
+        //             foreach($events as $eventinlist){
+        //                 if($eventinlist['event']['id'] == $eventwaiting['id']){
+        //                     $eventinlist['count'] = $eventinlist['count'] + 1; 
+        //                     $count++; 
+        //                     // return $eventinlist;
+        //                 }
+        //             }
+        //             if($count == 0){
+        //                 $events[] = [
+        //                     'event' => $eventwaiting,
+        //                     'count' => 0
+        //                 ];
+        //             }
+        //         }
+        //         else{
+        //             $events[] = [
+        //                 'event' => $eventwaiting,
+        //                 'count' => 0
+        //             ];
+        //         }
+        //         // return $eventwaiting['id'];
+        //     }
+        // }
+        // return $events;
         // return $user_tags;
         // $events_technologies = [];
         // foreach($event_tmp as $event){

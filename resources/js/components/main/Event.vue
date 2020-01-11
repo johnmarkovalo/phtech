@@ -138,12 +138,13 @@
           }
           console.log(this.UserLocation);
           this.events.forEach(event => {
-              this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
+              var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
+              if(km <= 5){
+                this.events = [];
+                this.events.push(event);
+              }
           });
-          // axios.put('api/User/' + sessionStorage.getItem('user-id') + '/update-location', {
-          //     latitude: UserGeolocationLatitude, longitude: UserGeolocationLongitude,
-          // })
-          // .then( response => { /** console.log(response.data) **/}).catch( error => { toastr.error("An Error Occurred")})
+
       },
       radians(degrees) {
         return degrees * Math.PI / 180;
@@ -173,6 +174,7 @@
         var km = Math.round(distance/1000, 1)
 
         console.log(km);
+        return km;
       }
 
     },
