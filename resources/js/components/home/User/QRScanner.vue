@@ -3,13 +3,11 @@
         <v-card class="transparent elevation-0">
             <v-card-text>
                 <v-row>
-                    <v-col>
+                    <qrcode-stream @decode="onDecode" @init="onInit" /> 
+                    <!-- <v-col>
                         <p class="error">{{ error }}</p>
-
                         <p class="decode-result">Last result: <b>{{ result }}</b></p>
-
-                        <qrcode-stream @decode="onDecode" @init="onInit" /> 
-                    </v-col>
+                    </v-col> -->
                 </v-row>
             </v-card-text>
         </v-card>
@@ -25,8 +23,8 @@
     methods: {
         onDecode (result) {
             this.result = result
-            // this.check()
-            alert('fck')
+            this.check()
+            // alert('fck')
         },
 
         async onInit (promise) {
@@ -49,11 +47,18 @@
             }
         },
         check(){
+            this.$Progress.start();
             axios.put('/api/event/check-attendance/'+this.$route.params.event_code, { 
                 qrcode: this.result,
                 code: this.$route.params.event_code
             })   
             .then( response => { 
+                this.$Progress.finish();
+                swal.fire(
+                    'Success!',
+                    'Successfully check attendance of' + response.data.success.user.name,
+                    'success'
+                )
             })
             .catch(error => {
                 this.$Progress.fail();

@@ -412,6 +412,7 @@ class EventController extends Controller
             $user_event->update(['position' => 'went']);
             point_logs::create(['point_id' => $request->user()->point->id, 'event_id' => $event->id, 'position' => 'attendee', 'point' => '5']);
             Point::where('id', $request->user()->point->id)->increment('points', 5);
+            return response(['success' => ['user' => $request->user()]]);
         }
         else{
             return response(['errors' => ['QR Code Not Found']], 422);
