@@ -174,43 +174,67 @@ class EventController extends Controller
     public function index (Request $request) {
         $event_tmp = Event::all();
         $eventlist = [];
-        foreach($event_tmp as $event){
-            if($event->start > date('Y-m-d H:i:s')){
-                $position = user_event::where([['user_id', $request->id],['event_id',$event->id]])->first();
-                $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
-                if(!$position){
-                    $position = 'pending';
+        $community_tmp = '';
+        if($request->id){
+            foreach($event_tmp as $event){
+                if($event->start > date('Y-m-d H:i:s')){
+                    $position = user_event::where([['user_id', $request->id],['event_id',$event->id]])->first();
+                    $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
+                    if(!$position){
+                        $position = 'pending';
+                    }
+                    else{
+                        $position = $position->position;
+                    }
+                    $eventlist[] = [
+                        'id' => $event->id,
+                        'name' => $event->title,
+                        'code' => $event->code,
+                        'details' => $event->description,
+                        'photo' => $event->photo,
+                        'location' => $event->location,
+                        'start' => $event->start,
+                        'end' => $event->end,
+                        'color' => 'teal',
+                        'community_organizer' => $community_tmp->community->name,
+                        'community' => $this->getCommunities($event->id),
+                        'tags' => $this->getTags($event->id),
+                        'position' =>  $position,
+                    ];
                 }
-                else{
-                    $position = $position->position;
+            }
+        }else{
+            foreach($event_tmp as $event){
+                if($event->start > date('Y-m-d H:i:s')){
+                    $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
+                    $eventlist[] = [
+                        'id' => $event->id,
+                        'name' => $event->title,
+                        'code' => $event->code,
+                        'details' => $event->description,
+                        'photo' => $event->photo,
+                        'location' => $event->location,
+                        'start' => $event->start,
+                        'end' => $event->end,
+                        'color' => 'teal',
+                        'community_organizer' => $community_tmp->community->name,
+                        'community' => $this->getCommunities($event->id),
+                        'tags' => $this->getTags($event->id),
+                        'position' =>  'pending',
+                    ];
                 }
-                $eventlist[] = [
-                    'id' => $event->id,
-                    'name' => $event->title,
-                    'code' => $event->code,
-                    'details' => $event->description,
-                    'photo' => $event->photo,
-                    'location' => $event->location,
-                    'start' => $event->start,
-                    'end' => $event->end,
-                    'color' => 'teal',
-                    'community_organizer' => $community_tmp->community->name,
-                    'community' => $this->getCommunities($event->id),
-                    'tags' => $this->getTags($event->id),
-                    'position' =>  $position,
-                ];
             }
         }
-        $recommended = [];
-        $user = User::where('id',$request->id)->first();
-        $user_tags = $user->information->technologies;
-        foreach($user_tags as $tag){
-            $recommended[] = Event::whereHas('technologies', function($q) use ($tag){
-                $q->where('technology.id', $tag->id);
-            })->get();
-            // $recommended[] = $tag->id;
-        }
-        return $recommended;
+        // $recommended = [];
+        // $user = User::where('id',$request->id)->first();
+        // $user_tags = $user->information->technologies;
+        // foreach($user_tags as $tag){
+        //     $recommended[] = Event::whereHas('technologies', function($q) use ($tag){
+        //         $q->where('technology.id', $tag->id);
+        //     })->get();
+        //     // $recommended[] = $tag->id;
+        // }
+        // return $recommended;
         // return $user_tags;
         // $events_technologies = [];
         // foreach($event_tmp as $event){

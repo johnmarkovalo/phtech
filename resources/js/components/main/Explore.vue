@@ -117,8 +117,26 @@
           const index = this.selected.indexOf(item.name)
           if (index >= 0) this.selected.splice(index, 1)
       },
+      getUserGeolocation() {
+          if (navigator.geolocation) {
+              navigator.geolocation.getCurrentPosition(this.setUserGeolocation);
+          } else {
+              window.clearInterval(window.locationInterval);
+              alert("Geolocation is not supported by this browser.");
+          }
+      },
+      setUserGeolocation(position) {
+          var UserGeolocationLatitude = position.coords.latitude
+          var UserGeolocationLongitude = position.coords.longitude
+          console.log(UserGeolocationLatitude, UserGeolocationLongitude)
+          // axios.put('api/User/' + sessionStorage.getItem('user-id') + '/update-location', {
+          //     latitude: UserGeolocationLatitude, longitude: UserGeolocationLongitude,
+          // })
+          .then( response => { /** console.log(response.data) **/}).catch( error => { toastr.error("An Error Occurred")})
+      },
     },
     created() {
+      this.getUserGeolocation()
       this.retrieveTags();
       this.retrieveEvent();
       // this.focus = new Date().toLocaleString();

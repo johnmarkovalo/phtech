@@ -6,7 +6,6 @@
             <v-spacer></v-spacer>
             <v-toolbar-items class="hidden-sm-and-down">
                 <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/">HOME</v-btn>
-                <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/about">ABOUT</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/communities">COMMMUNITIES</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/event">EVENTS</v-btn>
                 <v-btn text class="font-weight-bold mr-10" color="teal lighten--2" v-show='!isnakalogin()' to="/signin">SIGN-IN</v-btn>
@@ -57,15 +56,6 @@
                         </v-list-item-avatar>
                         <v-list-item-content>
                             <v-list-item-title>HOME</v-list-item-title>
-                        </v-list-item-content>
-                    </v-list-item>
-                    <v-list-item ripple="ripple" to="/about">
-                        <v-list-item-avatar>
-                            <v-icon class="teal lighten-2 white--text"
-                            >mdi-information</v-icon>
-                        </v-list-item-avatar>
-                        <v-list-item-content>
-                            <v-list-item-title>ABOUT</v-list-item-title>
                         </v-list-item-content>
                     </v-list-item>
                     <v-list-item ripple="ripple" to="/event">
@@ -346,20 +336,20 @@
                     this.Notif_Dialog = false
                 })
             },
-            getLogisticGeolocation() {
+            getUserGeolocation() {
                 if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(this.setLogisticGeolocation);
+                    navigator.geolocation.getCurrentPosition(this.setUserGeolocation);
                 } else {
                     window.clearInterval(window.locationInterval);
                     alert("Geolocation is not supported by this browser.");
                 }
             },
-            setLogisticGeolocation(position) {
-                var logisticGeolocationLatitude = position.coords.latitude
-                var logisticGeolocationLongitude = position.coords.longitude
-                console.log(logisticGeolocationLatitude, logisticGeolocationLongitude)
-                // axios.put('api/logistic/' + sessionStorage.getItem('user-id') + '/update-location', {
-                //     latitude: logisticGeolocationLatitude, longitude: logisticGeolocationLongitude,
+            setUserGeolocation(position) {
+                var UserGeolocationLatitude = position.coords.latitude
+                var UserGeolocationLongitude = position.coords.longitude
+                console.log(UserGeolocationLatitude, UserGeolocationLongitude)
+                // axios.put('api/User/' + sessionStorage.getItem('user-id') + '/update-location', {
+                //     latitude: UserGeolocationLatitude, longitude: UserGeolocationLongitude,
                 // })
                 .then( response => { /** console.log(response.data) **/}).catch( error => { toastr.error("An Error Occurred")})
             },
@@ -385,7 +375,7 @@
             },
         },
         mounted(){
-            this.getLogisticGeolocation()
+            // this.getUserGeolocation()
             axios.get('/api/notifications')
             .then( response => {
                 this.allNotifications = response.data.success.notifications
