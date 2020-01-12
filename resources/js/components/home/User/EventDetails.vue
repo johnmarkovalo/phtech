@@ -24,28 +24,36 @@
                         </v-row>
                     </v-col>
                     <v-col cols=12 md=12 lg=3 align=center>
-                        <v-row  v-if="upcomming">
+                        <v-row v-if="upcomming && event.allowed == true && attendeescount['count'] != attendeescount['over']">
                             <p v-if="this.status == 'pending'" class="display-1 teal--text text--darken-2 font-weight-bold">Want to go?</p>
                             <p v-if="this.status == 'going'" class="display-1 teal--text text--darken-2 font-weight-bold">You're Going</p>
                             <p v-if="this.status == 'notgoing'" class="display-1 teal--text text--darken-2 font-weight-bold">You're not Going</p>
                             <p v-if="this.status == 'speaker'" class="display-1 teal--text text--darken-2 font-weight-bold">You're a Guest Speaker</p>
                             <p v-if="this.status == 'organizer'" class="display-1 teal--text text--darken-2 font-weight-bold">You're a Organizer</p>
                         </v-row>
-                        <v-row justify=center  v-if="upcomming">
-                            <v-col v-if="event.allowed == true" cols=4>
-                                <v-btn class="white--text" color="primary" :outlined="coutlined()" large rounded block @click="joinEvent(user_id,true)"><v-icon>mdi-check</v-icon></v-btn>
+                        <v-row v-else-if="upcomming && event.allowed == true && attendeescount['count'] == attendeescount['over']">
+                            <p v-if="this.status == 'pending'" class="display-1 teal--text text--darken-2 font-weight-bold">Sorry this Event is Full</p>
+                        </v-row>
+                        <v-row v-else-if="upcomming && event.allowed == false">
+                            <p v-if="this.status == 'pending'" class="display-1 teal--text text--darken-2 font-weight-bold">Sorry this Event is Exclusive</p>
+                        </v-row>
+                        <v-row justify=center v-if="upcomming && event.allowed == true && attendeescount['count'] != attendeescount['over']">
+                            <v-col cols=4>
+                                <v-btn class="white--text" color="primary" :outlined="coutlined()" :disabled="eventisfull()" large rounded block @click="joinEvent(user_id,true)"><v-icon>mdi-check</v-icon></v-btn>
                             </v-col>
-                            <v-col v-if="event.allowed == true" cols=4>
-                                <v-btn class="white--text" color="primary" :outlined="xoutlined()" large rounded block @click="joinEvent(user_id,false)"><v-icon>mdi-close</v-icon></v-btn>
-                            </v-col>
-                            <v-col v-else cols=6>
-                                <h1>Sorry This Event Is Exclusive</h1>
+                            <v-col cols=4>
+                                <v-btn class="white--text" color="primary" :outlined="xoutlined()" :disabled="eventisfull()" large rounded block @click="joinEvent(user_id,false)"><v-icon>mdi-close</v-icon></v-btn>
                             </v-col>
                         </v-row>
+                        <v-row v-if="attendeescount != null">
+                            <v-col justify=center>
+                                <p class="title teal--text text--darken-2 font-weight-bold">({{attendeescount['count']}}/{{attendeescount['over']}})</p>
+                            </v-col>
+                        </v-row>
+                        <!-- Ratings -->
                         <v-row v-if="!upcomming">
                             <p class="display-1 teal--text text--darken-2 font-weight-bold">Event Rating</p>
                         </v-row>
-                        <!-- Ratings -->
                         <v-row justify=center  v-if="!upcomming">
                             <v-rating size="50" v-model="ratings" :readonly="submitted" background-color="teal lighten-3"  color="teal"></v-rating>
                         </v-row>
@@ -199,7 +207,7 @@
                                             <v-list-item-subtitle>Manange Attendees</v-list-item-subtitle>
                                         </v-list-item-content>
                                     </v-list-item>
-                                    <v-list-item ripple="ripple" @click="QRScanner()">
+                                    <v-list-item ripple="ripple" :disabled="eventistoday()" @click="QRScanner()">
                                         <v-list-item-avatar>
                                             <v-icon class="teal lighten-2 white--text"
                                             >mdi-qrcode-scan</v-icon>
@@ -720,6 +728,7 @@
         payment: '',
         isUpdating: false,
         qrcode: '',
+        attendeescount: null,
         //ratings
         ratings: 0,
         submitted: false,
@@ -820,6 +829,7 @@
                     fee: response.data.event.fee,
                     location: response.data.event.location,
                 }
+                this.attendeescount = response.data.event.attendeescount
                 this.center = { lat: response.data.event.location.lat, lng: response.data.event.location.lng }
                 this.attendees = response.data.attendees
                 this.OrginalSpeakers = response.data.speakers
@@ -853,6 +863,22 @@
                 this.retrieveCommunityUnder()
                 this.retrieveCommunitySponsors()
             })
+        },
+        eventistoday(){
+            if(this.event.start.date == new Date().toISOString().substr(0, 10)) {
+                return false
+            }
+            else{
+                return true
+            }
+        },
+        eventisfull(){
+            if(this.attendeescount['count'] == this.attendeescount['over']) {
+                return true
+            }
+            else{
+                return false
+            }
         },
         coutlined(){
             if(this.status == 'pending') {
@@ -906,6 +932,8 @@
                     this.attendees = response.data.attendees
                 })
                 .catch( error => { alert(error)})
+                .finally( x => {this.retrieveEvent()})
+
             }else{
                 this.Upload_Dialog = true
             }
@@ -1150,13 +1178,13 @@
             this.$router.push('/'+this.communities[0]['name'].split(' ').join('_')+'/events'+'/qrscan/'+this.$route.params.event_code)
         },
         submitRatings(){
-        //    axios.put('/api/submit-ratings/'+this.event.id, { 
-        //             ratings: this.ratings
-        //         })   
-        //         .then( response => { 
-        //         })
-        //         .catch( error => { alert(error)}) 
-            this.submitted = true;
+           axios.put('/api/submit-ratings/'+this.event.id, { 
+                    ratings: this.ratings
+                })   
+                .then( response => { 
+                })
+                .catch( error => { alert(error)}) 
+            // this.submitted = true;
         },
     },
     created() {

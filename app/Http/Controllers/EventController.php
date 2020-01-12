@@ -329,6 +329,7 @@ class EventController extends Controller
             'qrcode' => $status['qrcode'],
             'ratings' => $status['ratings'],
             'submitted' => $status['submitted'],
+            'attendeescount' => $status['attendeescount'],
         ];
         $tags = $this->getTags($event->id);
 
@@ -421,14 +422,15 @@ class EventController extends Controller
     }
 
     public function GiveRewardPoints($event){
-        $reviews_count = user_event::where([['event', $event->id],['rate', null]])-get()->count();
-        $attendees_count = count($attendees_tmp);
-
+        
         $attendeereviewpercentage = ($reviews_count / $attendees_count);
-        $attendees_tmp = user_event::where([['event', $event->id],['position', 'went']])-get();
-        $speakers_tmp = user_event::where([['event', $event->id],['position', 'speaker']])-get();
-        $organizers_tmp = user_event::where([['event', $event->id],['position', 'organizer']])-get();
+        $attendees_tmp = user_event::where([['event_id', $event->id],['position', 'went']])->get();
+        $speakers_tmp = user_event::where([['even_idt', $event->id],['position', 'speaker']])->get();
+        $organizers_tmp = user_event::where([['event_id', $event->id],['position', 'organizer']])->get();
 
+        $reviews_count = user_event::where([['event_id', $event->id],['rate', null]])->get()->count();
+        $attendees_count = count($attendees_tmp);
+        
         $attendees = [];
         foreach($attendees_tmp as $attendee){
             $attendees[] = $attendee->user;
@@ -656,6 +658,14 @@ class EventController extends Controller
                $ratings = user_event::where('event_id',$event->id)->avg('ratings');
             }
         }
+        $attendeescount = null;
+        if($event->limit != 0){
+            $attendeescount = [
+                'count' => user_event::where([['event_id', $event->id],['position','<>','notgoing']])->get()->count(),
+                'over' => $event->limit
+            ];
+        }
+
         $status = [
             'status' => $status,
             'settings' => $settings,
@@ -663,7 +673,8 @@ class EventController extends Controller
             'allowed' => $allowedToJoin,
             'qrcode' => $qrcode,
             'ratings' => $ratings,
-            'submitted' => $submitted
+            'submitted' => $submitted,
+            'attendeescount' => $attendeescount,
         ];
         return $status;
     }
