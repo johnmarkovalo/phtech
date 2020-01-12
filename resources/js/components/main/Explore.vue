@@ -9,7 +9,7 @@
           <v-card-text>
             <v-card class="mt-5 elevation-0">
                 <v-toolbar flat align="center">
-                  <v-icon medium color="primary">fas fa-search</v-icon>
+                  <v-text-field outlined type="text" placeholder="Search Event..." v-model="search" prepend-inner-icon="fas fa-search"/>
                 </v-toolbar>
                 <v-card-text>
                   <v-container fluid>
@@ -69,6 +69,7 @@
         lat:'',
         lng:''
       },
+      search: '',
     }),
     computed: {
       eventRecommended: function() {
@@ -87,6 +88,11 @@
               }
           })
       },
+      filteredList() {
+        return this.postList.filter(post => {
+          return event.title.toLowerCase().includes(this.search.toLowerCase())
+        })
+      }
     },
     mounted () {
       

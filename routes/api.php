@@ -76,6 +76,6 @@ use Illuminate\Http\Request;
         Route::put('/eventcommunity/{community}', 'EventController@eventcommunity');
 
         // Notification
-        Route::post('/reply-request', 'EventController@replyrequest');
+        Route::put('/reply-request', 'EventController@replyrequest');
     });
 

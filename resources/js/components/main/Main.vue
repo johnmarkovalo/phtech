@@ -322,7 +322,7 @@
                 {
                     code += keychars.charAt(Math.floor(Math.random() * keychars.length))
                 }
-                axios.post('/api/reply-request/',{
+                axios.put('/api/reply-request/',{
                     notification: this.notification,
                     status: status,
                     code: code
