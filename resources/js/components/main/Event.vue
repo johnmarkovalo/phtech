@@ -9,12 +9,12 @@
           <v-card-text>
             <v-card class="mt-5 elevation-0">
                 <v-toolbar flat align="center">
-                  <v-icon medium color="primary">fas fa-search</v-icon>
+                  <v-text-field outlined type="text" placeholder="Search Event..." v-model="search" prepend-inner-icon="fas fa-search"/>
                 </v-toolbar>
                 <v-card-text>
                   <v-container fluid>
                       <v-row dense>
-                        <v-col v-for="card in events" :key="card.title" cols="12" lg="3" xl="3" md="3">
+                        <v-col v-for="card in filteredList" :key="card.title" cols="12" lg="3" xl="3" md="3">
                           <v-hover v-slot:default="{ hover }">
                             <v-card :elevation="hover ? 12 : 2" @click="visit_event(card.community['0'].name,card.code)">
                               <v-img :src="card.photo" class=" align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
@@ -55,6 +55,7 @@
   export default {
     data: () => ({
       events: [],
+      recommended_events: [],
       tags: [],
       selected: [],
       modal: false,
@@ -69,6 +70,7 @@
         lat:'',
         lng:''
       },
+      search: '',
     }),
     computed: {
       eventRecommended: function() {
@@ -87,6 +89,19 @@
               }
           })
       },
+      filteredList() {
+        if(this.search == '' && this.recommended_events == ''){
+          return this.events
+        }
+        else if(this.search == ''){
+          return this.recommended_events
+        }
+        else{
+          return this.events.filter(event => {
+            return event.name.toLowerCase().includes(this.search.toLowerCase())
+          })
+        }
+      }
     },
     mounted () {
       
@@ -104,6 +119,7 @@
           })
           .then( response => {
               this.events = response.data.events
+              this.recommended_events = response.data.recommended_events
           })
           .catch( error => { alert(error)})
       },

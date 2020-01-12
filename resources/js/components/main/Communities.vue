@@ -55,7 +55,7 @@
                                     <v-img :src="card.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px"></v-img>
                                     <v-card-text> 
                                         <p class="headline teal--text text--darken-2">{{card.name}}</p>
-                                        <p class="title white--text text-truncate">{{card.description}}</p>
+                                        <p class="title text-truncate">{{card.description}}</p>
                                         <p class="subtitle-1">{{card.location.formatted_address}}</p>
                                     </v-card-text>
 
