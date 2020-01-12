@@ -8,8 +8,7 @@
             </v-toolbar>
             <v-card class="mt-5 elevation-0">
                 <v-toolbar flat align="center">
-                    <v-icon medium color="primary">fas fa-search</v-icon>
-                <v-toolbar-title class="hidden-sm-and-down display-1">Search Using Tags:</v-toolbar-title>
+                   <v-text-field outlined type="text" placeholder="Search Community..." v-model="search" prepend-inner-icon="fas fa-search"/>
                 <!-- <v-flex xs="12" md="5">
                     <v-autocomplete dense v-model="selected" :items="tags"
                         filled chips color="primary" class="transparent mt-6"
@@ -49,20 +48,20 @@
                 <v-card-text>
                 <v-container fluid>
                     <v-row dense>
-                        <v-col v-for="card in cards" :key="card.name" cols="12" lg="3" xl="3" md="3">
+                        <v-col v-for="community in filteredList" :key="community.name" cols="12" lg="3" xl="3" md="3">
                             <v-hover v-slot:default="{ hover }">
                                 <v-card :elevation="hover ? 12 : 2">
-                                    <v-img :src="card.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px"></v-img>
+                                    <v-img :src="community.photo" class="white--text align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px"></v-img>
                                     <v-card-text> 
-                                        <p class="headline teal--text text--darken-2">{{card.name}}</p>
-                                        <p class="title text-truncate">{{card.description}}</p>
-                                        <p class="subtitle-1">{{card.location.formatted_address}}</p>
+                                        <p class="headline teal--text text--darken-2">{{community.name}}</p>
+                                        <p class="title text-truncate">{{community.description}}</p>
+                                        <p class="subtitle-1">{{community.location.formatted_address}}</p>
                                     </v-card-text>
 
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
 
-                                        <v-btn outlined rounded color="primary" @click="visit_community(card.name)">
+                                        <v-btn outlined rounded color="primary" @click="visit_community(community.name)">
                                             <v-icon small>mdi-card-bulleted-settings</v-icon>
                                             View
                                         </v-btn>
@@ -81,18 +80,17 @@
 <script>
   export default {
     data: () => ({
-      cards: [],
+      communities: [],
       tags: [],
       selected: [],
-      community: [
-        { title: 'Pre-fab homes', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg'},
-        { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg'},
-        { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg'},
-        { title: 'Best Gwapo', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg'},
-      ],
-
+      search: '',
     }),
     computed: {
+        filteredList() {
+            return this.communities.filter(community => {
+                return community.name.toLowerCase().includes(this.search.toLowerCase())
+            })
+        }
     },
     mounted () {
         this.retrieveCommunity()
@@ -102,7 +100,7 @@
         retrieveCommunity(){
             axios.get('/api/community')
             .then( response => {
-                this.cards = response.data.community
+                this.communities = response.data.community
             })
             .catch( error => { alert(error)})
         },
