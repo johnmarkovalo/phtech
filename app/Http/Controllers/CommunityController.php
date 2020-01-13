@@ -68,7 +68,7 @@ class CommunityController extends Controller{
     }
 
     public function index (Request $request) {
-        $community_tmp = Community::all();
+        $community_tmp = Community::where('status','ACTIVE')->get();
         $communitylist = [];
         foreach($community_tmp as $community){
             $communitylist[] = [

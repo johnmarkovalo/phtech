@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 
 use Hash;
 use App\User;
+use App\Community;
+use App\Event;
+use App\Point;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -37,7 +40,7 @@ class UserController extends Controller
     }
 
     public function index (Request $request) {
-        $users = User::where('user_type', 'user')->get();
+        $users = User::where([['user_type', 'user'],['status','ACTIVE']])->get();
         return response(['users' => $users], 200);
         // return 'fuck';
     }
@@ -53,6 +56,20 @@ class UserController extends Controller
 
         return response(['success' => ['notifications' => $notifications]]);
         
+    }
+
+    public function Dashboard(){
+
+        $communities = Community::all()->count();
+        $users = User::all()->count();
+        $events = [
+            'upcomming' => Event::where('start', '<=' , date("yy/m/d"))->get()->count(),
+            'past' => Event::where('start', '>' , date("yy/m/d"))->get()->count()
+        ];
+
+        $points = Point::all()->sum('point');
+
+        return response(['communities' => $communities, 'users' => $users, 'events' => $events, 'points' => $points], 200);
     }
 
 }

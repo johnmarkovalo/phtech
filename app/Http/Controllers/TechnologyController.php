@@ -37,12 +37,13 @@ class TechnologyController extends Controller
     }
 
     public function index (Request $request) {
-        $technology = Technology::all();
+        $technology = Technology::where('status', 'ACTIVE')->get();
         $tags = [];
         foreach($technology as $tag ){
             $tags[] = [
                 'id' => $tag->id,
                 'name' => $tag->name,
+                'description' => $tag->description,
             ];
         }
         return response(['tags' => $tags], 200);

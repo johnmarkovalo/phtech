@@ -17,6 +17,13 @@ use Illuminate\Http\Request;
         Route::get('/notifications', 'UserController@user_notification');
         Route::post('/notifications/read', 'UserController@read_user_notification');
 
+        //Admin
+        Route::get('/dashboard', 'AdminController@Dashboard');
+        Route::get('/top-users', 'AdminController@getTopUsers');
+        Route::put('/ban-event/{event}', 'AdminController@BanEvent');
+        Route::put('/ban-user/{user}', 'AdminController@BanUser');
+        Route::put('/ban-community/{community}', 'AdminController@BanCommunity');
+
         //Get all users
         Route::get('/users', 'UserController@index');
 

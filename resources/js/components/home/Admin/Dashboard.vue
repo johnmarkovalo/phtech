@@ -18,24 +18,24 @@
                             <v-flex xs12 lg6 xl4>
                               <v-card color="teal darken-1">
                                   <v-card-text>
-                                  <p class="display-2 white--text">₱0.00</p>
-                                  <p class="title  white--text text-center">Exit Earnings</p>
+                                  <p class="display-2 white--text text-center">{{users}}</p>
+                                  <p class="title  white--text text-center">Users</p>
                                   </v-card-text>
                               </v-card>
                             </v-flex>
                             <v-flex xs12 lg6 xl4>
                               <v-card color="cyan darken-1">
                                   <v-card-text>
-                                  <p class="display-2 white--text">₱0.00</p>
-                                  <p class="title  white--text text-center">Referal Earnings</p>
+                                  <p class="display-2 white--text text-center">{{points}}</p>
+                                  <p class="title  white--text text-center">Points Gathered</p>
                                   </v-card-text>
                               </v-card>
                             </v-flex>
                             <v-flex xs12 lg12 xl4>
                               <v-card color="teal darken-1">
                                   <v-card-text>
-                                  <p class="display-2 white--text">₱0.00</p>
-                                  <p class="title  white--text text-center">Total Earnings</p>
+                                  <p class="display-2 white--text text-center">{{communities}}</p>
+                                  <p class="title  white--text text-center">Communities</p>
                                   </v-card-text>
                               </v-card>
                             </v-flex>
@@ -47,16 +47,16 @@
                             <v-flex xs12 md6>
                               <v-card color="red darken-1">
                                   <v-card-text>
-                                  <p class="display-2 white--text">₱0.00</p>
-                                  <p class="title  white--text text-center">Total Encashed</p>
+                                  <p class="display-2 white--text text-center">{{events.upcomming}}</p>
+                                  <p class="title  white--text text-center">Past Events</p>
                                   </v-card-text>
                               </v-card>
                             </v-flex>
                             <v-flex xs12 md6>
                               <v-card color="green darken-1">
                                   <v-card-text>
-                                  <p class="display-2 white--text">₱0.00</p>
-                                  <p class="title  white--text text-center">Available Balance</p>
+                                  <p class="display-2 white--text text-center">{{events.past}}</p>
+                                  <p class="title  white--text text-center">Upcomming Events</p>
                                   </v-card-text>
                               </v-card>
                             </v-flex>
@@ -75,13 +75,29 @@
   export default {
     data(){
       return {
+        events: [],
+        communities: '',
+        points: '',
+        users: '',
       }
     },
     methods:{
+      getDashboard(){
+        axios.get('/api/dashboard')
+        .then( response => {
+            this.events = response.data.events
+            this.users = response.data.users
+            this.communities = response.data.communities
+            this.points = response.data.points
+        })
+        .catch( error => { alert(error)})
+        .finally( x => {
+          console.log(this.communities);
+        })
+      }
     },
     created() {
-      console.log(sessionStorage.getItem('user-id'));
-      
+      this.getDashboard()
     }
 }
 </script>

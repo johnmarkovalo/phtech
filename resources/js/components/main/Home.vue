@@ -46,7 +46,7 @@
                 <v-list-item-title class="subheading font-weight-regular">Communities</v-list-item-title>
               </v-list-item-content>
             </v-list-item>
-            <v-list-item ripple="ripple" exact to="">
+            <v-list-item ripple="ripple" exact to="topusers">
               <v-list-item-action>
                 <v-icon>fas fa-award</v-icon>
               </v-list-item-action>

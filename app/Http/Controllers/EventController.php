@@ -172,7 +172,7 @@ class EventController extends Controller
     }
 
     public function index (Request $request) {
-        $allevents = Event::all();
+        $allevents = Event::where('status','ACTIVE')->get();
         $eventlist = [];
         $community_tmp = '';
         $recommended_events = [];
@@ -300,7 +300,7 @@ class EventController extends Controller
                 }
             }
         }
-        return response(['events' => $eventlist, 'recommended_events' => $recommended_events], 200);
+        return response(['events' => $eventlist, 'recommended_events' => $recommended_events, 'allevents' => $allevents], 200);
     }
     
     public function eventdetails(Request $request) {

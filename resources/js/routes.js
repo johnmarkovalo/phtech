@@ -23,6 +23,7 @@ import Profile from './components/home/User/Profile.vue'
 //Admin
 import Dashboard from './components/home/Admin/Dashboard.vue'
 import UserList from './components/home/Admin/Users.vue'
+import TopUsers from './components/home/Admin/TopUsers.vue'
 import Events from './components/home/Admin/EventList.vue'
 import Community from './components/home/Admin/CommunityList.vue'
 import Tech from './components/home/Admin/Technology.vue'
@@ -45,6 +46,7 @@ export const routes = [
                     { path: '/technology', name: 'technology', components: {home: Tech}},
                     { path: '/community', name: 'community', components: {home: Community}},
                     { path: '/users', name: 'users', components: {home: UserList}},
+                    { path: '/topusers', name: 'topusers', components: {home: TopUsers}},
                     { path: '/events', name: 'events', components: {home: Events}},
                     //User
                     { path: '/profile', name: 'profile', components: {home: Profile}},
