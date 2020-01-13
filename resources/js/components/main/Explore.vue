@@ -112,7 +112,7 @@
             return eventsforfilter;
           }
         }
-        else if(this.search == ''){
+        else if(this.search == '' && this.recommended_events != ''){
           if(this.location == 'Anywhere'){
             return this.recommended_events
           }
@@ -129,22 +129,63 @@
         }
         else{
           if(this.location == 'Anywhere'){
-            return this.events.filter(event => {
-              return event.name.toLowerCase().includes(this.search.toLowerCase())
-            })
+            var events=[];
+            if(this.search.includes('#')){
+              this.events.forEach(event => {
+                var done = false;
+                event.tags.forEach(tag => {
+                  if(done == false){
+                    if(tag['name'].toLowerCase().includes(this.search.substring(1).toLowerCase())){
+                      events.push(event);
+                      done = true;
+                    }
+                  }
+                });
+              })
+              return events;
+            }
+            else{
+              return this.events.filter(event => {
+                return event.name.toLowerCase().includes(this.search.toLowerCase())
+              })
+            }
           }
           else{
-            var events = this.events.filter(event => {
-              return event.name.toLowerCase().includes(this.search.toLowerCase())
-            });
-            var eventsforfilter = [];
-            events.forEach(event => {
-              var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
-              if(km <= 50){
-                eventsforfilter.push(event);
-              }
-            });
-            return eventsforfilter;
+            var events=[];
+            if(this.search.includes('#')){
+              this.events.forEach(event => {
+                var done = false;
+                event.tags.forEach(tag => {
+                  if(done == false){
+                    if(tag['name'].toLowerCase().includes(this.search.substring(1).toLowerCase())){
+                      events.push(event);
+                      done = true;
+                    }
+                  }
+                });
+              })
+              var eventsforfilter = [];
+              events.forEach(event => {
+                var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
+                if(km <= 50){
+                  eventsforfilter.push(event);
+                }
+              });
+              return eventsforfilter;
+            }
+            else{
+              var events = this.events.filter(event => {
+                return event.name.toLowerCase().includes(this.search.toLowerCase())
+              });
+              var eventsforfilter = [];
+              events.forEach(event => {
+                var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
+                if(km <= 50){
+                  eventsforfilter.push(event);
+                }
+              });
+              return eventsforfilter;
+            }
           }
         }
       }
