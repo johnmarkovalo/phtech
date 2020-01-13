@@ -8,9 +8,14 @@
           </v-toolbar>
           <v-card-text>
             <v-card class="mt-5 elevation-0">
-                <v-toolbar flat align="center">
-                  <v-text-field outlined type="text" placeholder="Search Event..." v-model="search" prepend-inner-icon="fas fa-search"/>
-                </v-toolbar>
+                <v-row justify="start" align="center">
+                  <v-col cols="6">
+                    <v-text-field outlined type="text" placeholder="Search Event..." v-model="search" prepend-inner-icon="fas fa-search"/>
+                  </v-col>
+                  <v-col cols="6">
+                   <v-select dense color="primary" v-model="location" :items="select_options" label="Location" prepend-inner-icon="mdi-map-marker"/>
+                  </v-col>
+                </v-row>
                 <v-card-text>
                   <v-container fluid>
                       <v-row dense>
@@ -71,6 +76,8 @@
         lng:''
       },
       search: '',
+      select_options: ['Anywhere','Within 50km near your location'],
+      location: 'Anywhere',
     }),
     computed: {
       eventRecommended: function() {
@@ -91,15 +98,54 @@
       },
       filteredList() {
         if(this.search == '' && this.recommended_events == ''){
-          return this.events
+          if(this.location == 'Anywhere'){
+            return this.events
+          }
+          else{
+            var eventsforfilter = [];
+            this.events.forEach(event => {
+              var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
+              if(km <= 50){
+                eventsforfilter.push(event);
+              }
+            });
+            return eventsforfilter;
+          }
         }
         else if(this.search == ''){
-          return this.recommended_events
+          if(this.location == 'Anywhere'){
+            return this.recommended_events
+          }
+          else{
+            var eventsforfilter = [];
+            this.recommended_events.forEach(event => {
+              var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
+              if(km <= 50){
+                eventsforfilter.push(event);
+              }
+            });
+            return eventsforfilter;
+          }
         }
         else{
-          return this.events.filter(event => {
-            return event.name.toLowerCase().includes(this.search.toLowerCase())
-          })
+          if(this.location == 'Anywhere'){
+            return this.events.filter(event => {
+              return event.name.toLowerCase().includes(this.search.toLowerCase())
+            })
+          }
+          else{
+            var events = this.events.filter(event => {
+              return event.name.toLowerCase().includes(this.search.toLowerCase())
+            });
+            var eventsforfilter = [];
+            events.forEach(event => {
+              var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
+              if(km <= 50){
+                eventsforfilter.push(event);
+              }
+            });
+            return eventsforfilter;
+          }
         }
       }
     },
@@ -107,9 +153,6 @@
       
     },
     methods: {
-      visit_event(community_name,event_code){
-          this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
-      },
       retrieveEvent(){
           axios.get('/api/event' ,
           {
@@ -122,6 +165,9 @@
               this.recommended_events = response.data.recommended_events
           })
           .catch( error => { alert(error)})
+      },
+      visit_event(community_name,event_code){
+          this.$router.push('/'+community_name.split(' ').join('_')+'/events'+'/'+event_code)
       },
       retrieveTags() {
           axios.get('/api/technology')
@@ -184,14 +230,18 @@
         return km;
       },
       FilterByDistance(){
-        console.log(this.UserLocation);
-        this.events.forEach(event => {
-          var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
-          if(km <= 50){
-            this.events = [];
-            this.events.push(event);
-          }
-        });
+        if(this.location == 'Anywhere'){
+          this.eventsforfilter = this.events
+        }
+        else{
+          this.events.forEach(event => {
+            var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
+            if(km <= 50){
+              this.eventsforfilter = [];
+              this.eventsforfilter.push(event);
+            }
+          });
+        }
       }
 
     },

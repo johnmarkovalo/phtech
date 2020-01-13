@@ -13,7 +13,7 @@
                         </v-row>
                         <v-row>
                             <v-col cols=3 lg=2>
-                                <cld-image :publicId="event.organizer.avatar" width="100" class="mr-2">
+                                <cld-image :publicId="event.organizer.avatar" :width="organizer_photo" class="mr-2">
                                     <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
                                 </cld-image>
                             </v-col>
@@ -793,7 +793,16 @@
         },
         allowedDatesEnd () {
             return (another => val => val >= another)(this.event.start.date)
-        }
+        },
+        organizer_photo(){
+            switch (this.$vuetify.breakpoint.name) {
+            case 'xs': return '60'
+            case 'sm': return '70'
+            case 'md': return '80'
+            case 'lg': return '90'
+            case 'xl': return '100'
+            }
+        },
     },
     mounted () {
         this.retrieveEvent()
