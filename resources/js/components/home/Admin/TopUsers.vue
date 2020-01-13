@@ -24,7 +24,6 @@ export default {
                 {text: 'ID', value: 'id',},
                 {text: 'Name', value: 'name'},
                 {text: 'Points', value: 'point'},
-                {text: 'Actions', value: 'action', sortable: false },
             ],
             users: [],
         }
