@@ -113,7 +113,7 @@
                                     </form>
                                 </v-layout>
                             </v-container>
-                            <v-btn text @click="e1 = 2">Cancel</v-btn>
+                            <v-btn text @click="e1 = 1">Cancel</v-btn>
                             <v-btn x-large rounded color="primary" @click="e1 = 3">
                                 Continue
                             </v-btn>
@@ -133,7 +133,7 @@
                                 </v-form>
                             </v-container>
 
-                            <v-btn text @click="e1 = 3">Cancel</v-btn>
+                            <v-btn text @click="e1 = 2">Cancel</v-btn>
                             <v-btn x-large rounded color="primary" @click="Validate(1)">
                                 Continue
                             </v-btn>
@@ -156,7 +156,7 @@
                                     </v-layout>
                                 </v-form>
                             </v-container>
-                            <v-btn text @click="e1 = 4">Cancel</v-btn>
+                            <v-btn text @click="e1 = 3">Cancel</v-btn>
 
                             <v-btn x-large rounded color="primary" @click="Validate(2)">
                                 Continue
@@ -170,7 +170,7 @@
                                 <a class="subtitile-2 teal--text text--darken-2">Guidlines</a>
                             </v-container>
 
-                            <v-btn text>Cancel</v-btn>
+                            <v-btn text @click="e1 = 4">Cancel</v-btn>
                             <v-btn x-large rounded :loading="loading" color="primary" @click="SaveCommunity()">
                                 Save Community
                             </v-btn>

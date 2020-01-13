@@ -102,17 +102,17 @@
                                   <v-btn x-large rounded color="primary" @click="e1 = 3">
                                       Continue
                                   </v-btn>
-                                  <v-btn text>Cancel</v-btn>
+                                  <v-btn text @click="e1 = 1">Cancel</v-btn>
                           </v-stepper-content>
 
                           <v-stepper-content step="3">
-                              <p class="display-1">Congratulations! Please Save The information</p>
+                              <p class="display-1">Congratulations! Please Review your information Then Click Save</p>
 
                               <v-btn x-large rounded color="success" :loading="loading" @click="SaveInfoAndTech()">
                                 Save Information
                               </v-btn>
 
-                              <v-btn text>Cancel</v-btn>
+                              <v-btn text @click="e1 = 2">Cancel</v-btn>
                           </v-stepper-content>
                         </v-stepper-items>
                       </v-stepper>  
