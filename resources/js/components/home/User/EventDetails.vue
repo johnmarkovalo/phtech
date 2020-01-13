@@ -24,20 +24,20 @@
                         </v-row>
                     </v-col>
                     <v-col cols=12 md=12 lg=3 align=center>
-                        <v-row v-if="upcomming && event.allowed == true && attendeescount['count'] != attendeescount['over']">
+                        <v-row v-if="upcomming && event.allowed == true && (event_space == 'free' ||event_space == 'available')">
                             <p v-if="this.status == 'pending'" class="display-1 teal--text text--darken-2 font-weight-bold">Want to go?</p>
                             <p v-if="this.status == 'going'" class="display-1 teal--text text--darken-2 font-weight-bold">You're Going</p>
                             <p v-if="this.status == 'notgoing'" class="display-1 teal--text text--darken-2 font-weight-bold">You're not Going</p>
                             <p v-if="this.status == 'speaker'" class="display-1 teal--text text--darken-2 font-weight-bold">You're a Guest Speaker</p>
                             <p v-if="this.status == 'organizer'" class="display-1 teal--text text--darken-2 font-weight-bold">You're a Organizer</p>
                         </v-row>
-                        <v-row v-else-if="upcomming && event.allowed == true && attendeescount['count'] == attendeescount['over']">
+                        <v-row v-else-if="upcomming && event.allowed == true && (event_space == 'free' ||event_space == 'full')">
                             <p v-if="this.status == 'pending'" class="display-1 teal--text text--darken-2 font-weight-bold">Sorry this Event is Full</p>
                         </v-row>
                         <v-row v-else-if="upcomming && event.allowed == false">
                             <p v-if="this.status == 'pending'" class="display-1 teal--text text--darken-2 font-weight-bold">Sorry this Event is Exclusive</p>
                         </v-row>
-                        <v-row justify=center v-if="upcomming && event.allowed == true && attendeescount['count'] != attendeescount['over']">
+                        <v-row justify=center v-if="upcomming && event.allowed == true && (event_space == 'free' ||event_space == 'available')">
                             <v-col cols=4>
                                 <v-btn class="white--text" color="primary" :outlined="coutlined()" :disabled="eventisfull()" large rounded block @click="joinEvent(user_id,true)"><v-icon>mdi-check</v-icon></v-btn>
                             </v-col>
@@ -729,6 +729,7 @@
         isUpdating: false,
         qrcode: '',
         attendeescount: null,
+        event_space: null,
         //ratings
         ratings: 0,
         submitted: false,
@@ -830,6 +831,17 @@
                     location: response.data.event.location,
                 }
                 this.attendeescount = response.data.event.attendeescount
+                if(this.attendeescount == null){
+                    this.event_space = 'free'
+                }
+                else{
+                    if(this.attendeescount['count'] == this.attendeescount['over']) {
+                    this.event_space = 'full'
+                    }
+                    else if(this.attendeescount['count'] != this.attendeescount['over']){
+                        this.event_space = 'available'
+                    }
+                }
                 this.center = { lat: response.data.event.location.lat, lng: response.data.event.location.lng }
                 this.attendees = response.data.attendees
                 this.OrginalSpeakers = response.data.speakers
@@ -873,7 +885,7 @@
             }
         },
         eventisfull(){
-            if(this.attendeescount['count'] == this.attendeescount['over']) {
+            if(this.event_space == 'available') {
                 return true
             }
             else{
