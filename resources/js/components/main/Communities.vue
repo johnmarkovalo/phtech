@@ -55,7 +55,7 @@
                                     <v-card-text> 
                                         <p class="headline teal--text text--darken-2">{{community.name}}</p>
                                         <p class="title text-truncate">{{community.description}}</p>
-                                        <p class="subtitle-1">{{community.location.formatted_address}}</p>
+                                        <p class="subtitle-1 text-truncate">{{community.location.formatted_address}}</p>
                                     </v-card-text>
 
                                     <v-card-actions>

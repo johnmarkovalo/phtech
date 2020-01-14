@@ -21,28 +21,36 @@
                       <v-row dense>
                         <v-col v-for="card in filteredList" :key="card.title" cols="12" lg="3" xl="3" md="3">
                           <v-hover v-slot:default="{ hover }">
-                            <v-card :elevation="hover ? 12 : 2" @click="visit_event(card.community['0'].name,card.code)">
+                            <v-card :elevation="hover ? 12 : 2">
                               <v-img :src="card.photo" class=" align-end" gradient="to bottom, rgba(0,0,0,.1), rgba(0,0,0,.5)" height="200px">
                               </v-img>
                               <v-card-text> 
                                 <p class="title teal--text text--darken-2">{{card.start | eventDate}}</p>
                                 <p class="headline ">{{card.name}}</p>
                                 <p class="subtitle-1 teal--text text--darken-2">{{card.community_organizer}}</p>
-                                <p class="subtitle-2">{{card.location.formatted_address}}</p>
-                                <v-chip v-for="item in card.tags" v-bind:key="item.id" color="primary" outlined>
-                                    <v-icon left>
-                                      mdi-pound
-                                    </v-icon>
-                                    {{item['name']}}
-                                  </v-chip>
+                                <p class="subtitle-2 text-truncate">{{card.location.formatted_address}}</p>
+                                <!-- <v-chip v-for="item in card.tags" v-bind:key="item.id" color="primary" outlined>
+                                  <v-icon left>
+                                    mdi-pound
+                                  </v-icon>
+                                  {{item['name']}}
+                                </v-chip> -->
+                                <v-chip-group row>
+                                     <v-chip v-for="item in card.tags" v-bind:key="item.id" color="primary" outlined>
+                                        <v-icon left>
+                                          mdi-pound
+                                        </v-icon>
+                                        {{item['name']}}
+                                      </v-chip>
+                                </v-chip-group>
                               </v-card-text>
 
                               <v-card-actions>
                                 <v-spacer></v-spacer>
 
-                                <v-btn v-if="card.position == 'pending'" rounded outlined color="primary" width="5vw" >Attend</v-btn>
-                                <v-btn v-else-if="card.position == 'going' || card.position == 'organizer'" rounded outlined color="success" width="5vw">Going</v-btn>
-                                <v-btn v-else-if="card.position == 'notgoing'" rounded outlined color="error" width="5vw">Not Going</v-btn>
+                                <v-btn v-if="card.position == 'pending'" rounded outlined color="primary" width="5vw"  @click="visit_event(card.community['0'].name,card.code)">Attend</v-btn>
+                                <v-btn v-else-if="card.position == 'going' || card.position == 'organizer'" rounded outlined color="success" width="5vw" @click="visit_event(card.community['0'].name,card.code)">Going</v-btn>
+                                <v-btn v-else-if="card.position == 'notgoing'" rounded outlined color="error" width="5vw" @click="visit_event(card.community['0'].name,card.code)">Not Going</v-btn>
                               </v-card-actions>
                             </v-card>
                           </v-hover>
