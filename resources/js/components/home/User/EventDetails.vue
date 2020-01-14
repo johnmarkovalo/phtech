@@ -31,6 +31,12 @@
                             <p v-if="this.status == 'speaker'" class="display-1 teal--text text--darken-2 font-weight-bold">You're a Guest Speaker</p>
                             <p v-if="this.status == 'organizer'" class="display-1 teal--text text--darken-2 font-weight-bold">You're a Organizer</p>
                         </v-row>
+                        <v-row justify=center v-if="upcomming && event.fee == 0 && event.allowed == true && (event_space == 'free' ||event_space == 'available')">
+                            <p class="headline teal--text text--darken-2 font-weight-bold">Free</p>
+                        </v-row>
+                        <v-row justify=center v-else-if="upcomming && event.fee != 0 && event.allowed == true && (event_space == 'free' ||event_space == 'available')">
+                            <p class="headline teal--text text--darken-2 font-weight-bold">₱{{event.fee}}</p>
+                        </v-row>
                         <v-row v-else-if="upcomming && event.allowed == true && (event_space == 'free' ||event_space == 'full')">
                             <p v-if="this.status == 'pending'" class="display-1 teal--text text--darken-2 font-weight-bold">Sorry this Event is Full</p>
                         </v-row>
@@ -39,10 +45,10 @@
                         </v-row>
                         <v-row justify=center v-if="upcomming && event.allowed == true && (event_space == 'free' ||event_space == 'available')">
                             <v-col cols=4>
-                                <v-btn class="white--text" color="primary" :outlined="coutlined()" :disabled="eventisfull()" large rounded block @click="joinEvent(user_id,true)"><v-icon>mdi-check</v-icon></v-btn>
+                                <v-btn class="white--text" color="primary" :outlined="coutlined()" large rounded block @click="joinEvent(user_id,true)"><v-icon>mdi-check</v-icon></v-btn>
                             </v-col>
                             <v-col cols=4>
-                                <v-btn class="white--text" color="primary" :outlined="xoutlined()" :disabled="eventisfull()" large rounded block @click="joinEvent(user_id,false)"><v-icon>mdi-close</v-icon></v-btn>
+                                <v-btn class="white--text" color="primary" :outlined="xoutlined()" large rounded block @click="joinEvent(user_id,false)"><v-icon>mdi-close</v-icon></v-btn>
                             </v-col>
                         </v-row>
                         <v-row v-if="attendeescount != null">
@@ -891,14 +897,6 @@
             }
             else{
                 return true
-            }
-        },
-        eventisfull(){
-            if(this.event_space == 'available') {
-                return true
-            }
-            else{
-                return false
             }
         },
         coutlined(){

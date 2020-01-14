@@ -611,13 +611,13 @@ class EventController extends Controller
     }
     
     public function getStatus($user_id,$event){
-        $allowedToJoin = false;
+        $membership = false;
         $communities = event_community::where('event_id', $event->id)->get();
         foreach($communities as $community){
             $position_tmp = user_community::where([['user_id', $user_id],['community_id', $community->community->id]])->first();
             if($position_tmp){
                 $position = $position_tmp->position;
-                $allowedToJoin = true;
+                $membership = true;
                 break;
             }
             else{
@@ -664,6 +664,16 @@ class EventController extends Controller
                 'count' => user_event::where([['event_id', $event->id],['position','<>','notgoing']])->get()->count(),
                 'over' => $event->limit
             ];
+        }
+        $allowedToJoin = true;
+        if($membership == true && $event->exclusive == 1){
+            $allowedToJoin = true;
+        }
+        elseif($membership == false && $event->exclusive == 1){
+            $allowedToJoin = false;
+        }
+        else{
+            $allowedToJoin = true;
         }
 
         $status = [
