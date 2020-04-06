@@ -68,7 +68,6 @@
   export default {
     data: () => ({
       events: [],
-      recommended_events: [],
       tags: [],
       selected: [],
       modal: false,
@@ -88,45 +87,14 @@
       location: 'Anywhere',
     }),
     computed: {
-      eventRecommended: function() {
-          return this.events.filter(function(event) {
-              event.tags.forEach(function(tag) {
-                if(tag.name == 'going' || tag.name == 'organizer' || tag.name == 'went'){
-                    return event
-                }
-              })
-          })
-      },
-      NotGoingAttendee: function() {
-          return this.attendees.filter(function(attendee) {
-              if(attendee.position == 'notgoing' || attendee.position == 'absent'){
-                  return attendee
-              }
-          })
-      },
       filteredList() {
-        if(this.search == '' && this.recommended_events == ''){
+        if(this.search == ''){
           if(this.location == 'Anywhere'){
             return this.events
           }
           else{
             var eventsforfilter = [];
             this.events.forEach(event => {
-              var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
-              if(km <= 50){
-                eventsforfilter.push(event);
-              }
-            });
-            return eventsforfilter;
-          }
-        }
-        else if(this.search == '' && this.recommended_events != ''){
-          if(this.location == 'Anywhere'){
-            return this.recommended_events
-          }
-          else{
-            var eventsforfilter = [];
-            this.recommended_events.forEach(event => {
               var km = this.calculate_distance(this.UserLocation.lat,this.UserLocation.lng,event.location.lat,event.location.lng);
               if(km <= 50){
                 eventsforfilter.push(event);
@@ -211,7 +179,6 @@
           })
           .then( response => {
               this.events = response.data.events
-              this.recommended_events = response.data.recommended_events
           })
           .catch( error => { alert(error)})
       },

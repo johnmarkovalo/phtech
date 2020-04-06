@@ -175,132 +175,52 @@ class EventController extends Controller
         $allevents = Event::where('status','ACTIVE')->get();
         $eventlist = [];
         $community_tmp = '';
-        $recommended_events = [];
-        if($request->id){
-            foreach($allevents as $event){
-                if($event->start > date('Y-m-d H:i:s')){
-                    $position = user_event::where([['user_id', $request->id],['event_id',$event->id]])->first();
-                    $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
-                    if(!$position){
-                        $position = 'pending';
-                    }
-                    else{
-                        $position = $position->position;
-                    }
-                    $eventlist[] = [
-                        'id' => $event->id,
-                        'name' => $event->title,
-                        'code' => $event->code,
-                        'details' => $event->description,
-                        'photo' => $event->photo,
-                        'location' => $event->location,
-                        'start' => $event->start,
-                        'end' => $event->end,
-                        'color' => 'teal',
-                        'community_organizer' => $community_tmp->community->name,
-                        'community' => $this->getCommunities($event->id),
-                        'tags' => $this->getTags($event->id),
-                        'position' =>  $position,
-                    ];
-                }
-            }
-
-            $recommended = [];
-            $user = User::where('id',$request->id)->first();
-            $user_tags = $user->information->technologies;
-            foreach($user_tags as $tag){
-                $recommended[] = Event::whereHas('technologies', function($q) use ($tag){
-                    $q->where('technology.id', $tag->id);
-                })->get();
-                // $recommended[] = $tag->id;
-            }
-
-            $events = [];
-            foreach($recommended as $tag){
-                foreach($tag as $eventwaiting){
-                    $count = 0; 
-                    if($events != null){
-                        foreach($events as $eventinlist){
-                            if($eventinlist['event']['id'] == $eventwaiting['id']){
-                                $eventinlist['count'] = $eventinlist['count'] + 1; 
-                                $count++; 
-                                // return $eventinlist;
-                            }
-                        }
-                        if($count == 0){
-                            $events[] = [
-                                'event' => $eventwaiting,
-                                'count' => 0
-                            ];
-                        }
-                    }
-                    else{
-                        $events[] = [
-                            'event' => $eventwaiting,
-                            'count' => 0
-                        ];
-                    }
-                    // return $eventwaiting['id'];
-                }
-            }
-
-            $recommended_events_tmp = [];
-            foreach($events as $event){
-                $recommended_events_tmp[] = $event['event'];
-            }
-
-            $community_tmp = '';
-            foreach($recommended_events_tmp as $event){
-                if($event->start > date('Y-m-d H:i:s')){
-                    $position = user_event::where([['user_id', $request->id],['event_id',$event->id]])->first();
-                    $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
-                    if(!$position){
-                        $position = 'pending';
-                    }
-                    else{
-                        $position = $position->position;
-                    }
-                    $recommended_events[] = [
-                        'id' => $event->id,
-                        'name' => $event->title,
-                        'code' => $event->code,
-                        'details' => $event->description,
-                        'photo' => $event->photo,
-                        'location' => $event->location,
-                        'start' => $event->start,
-                        'end' => $event->end,
-                        'color' => 'teal',
-                        'community_organizer' => $community_tmp->community->name,
-                        'community' => $this->getCommunities($event->id),
-                        'tags' => $this->getTags($event->id),
-                        'position' =>  $position,
-                    ];
-                }
-            }
-
-        }else{
-            foreach($allevents as $event){
-                if($event->start > date('Y-m-d H:i:s')){
-                    $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
-                    $eventlist[] = [
-                        'id' => $event->id,
-                        'name' => $event->title,
-                        'code' => $event->code,
-                        'details' => $event->description,
-                        'photo' => $event->photo,
-                        'location' => $event->location,
-                        'start' => $event->start,
-                        'end' => $event->end,
-                        'color' => 'teal',
-                        'community_organizer' => $community_tmp->community->name,
-                        'community' => $this->getCommunities($event->id),
-                        'tags' => $this->getTags($event->id),
-                        'position' =>  'pending',
-                    ];
-                }
+        foreach($allevents as $event){
+            if($event->start > date('Y-m-d H:i:s')){
+                $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
+                $eventlist[] = [
+                    'id' => $event->id,
+                    'name' => $event->title,
+                    'code' => $event->code,
+                    'details' => $event->description,
+                    'photo' => $event->photo,
+                    'location' => $event->location,
+                    'start' => $event->start,
+                    'end' => $event->end,
+                    'color' => 'teal',
+                    'community_organizer' => $community_tmp->community->name,
+                    'community' => $this->getCommunities($event->id),
+                    'tags' => $this->getTags($event->id),
+                    'position' =>  'pending',
+                ];
             }
         }
-        return response(['events' => $eventlist, 'recommended_events' => $recommended_events, 'allevents' => $allevents], 200);
+        return response(['events' => $eventlist, 'allevents' => $allevents], 200);
+    }
+
+    public function recent(){
+        $allevents = Event::where([['status','ACTIVE'],['start','<',date('Y-m-d H:i:s')]])->orderBy('id', 'desc')->limit(3)->get();
+        $eventlist = [];
+        $community_tmp = '';
+        foreach($allevents as $event){
+                $community_tmp = event_community::where([['event_id', $event->id],['position', 'organizer']])->first();
+                $eventlist[] = [
+                    'id' => $event->id,
+                    'name' => $event->title,
+                    'code' => $event->code,
+                    'details' => $event->description,
+                    'photo' => $event->photo,
+                    'location' => $event->location,
+                    'start' => $event->start,
+                    'end' => $event->end,
+                    'color' => 'teal',
+                    'community_organizer' => $community_tmp->community->name,
+                    'community' => $this->getCommunities($event->id),
+                    'tags' => $this->getTags($event->id),
+                    'position' =>  'pending',
+                ];
+        }
+        return response(['events' => $eventlist], 200);
     }
     
     public function eventdetails(Request $request) {

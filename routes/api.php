@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
     Route::get('/technology', 'TechnologyController@index');
     Route::get('/community', 'CommunityController@index');
     Route::get('/event', 'EventController@index');
+    Route::get('/recentevent', 'EventController@recent');
     // private routes
     Route::middleware('auth:api')->group(function () {
         // Get current logged in user

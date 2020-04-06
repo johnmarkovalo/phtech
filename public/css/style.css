@@ -99,3 +99,13 @@
     background: #FF8F00;
     border: 2px solid #FF8F00;
   }
+
+  #about{
+    background: url(../img/carousel/6.png) top center;
+    background-color: rgba(199, 199, 199, 0.8);
+    background-size: cover;
+  }
+
+  footer{
+    background-color:#00695C;
+  }
