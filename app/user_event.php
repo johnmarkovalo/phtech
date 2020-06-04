@@ -16,6 +16,7 @@ class user_event extends Model
         'position',
         'qrcode',
         'ratings',
+        'review',
     ];
 
     public function user() {

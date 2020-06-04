@@ -239,6 +239,7 @@ class EventController extends Controller
             'limit' => $event->limit,
             'fee' => $event->fee,
             'exclusive' => $event->exclusive,
+            'timeframe' => $event->reviews_timeframe,
             'allowed' => $status['allowed'],
             'organizer' => [
                 'name' => $event->organizer->name,  
@@ -532,6 +533,8 @@ class EventController extends Controller
     
     public function getStatus($user_id,$event){
         $membership = false;
+        $settings = false;
+        $position = '';
         $communities = event_community::where('event_id', $event->id)->get();
         foreach($communities as $community){
             $position_tmp = user_community::where([['user_id', $user_id],['community_id', $community->community->id]])->first();
@@ -544,12 +547,14 @@ class EventController extends Controller
                 $position = '';
             }
         }
+        // echo($position);
         if($event->organizer->id == $user_id || $position == 'organizer' || $position == 'event-organizer'){
             $settings = true;
         }
         else{
             $settings = false;
         }
+        // echo($settings);
         $qrcode = '';
         $submitted = false;
         $ratings = '';

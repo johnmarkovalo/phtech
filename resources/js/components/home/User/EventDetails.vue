@@ -61,10 +61,10 @@
                             <p class="display-1 teal--text text--darken-2 font-weight-bold">Event Rating</p>
                         </v-row>
                         <v-row justify=center  v-if="!upcomming">
-                            <v-rating size="50" v-model="ratings" :readonly="submitted" background-color="teal lighten-3"  color="teal"></v-rating>
+                            <v-rating size="50" v-model="ratings" readonly background-color="teal lighten-3"  color="teal"></v-rating>
                         </v-row>
                         <v-row justify=center  v-if="(!upcomming && showSubmit == true)">
-                            <v-btn outlined large rounded :disabled="submitted" @click="submitRatings()">Submit Ratings
+                            <v-btn outlined large rounded :disabled="allowreview()" @click="Remarks_Dialog = true">Write Reviews
                                 <v-icon color="primary">mdi-send-circle-outline</v-icon>
                             </v-btn>
                         </v-row>
@@ -309,7 +309,7 @@
                                                         </v-list-item>
                                                         <v-list-item v-else ripple="ripple" @click="joinEvent(attendee.id,false)">
                                                             <v-list-item-content>
-                                                                <v-list-item-title>Move to "Didn't Going"</v-list-item-title>
+                                                                <v-list-item-title>Move to "Didn't Go"</v-list-item-title>
                                                             </v-list-item-content>
                                                         </v-list-item>
                                                     </v-list>
@@ -374,6 +374,27 @@
                 <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn rounded color="primary" @click="upload_Cover()">Upload Profile</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
+        <v-dialog v-model="Remarks_Dialog" max-width="600px">
+            <v-card>
+                <v-card-title >
+                Review
+                </v-card-title>
+                <v-card-text>
+                <v-container>
+                    <v-row justify=center  v-if="!upcomming">
+                        <v-rating size="50" v-model="ratings" background-color="teal lighten-3"  color="teal"></v-rating>
+                    </v-row>
+                    <v-row wrap justify=center align=center>
+                        <v-textarea outlined rounded class="teal-text text--darken-2" v-model="event.review"></v-textarea>
+                    </v-row>
+                </v-container>
+                </v-card-text>
+                <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn rounded color="primary" @click="submitRatings()">Submit Review</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -703,6 +724,17 @@
                                         </v-row>
                                     </v-expansion-panel-content>
                                 </v-expansion-panel>
+                                 <v-expansion-panel>
+                                    <v-expansion-panel-header class="teal--text text--darken-2">Review Timeframe</v-expansion-panel-header>
+                                    <v-expansion-panel-content>
+                                        <p class="title teal--text text--darken-2">Event Review Timeframe</p>
+                                        <v-row>
+                                            <v-col cols=12 md=6 lg=4 xl=4>
+                                                <v-select color="primary" v-model="event.timeframe" :items="timeframe" outlined chips label="Event Timeframe"  prepend-inner-icon="mdi-account-group"/>
+                                            </v-col>
+                                        </v-row>
+                                    </v-expansion-panel-content>
+                                </v-expansion-panel>
                             </v-expansion-panels>
                         </v-row>
                     </v-container>
@@ -744,6 +776,7 @@
         dialog: false,
         Cover_Dialog:false,
         Settings_Dialog: false,
+        Remarks_Dialog: false,
         Upload_Dialog: false,
         QrCode_Dialog: false,
         // Photo
@@ -771,6 +804,7 @@
         NewSpeakers: [],
         RemovedSpeakers: [],
         selectedSponsors: [],
+        timeframe: ['1 Day','1 Week','1 Month']
     }),
     computed: {
         GoingAttendee: function() {
@@ -840,6 +874,7 @@
                     description: response.data.event.description,
                     organizer: response.data.event.organizer,
                     exclusive: response.data.event.exclusive,
+                    timeframe: response.data.event.timeframe,
                     allowed: response.data.event.allowed,
                     limit: response.data.event.limit,
                     fee: response.data.event.fee,
@@ -886,14 +921,57 @@
             })
             .catch( error => { alert(error)})
             .finally( x => { 
+                console.log(this.upcomming);
+                console.log(this.submitted);
+                console.log(this.showSubmit);
+                console.log(this.status);
+                console.log(this.settings);
+                
                 this.loading = false
                 this.retrieveCommunityUnder()
                 this.retrieveCommunitySponsors()
             })
         },
         eventistoday(){
-            if(this.event.start.date == new Date().toISOString().substr(0, 10)) {
-                return false
+            if(new Date(this.event.start.date).toLocaleDateString() == new Date().toLocaleDateString()) {
+                if(new Date().toLocaleTimeString() <= new Date(new Date(this.event.start.full).getTime() + 30*60*1000).toLocaleTimeString()){
+                    return false
+                }
+                else{
+                    return true
+                }
+            }
+            else{
+                return true
+            }
+        },
+        allowreview(){
+            if(this.submitted == false){
+                if(this.event.timeframe == '1 Day') {
+                    if(new Date().toLocaleDateString() <= new Date(new Date(this.event.start.full).getTime() + 24*60*60*1000).toLocaleDateString()){
+                        return false
+                    }
+                    else{
+                        return true
+                    }
+                }
+                else if(this.event.timeframe == '1 Week'){
+                    if(new Date().toLocaleDateString() <= new Date(new Date(this.event.start.full).getTime() + 7*24*60*60*1000).toLocaleDateString()){
+                        return false
+                    }
+                    else{
+                        return true
+                    }
+                }
+                else if(this.event.timeframe == '1 Month'){
+                    if(new Date().toLocaleDateString() <= new Date(new Date(this.event.start.full).getTime() + 30*24*60*60*1000).toLocaleDateString()){
+                        return false
+                    }
+                    else{
+                        return true
+                    }
+                }
+                
             }
             else{
                 return true
@@ -1122,6 +1200,7 @@
                     //Optional Settings
                     limit: this.event.limit,
                     exclusive: this.event.exclusive,
+                    reviews_timeframe: this.event.timeframe,
                     fee: this.event.fee,
     
                 })
@@ -1197,13 +1276,24 @@
             this.$router.push('/'+this.communities[0]['name'].split(' ').join('_')+'/events'+'/qrscan/'+this.$route.params.event_code)
         },
         submitRatings(){
-           axios.put('/api/submit-ratings/'+this.event.id, { 
-                    ratings: this.ratings
-                })   
-                .then( response => { 
-                })
-                .catch( error => { alert(error)}) 
-            // this.submitted = true;
+            swal.fire({
+                position: 'top-end',
+                toast: true,
+                type: 'success',
+                title: 'Review Submitted',
+                showConfirmButton: false,
+                timer: 1500
+            })
+
+        //    axios.put('/api/submit-ratings/'+this.event.id, { 
+        //             ratings: this.ratings,
+        //             // remarks: this.event.review
+        //         })   
+        //         .then( response => { 
+        //         })
+        //         .catch( error => { alert(error)}) 
+            this.Remarks_Dialog = false;
+            this.submitted = true;
         },
     },
     created() {

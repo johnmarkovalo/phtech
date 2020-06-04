@@ -192,29 +192,33 @@
                                             <p class="title teal--text text--darken-2">Event Speaker</p>
                                             <v-row>
                                                 <v-col cols=12 md=12 lg=12 xl=12>
-                                                    <v-autocomplete v-model="selectedSpeakers" :disabled="isUpdating" :items="users"
-                                                        filled chips color="primary" label="Select Speakers"
-                                                        item-text="name" item-value="id" multiple outlined>
-                                                        <template v-slot:selection="data">
-                                                            <v-chip v-bind="data.attrs" :input-value="data.selectedSpeakers" close @click="data.select"
-                                                                @click:close="remove(data.item)">
-                                                                <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
-                                                                    <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
-                                                                </cld-image>
-                                                                {{ data.item.name }}
-                                                            </v-chip>
-                                                        </template>
-                                                        <template v-slot:item="data">
-                                                            <template v-if="typeof data.item !== 'object'">
-                                                                <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                    <form v-on:submit.prevent="">
+                                                        <v-autocomplete v-model="selectedSpeakers" :disabled="isUpdating" :items="users"
+                                                            filled chips color="primary" label="Select Speakers"
+                                                            :search-input.sync="searchInput" rounded
+                                                            item-text="name" item-value="id" multiple dense>
+                                                            <template v-slot:selection="data">
+                                                                <v-chip v-bind="data.attrs" :input-value="data.selectedSpeakers" close @click="data.select"
+                                                                    @click:close="remove(data.item)">
+                                                                    <cld-image :publicId="data.item.avatar" width="30" class="mr-2">
+                                                                        <cld-transformation width="2000" height="2000" border="5px_solid_rgb:4DB6AC" gravity="face" radius="max" crop="thumb" fetchFormat="png"/>
+                                                                    </cld-image>
+                                                                    {{ data.item.name }}
+                                                                </v-chip>
                                                             </template>
-                                                            <template v-else>
-                                                            <v-list-item-content>
-                                                                <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                                            </v-list-item-content>
+                                                            <template v-slot:item="data">
+                                                                <template v-if="typeof data.item !== 'object'">
+                                                                    <v-list-item-content v-text="data.item"></v-list-item-content>
+                                                                </template>
+                                                                <template v-else>
+                                                                <v-list-item-content>
+                                                                    <v-list-item-title v-html="data.item.name"></v-list-item-title>
+                                                                </v-list-item-content>
+                                                                </template>
                                                             </template>
-                                                        </template>
-                                                    </v-autocomplete>
+                                                        </v-autocomplete>
+                                                        <button v-show="false" type="submit" @click="AddSpeaker()">Submit</button>
+                                                    </form>
                                                 </v-col>
                                             </v-row>
                                         </v-expansion-panel-content>
@@ -271,9 +275,6 @@
                                                                 @click="data.select"
                                                                 @click:close="removeSponsor(data.item)"
                                                                 >
-                                                                <!-- <v-avatar left>
-                                                                    <v-img :src="data.item.avatar"></v-img>
-                                                                </v-avatar> -->
                                                                 {{ data.item.name }}
                                                                 </v-chip>
                                                             </template>
@@ -283,12 +284,8 @@
                                                                 <v-list-item-content v-text="data.item"></v-list-item-content>
                                                                 </template>
                                                                 <template v-else>
-                                                                <!-- <v-list-item-avatar>
-                                                                    <img :src="data.item.avatar">
-                                                                </v-list-item-avatar> -->
                                                                 <v-list-item-content>
                                                                     <v-list-item-title v-html="data.item.name"></v-list-item-title>
-                                                                    <!-- <v-list-item-subtitle v-html="data.item.group"></v-list-item-subtitle> -->
                                                                 </v-list-item-content>
                                                                 </template>
                                                             </template>
@@ -401,6 +398,16 @@ export default {
             let newItem = { name: this.searchInput };
             this.sponsorsdiila.push(newItem);
             this.selectedSponsors.push(newItem);
+        },
+        removeSpeaker (item) {
+            const index = this.selectedSpeakers.indexOf(item.name)
+            if (index >= 0) this.selectedSpeakers.splice(index, 1)
+        },
+        AddSpeaker(item){
+            let newItem = { name: this.searchInput };
+            this.users.push(newItem);
+            this.selectedSpeakers.push(newItem);
+            
         },
         startChange(){
             this.end.date = this.start.date

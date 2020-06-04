@@ -26,6 +26,7 @@ class Event extends Model
         'fee',
         'limit',
         'exclusive',
+        'reviews_timeframe',
         'status',
     ];
 
